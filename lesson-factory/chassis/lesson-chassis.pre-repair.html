@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="frame-ancestors https://*.thinkific.com https://aero.aea.net https://*.aea.net 'self';">
+<title>SWAP_TITLE | SWAP_COURSE</title>
+<!--
+  ELECTRIC INK LESSON CHASSIS. Clone this file. Do not clone 01-resistance.html.
+  Spine: Start, optional Why, one Poke (pick a recipe), Check, Field card.
+  Recipes: beat-recipes.md  |  Contract: chassis.md
+  This stand-in poke is the DECIDE recipe (HF / regs / "what next").
+  Do not keep decide because the stencil had decide. Pick the day's recipe.
+
+  Search SWAP_ : COURSE NUM TITLE SUB GOAL LO1 LO2 (LO3 if this day has three)
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0a0b0d;
+  --ink-2:#111318;
+  --ink-3:#171a21;
+  --line:#262b34;
+  --paper:#eef1f4;
+  --paper-2:#c6ccd6;
+  --paper-3:#a3abba;
+  --R:#ff9e3d;
+  --R-dim:#5a3d1c;
+  --I:#39d7ff;
+  --I-dim:#123c47;
+  --V:#b48cff;
+  --ok:#5ddb9a;
+  --bad:#ff6b6b;
+  --shadow:0 24px 60px -20px rgba(0,0,0,.7);
+  --maxw:1080px;
+  --qty:var(--R);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:72px}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{
+  margin:0;background:var(--ink);color:var(--paper);
+  font-family:"IBM Plex Sans",system-ui,sans-serif;
+  font-size:19px;line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+  background-image:radial-gradient(1200px 600px at 70% -10%, #14171d 0%, var(--ink) 60%);
+}
+::selection{background:var(--qty);color:#111}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 clamp(20px,5vw,48px)}
+h1,h2,h3,.display{font-family:"Space Grotesk",sans-serif;letter-spacing:-.02em;line-height:1.04}
+p{color:var(--paper-2)}
+strong{color:var(--paper);font-weight:600}
+.mono{font-family:"IBM Plex Mono",monospace}
+.kicker{font-family:"IBM Plex Mono",monospace;font-size:13px;letter-spacing:.28em;
+  text-transform:uppercase;color:var(--paper-3);display:flex;align-items:center;gap:12px}
+.kicker::before{content:"";width:26px;height:1px;background:var(--paper-3)}
+.section{padding:clamp(56px,9vw,120px) 0;border-top:1px solid var(--line)}
+.section h2{font-size:clamp(28px,5vw,46px);font-weight:600;margin:18px 0 10px}
+.lede{font-size:clamp(19px,2.4vw,23px);color:var(--paper);max-width:64ch}
+.hero{position:relative;min-height:0;display:flex;flex-direction:column;
+  justify-content:center;padding:48px 0 56px;overflow:hidden}
+.hero .wrap{position:relative;z-index:2}
+.course-tag{font-family:"IBM Plex Mono",monospace;font-size:13px;letter-spacing:.24em;
+  text-transform:uppercase;color:var(--paper-3)}
+.course-tag b{color:var(--qty);font-weight:500}
+.hero h1{font-size:clamp(48px,11vw,132px);font-weight:700;margin:.15em 0 .1em;color:var(--paper)}
+.hero h1 .u{position:relative;white-space:nowrap}
+.hero h1 .u::after{content:"";position:absolute;left:0;right:0;bottom:.08em;height:.09em;
+  background:var(--qty);box-shadow:0 0 24px var(--qty)}
+.hero-sub{font-size:clamp(20px,2.6vw,27px);max-width:40ch;color:var(--paper-2);margin-top:10px}
+.hero-meta{margin-top:44px;display:flex;flex-wrap:wrap;gap:14px 34px;
+  font-family:"IBM Plex Mono",monospace;font-size:13.5px;color:var(--paper-3)}
+.hero-meta span b{color:var(--paper);font-weight:500}
+.los{margin-top:36px;max-width:70ch;border:1px solid var(--line);border-radius:16px;
+  background:rgba(17,19,24,.72);padding:18px 22px 16px}
+.los .k{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--qty);margin-bottom:10px}
+.los ol{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:8px}
+.los li{color:var(--paper);font-size:16.5px;line-height:1.45}
+.tpl-flag{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--qty);border:1px solid var(--line);border-radius:100px;
+  padding:6px 12px;display:inline-block;margin-bottom:18px}
+.figure{background:var(--ink-2);border:1px solid var(--line);border-radius:16px;
+  padding:clamp(20px,3vw,34px);box-shadow:var(--shadow);margin:34px 0}
+.figcap{font-family:"IBM Plex Mono",monospace;font-size:12.5px;color:var(--paper-3);
+  letter-spacing:.06em;margin-top:14px;display:flex;gap:10px}
+.figcap b{color:var(--paper-2);font-weight:500}
+.callout{border-left:3px solid var(--qty);background:linear-gradient(90deg,rgba(255,158,61,.07),transparent 80%);
+  padding:18px 22px;border-radius:0 12px 12px 0;margin:30px 0;font-size:18px}
+.callout .lbl{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--qty);display:block;margin-bottom:6px}
+.prose{max-width:66ch}
+.prose p{margin:0 0 20px}
+.btn{font-family:"IBM Plex Mono",monospace;font-size:14px;letter-spacing:.04em;
+  background:var(--ink-3);color:var(--paper);border:1px solid var(--line);
+  padding:12px 18px;border-radius:10px;cursor:pointer;transition:.15s;user-select:none}
+.btn:hover{border-color:var(--qty);color:#fff}
+.btn:focus-visible{outline:2px solid var(--I);outline-offset:2px}
+.btn.active{background:var(--qty);color:#111;border-color:var(--qty);font-weight:600}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+:focus-visible{outline:2px solid var(--I);outline-offset:2px}
+.skip{
+  position:absolute;left:12px;top:8px;z-index:60;padding:8px 12px;
+  background:var(--qty);color:#111;font-family:"IBM Plex Mono",monospace;
+  font-size:13px;text-decoration:none;transform:translateY(-160%)}
+.skip:focus{transform:none}
+.ldock{
+  position:sticky;top:0;z-index:50;
+  background:rgba(10,11,13,.94);
+  backdrop-filter:saturate(1.2) blur(12px);
+  border-bottom:1px solid var(--line)}
+.ldock.playing{box-shadow:inset 0 2px 0 var(--qty)}
+.ldock-inner{
+  max-width:var(--maxw);margin:0 auto;
+  padding:7px clamp(16px,4vw,48px) 8px;
+  display:grid;grid-template-columns:auto minmax(0,1fr) auto;
+  grid-template-areas:"id here aud";
+  gap:8px 22px;align-items:center}
+.ldock-id{grid-area:id;display:flex;flex-direction:column;min-width:0;line-height:1.15}
+.ldock-num{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--qty);font-weight:500}
+.ldock-title{font-family:"Space Grotesk",sans-serif;font-weight:600;font-size:17px;
+  color:var(--paper);letter-spacing:-.02em}
+.ldock-course{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--paper-3);
+  letter-spacing:.04em;margin-top:2px}
+.ldock-here{grid-area:here;min-width:0}
+.ldock-now{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.14em;
+  text-transform:uppercase;color:#2a303a;display:block;margin-bottom:6px}
+.ldock-now b{font-weight:600}
+.ldock-now.is-open,.ldock-now.is-open b{color:var(--R)}
+.ldock-now.is-done,.ldock-now.is-done b{color:var(--ok)}
+.ldock-beats{display:flex;gap:4px;align-items:center}
+.ld-beat{
+  flex:1;min-width:0;height:44px;padding:0;border:0;background:transparent;cursor:pointer;
+  display:flex;align-items:center}
+.ld-beat i{display:block;width:100%;height:5px;background:#2a303a;border-radius:1px;
+  pointer-events:none;transition:background .15s ease,height .15s ease}
+.ld-beat.open i{background:var(--R);height:6px}
+.ld-beat.open:hover i,.ld-beat.open:focus-visible i{background:var(--R)}
+.ld-beat[aria-current="location"]:not(.done):not(.locked) i{background:var(--R);height:6px}
+.ld-beat.done i{background:var(--ok);height:5px}
+.ld-beat.done:hover i,.ld-beat.done:focus-visible i{background:var(--ok)}
+.ld-beat.locked{cursor:not-allowed;opacity:.55}
+.ld-beat.locked i,.ld-beat.locked:hover i,.ld-beat.locked:focus-visible i{background:#2a303a;height:5px}
+.gatebar{margin-top:32px}
+.gatenote{margin:0 0 12px;font-size:16.5px;line-height:1.45;color:var(--paper);max-width:62ch}
+.gatenote.is-ready{color:var(--ok)}
+.gate-next{
+  min-height:44px;cursor:pointer;border:0;border-radius:10px;
+  background:var(--I);color:#04222b;font-weight:600;
+  font-family:"IBM Plex Mono",monospace;font-size:14px;padding:14px 24px}
+.gate-next:focus-visible{outline:2.5px solid var(--R);outline-offset:3px}
+.gate-next:disabled{opacity:.4;cursor:not-allowed}
+.ldock-hint{display:block;font-family:"IBM Plex Mono",monospace;font-size:11px;
+  letter-spacing:.04em;color:var(--R);margin-top:6px;line-height:1.35}
+.ldock-hint.is-ready{color:var(--ok)}
+.ldock-hint.is-flash{animation:gateflash .55s ease 0s 2}
+@keyframes gateflash{0%,100%{opacity:1}50%{opacity:.35}}
+[data-beat].is-locked{display:none}
+.ldock-aud{grid-area:aud;display:flex;align-items:center;gap:10px;min-width:0}
+.ldock-play{
+  width:44px;height:44px;border-radius:50%;border:0;cursor:pointer;flex:none;
+  background:var(--qty);color:#111;display:grid;place-items:center}
+.ldock-play:hover{filter:brightness(1.08)}
+.ldock-play:disabled{opacity:.4;cursor:not-allowed;filter:none}
+.ldock-time{display:flex;flex-direction:column;gap:4px;min-width:148px}
+.ldock-time .row{display:flex;justify-content:space-between;font-family:"IBM Plex Mono",monospace;
+  font-size:11px;color:var(--paper-3);letter-spacing:.04em}
+.ldock-time input[type=range]{
+  -webkit-appearance:none;appearance:none;width:100%;height:4px;border-radius:2px;
+  background:var(--line);outline:none;cursor:pointer;margin:0}
+.ldock-time input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none;width:12px;height:12px;border-radius:50%;background:var(--qty);border:0}
+.ldock-time input[type=range]::-moz-range-thumb{
+  width:12px;height:12px;border-radius:50%;background:var(--qty);border:0}
+.ldock-time input[type=range]::-moz-range-track{
+  height:4px;background:var(--line);border:0;border-radius:2px}
+.ldock audio{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
+@media(max-width:720px){
+  .ldock-inner{
+    grid-template-columns:minmax(0,1fr) auto;
+    grid-template-areas:"id aud" "here here";
+    padding:8px 16px 10px}
+  .ldock-course{display:none}
+  .ldock-time{min-width:0;width:118px}
+}
+@media (prefers-reduced-motion:reduce){
+  .ld-beat i{transition:none}
+  .ldock-hint.is-flash{animation:none}
+  .ldock{backdrop-filter:none;background:var(--ink)}
+}
+.defrow{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:22px}
+@media(max-width:760px){.defrow{grid-template-columns:1fr}}
+.def{background:var(--ink-2);border:1px solid var(--line);border-radius:14px;padding:16px 18px}
+.def .d{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--paper-3)}
+.def .w{font-family:"Space Grotesk",sans-serif;font-size:28px;font-weight:600;color:var(--paper);margin:6px 0 2px}
+.def .u{font-size:14px;color:var(--paper-3)}
+.sumgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:28px}
+@media(max-width:820px){.sumgrid{grid-template-columns:1fr 1fr}}
+@media(max-width:460px){.sumgrid{grid-template-columns:1fr}}
+.sumcard{background:var(--ink-2);border:1px solid var(--line);border-radius:14px;padding:20px}
+.sumcard .n{font-family:"IBM Plex Mono";font-size:12px;color:var(--qty)}
+.sumcard h4{font-family:"Space Grotesk";font-size:16px;margin:8px 0 6px;color:var(--paper)}
+.sumcard p{font-size:14px;margin:0;color:var(--paper-3);line-height:1.5}
+.decide{display:flex;flex-direction:column;gap:8px;margin-top:24px;max-width:62ch}
+.decide .btn{text-align:left;min-height:52px;width:100%}
+.decide .btn.is-pick{border-color:var(--qty);color:#fff}
+.pokefb{margin-top:18px;display:none}
+.pokefb.on{display:block}
+.kc{position:relative;background:var(--ink-2);border:1px solid var(--line);border-radius:20px;
+  box-shadow:var(--shadow);overflow:hidden;margin-top:30px}
+.kc::before{content:"";position:absolute;top:0;bottom:0;left:0;width:6px;
+  background:linear-gradient(var(--qty),#c56a18);pointer-events:none}
+.kc-bezel{padding:16px 22px 14px 28px;border-bottom:1px solid var(--line);background:#0d0f14}
+.kc-bezel-row{display:flex;align-items:center;justify-content:space-between;gap:16px;
+  font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--paper-3)}
+.kc-tag{display:flex;align-items:center;gap:10px;min-width:0;color:var(--paper-2)}
+.kc-dot{width:9px;height:9px;border:1.5px solid var(--qty);border-radius:50%;flex:none;position:relative}
+.kc-dot::after{content:"";position:absolute;inset:2px;border-radius:50%;background:var(--qty)}
+.kc-count{color:var(--paper);font-weight:600;letter-spacing:.08em;border:1px solid var(--line);
+  padding:3px 10px;background:var(--ink-3);white-space:nowrap}
+.kc-count b{color:var(--qty);font-weight:700}
+.kc-rail{display:flex;gap:5px;margin-top:10px}
+.kc-seg{flex:1;height:6px;background:#2a303a;position:relative;overflow:hidden;border-radius:1px}
+.kc-seg i{position:absolute;inset:0;background:var(--ok);transform:scaleX(0);transform-origin:left;transition:transform .45s ease}
+.kc-seg.done i{transform:scaleX(1)}
+.kc-seg.done.miss i{background:var(--bad)}
+.kc-seg.current i{transform:scaleX(1);background:var(--qty)}
+.kc-stage{padding:clamp(20px,3vw,32px) clamp(20px,3vw,32px) clamp(20px,3vw,32px) 28px}
+.kc-screen{display:none;flex-direction:column;gap:16px}
+.kc-screen.on{display:flex}
+.kc-eyebrow{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.26em;text-transform:uppercase;
+  color:var(--qty);font-weight:600;display:flex;align-items:center;gap:12px}
+.kc-eyebrow::after{content:"";flex:1;height:1px;background:var(--line);max-width:160px}
+.kc-cover-h{font-family:"Space Grotesk",sans-serif;font-size:clamp(22px,2.6vw,28px);font-weight:600;line-height:1.15;
+  letter-spacing:-.02em;margin:0;color:var(--paper);max-width:28ch}
+.kc-cover-los{margin:4px 0 8px;padding:0;list-style:none;display:flex;flex-direction:column;gap:12px;max-width:58ch}
+.kc-cover-los li{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:start;
+  color:var(--paper);font-size:17px;line-height:1.45}
+.kc-cover-los .n{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.12em;
+  color:var(--qty);padding-top:5px}
+.kc-stem{font-family:"Space Grotesk",sans-serif;font-size:clamp(20px,2.5vw,28px);font-weight:600;
+  color:var(--paper);line-height:1.25;margin:0;letter-spacing:-.01em;max-width:50ch}
+.kc-note{font-size:15px;color:var(--paper-3);margin:0;max-width:66ch}
+.kc-opts{display:flex;flex-direction:column;gap:8px}
+.kc-opt{display:grid;grid-template-columns:auto 1fr;align-items:center;gap:15px;text-align:left;width:100%;
+  cursor:pointer;position:relative;background:var(--ink);border:1.5px solid var(--line);border-radius:0;
+  padding:12px 16px;min-height:52px;font-size:17px;line-height:1.35;color:var(--paper);font-family:inherit}
+.kc-opt:hover:not(:disabled){border-color:var(--qty);box-shadow:-3px 0 0 var(--qty)}
+.kc-opt .key{font-family:"IBM Plex Mono",monospace;font-weight:700;width:32px;height:32px;display:grid;place-items:center;
+  flex:none;font-size:15px;border:1.5px solid var(--line);color:var(--paper-3);background:var(--ink-3)}
+.kc-opt:disabled{cursor:default}
+.kc-opt.is-key{border-color:var(--ok);background:rgba(93,219,154,.12);box-shadow:-3px 0 0 var(--ok)}
+.kc-opt.is-key .key{border-color:var(--ok);background:var(--ok);color:#111}
+.kc-opt.is-miss{border-color:var(--bad);background:rgba(255,107,107,.12);box-shadow:-3px 0 0 var(--bad)}
+.kc-opt.is-miss .key{border-color:var(--bad);background:var(--bad);color:#111}
+.kc-opt.dim{opacity:.46}
+.kc-fb{display:none;background:var(--ink);border:1.5px solid var(--line);border-left:4px solid var(--ok);margin-top:2px}
+.kc-fb.show{display:block}
+.kc-fb.miss{border-left-color:var(--bad)}
+.kc-verdict{display:flex;align-items:center;gap:10px;font-family:"IBM Plex Mono",monospace;font-weight:700;
+  font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:#111;background:var(--ok);padding:8px 16px}
+.kc-fb.miss .kc-verdict{background:var(--bad);color:#111}
+.kc-fb-body{padding:12px 16px 14px}
+.kc-fb-body p{margin:0;font-size:16.5px;line-height:1.5;color:var(--paper)}
+.kc-fb-body .ans{margin-top:10px;font-family:"IBM Plex Mono",monospace;font-size:14px;color:var(--ok);line-height:1.45}
+.kc-qfoot{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding-top:8px}
+.kc-qfoot.hide{display:none}
+.kc-hint{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--paper-3)}
+.kc-nav{display:flex;gap:10px;flex-wrap:wrap}
+.kc-nav .btn.retry{border-color:var(--bad);color:var(--bad)}
+.kc-debrief-head{display:flex;align-items:center;gap:28px;flex-wrap:wrap}
+.kc-gauge-wrap{position:relative;flex:none;display:grid;place-items:center}
+.kc-gauge{width:120px;aspect-ratio:1;display:block}
+.kc-gauge .track{stroke:var(--line);fill:none;stroke-width:10}
+.kc-gauge .arc{stroke:var(--qty);fill:none;stroke-width:10}
+.kc-gauge-face{position:absolute;inset:0;display:grid;place-items:center;text-align:center;line-height:1}
+.kc-gauge-face .gn{font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:36px;color:var(--paper)}
+.kc-gauge-face .gn small{font-size:.45em;color:var(--paper-3);font-weight:500}
+.kc-score-meta{display:flex;flex-direction:column;gap:6px}
+.kc-score-meta .band{font-family:"Space Grotesk",sans-serif;font-size:clamp(26px,4vw,40px);font-weight:600;line-height:1;color:var(--paper)}
+.kc-score-meta .pct{font-family:"IBM Plex Mono",monospace;color:var(--qty);font-weight:600;font-size:14px}
+.kc-review{display:flex;flex-direction:column;border-top:1px solid var(--line)}
+.kc-rev-row{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:12px;width:100%;
+  text-align:left;cursor:pointer;background:transparent;border:0;border-bottom:1px solid var(--line);
+  padding:10px 2px;font-family:inherit;color:var(--paper)}
+.kc-rev-row .mark{font-family:"IBM Plex Mono",monospace;font-weight:700;width:24px;height:24px;display:grid;place-items:center;color:#111}
+.kc-rev-row .mark.ok{background:var(--ok)}
+.kc-rev-row .mark.no{background:var(--bad)}
+.kc-rev-row .q{font-size:15.5px;line-height:1.3;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kc-rev-fb{padding:10px 12px 14px 44px;font-size:15.5px;line-height:1.5;color:var(--paper-2);background:var(--ink);
+  border-bottom:1px solid var(--line)}
+.kc-synth{background:var(--qty);color:#111;padding:16px 22px}
+.kc-synth .lab{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;
+  display:flex;align-items:center;gap:10px;font-weight:700;color:#111}
+.kc-synth p,.kc-synth li{font-size:16px;line-height:1.45;margin:0;color:#111;font-weight:600}
+.kc-synth-los{margin:10px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px}
+.kc-synth-los li{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:start}
+.kc-synth-los .n{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.12em;padding-top:3px;color:#111}
+.kc-dfoot{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.kc-dfoot .note{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--paper-3);letter-spacing:.04em;text-transform:uppercase}
+.fsum{margin-top:28px;background:var(--ink-2);border:1px solid var(--line);border-radius:20px;
+  box-shadow:var(--shadow);overflow:hidden;position:relative}
+.fsum::before{content:"";position:absolute;top:0;bottom:0;left:0;width:6px;background:linear-gradient(var(--qty),#c56a18)}
+.fsum-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:0}
+@media(max-width:820px){.fsum-grid{grid-template-columns:1fr}}
+.fsum-card{padding:24px 22px 22px 28px;border-right:1px solid var(--line)}
+@media(max-width:820px){.fsum-card{border-right:none;border-bottom:1px solid var(--line)}}
+.fsum-card:last-child{border-right:none}
+.fsum-card .n{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.16em;color:var(--qty)}
+.fsum-card h3{font-family:"Space Grotesk",sans-serif;font-size:13px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--paper-3);font-weight:600;margin:8px 0 6px}
+.fsum-card .big{font-family:"Space Grotesk",sans-serif;font-size:28px;font-weight:600;color:var(--paper);margin:0 0 14px;line-height:1.1}
+.fsum-card .plate{display:flex;flex-direction:column;gap:7px;font-family:"IBM Plex Mono",monospace;font-size:12.5px}
+.fsum-card .pr{display:flex;align-items:baseline;gap:8px;color:var(--paper-3);text-transform:uppercase;letter-spacing:.03em}
+.fsum-card .pr .lead{flex:1;border-bottom:1.5px dotted var(--line);transform:translateY(-3px);min-width:10px}
+.fsum-card .pr .v{color:var(--paper);font-weight:600;text-transform:none;letter-spacing:0;white-space:nowrap}
+.fsum-synth{background:var(--qty);color:#111;padding:18px 22px 18px 28px}
+.fsum-synth .lab{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;
+  font-weight:700;display:flex;align-items:center;gap:10px}
+.fsum-synth p{margin:6px 0 0;font-size:17px;line-height:1.4;font-weight:600;max-width:70ch;color:#111}
+.nextbar{margin-top:40px;display:flex;justify-content:space-between;align-items:center;
+  flex-wrap:wrap;gap:16px;padding-top:30px;border-top:1px solid var(--line)}
+.nextbar .lbl{font-family:"IBM Plex Mono";font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--paper-3)}
+.nextbar .nx{font-family:"Space Grotesk";font-size:22px;font-weight:600;color:var(--paper)}
+.nextbar .go{background:var(--I);color:#04222b;font-weight:600;border:none;padding:14px 24px;
+  border-radius:10px;font-family:"IBM Plex Mono";cursor:pointer;font-size:14px}
+.nextbar .go:disabled{opacity:.4;cursor:not-allowed}
+.nextbar .actions{display:flex;flex-wrap:wrap;gap:10px}
+.src{margin-top:40px;font-family:"IBM Plex Mono";font-size:12px;color:var(--paper-3);line-height:1.7}
+.footer{padding:50px 0 70px;border-top:1px solid var(--line);text-align:center}
+</style>
+</head>
+<body>
+<a class="skip" href="#why">Skip to lesson</a>
+<nav class="ldock" id="ldock" data-course="SWAP_COURSE" data-num="SWAP_NUM" data-title="SWAP_TITLE" aria-label="Lesson position and audio">
+  <div class="ldock-inner">
+    <div class="ldock-id">
+      <span class="ldock-num" id="ldNum">SWAP_NUM</span>
+      <span class="ldock-title" id="ldTitle">SWAP_TITLE</span>
+      <span class="ldock-course" id="ldCourse">SWAP_COURSE</span>
+    </div>
+    <div class="ldock-here">
+      <span class="ldock-now is-open" id="ldNow">01 / 05  Start</span>
+      <div class="ldock-beats" id="ldBeats" role="list"></div>
+      <span class="ldock-hint" id="ldHint" aria-live="polite">Press Begin to start.</span>
+    </div>
+    <div class="ldock-aud" role="group" aria-label="Lesson audio">
+      <button type="button" class="ldock-play" id="ldPlay" aria-pressed="false" aria-label="Play narration"></button>
+      <div class="ldock-time">
+        <div class="row"><span id="ldT0">0:00</span><span id="ldT1">0:00</span></div>
+        <input type="range" id="ldSeek" min="0" max="0" value="0" step="0.1" aria-label="Audio position">
+      </div>
+    </div>
+  </div>
+  <audio id="lessonAudio" preload="none"></audio>
+</nav>
+
+<header class="hero" id="hero" data-beat="Start">
+  <div class="wrap">
+    <span class="tpl-flag">Template : spine + a recipe, not a DC clone</span>
+    <div class="course-tag">SWAP_COURSE &nbsp;/&nbsp; <b>Lesson SWAP_NUM</b></div>
+    <h1>Chas<span class="u">sis</span></h1>
+    <p class="hero-sub">SWAP_GOAL. One-line goal from the daily plan. Not a symbol/unit row unless this day is a quantity.</p>
+    <div class="los">
+      <div class="k">When you are done you can</div>
+      <ol>
+        <li>SWAP_LO1</li>
+        <li>SWAP_LO2</li>
+      </ol>
+    </div>
+    <div class="gatebar"><button type="button" class="gate-next" data-clear="hero">Begin</button></div>
+  </div>
+</header>
+
+<section class="section" id="why" data-beat="Why">
+  <div class="wrap">
+    <div class="kicker">Why it matters (optional)</div>
+    <h2>One floor reason</h2>
+    <p class="lede" style="margin-top:16px">Read beat. Drop this whole section if the poke already is the reason. Do not invent accident specifics. Nick signs numbers.</p>
+    <div class="figure" style="margin-top:26px">
+      <p class="prose" style="margin:0">Swap this plate. Keep the gatebar. SDS, HF, and CNS each get a different figure, not a resistor strap.</p>
+      <div class="figcap"><b>FIG 1</b> Placeholder for this day's picture.</div>
+    </div>
+    <div class="gatebar">
+      <p class="gatenote" id="gateNote-why">Read this, then Continue.</p>
+      <button type="button" class="gate-next" data-clear="why">Continue</button>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="poke" data-beat="Call">
+  <div class="wrap">
+    <div class="kicker">The poke · recipe: decide</div>
+    <h2>Make the call</h2>
+    <p class="lede" style="margin-top:16px">Lab beat. This stand-in is the <b>decide</b> recipe (Dirty Dozen, what to say next, classify the job). Replace the whole block with lookup, sequence, compare, bench, meter, scope, or trace when that is the day's job. See beat-recipes.md. One poke.</p>
+    <p class="lede" style="margin-top:22px">Written turnover was skipped. The next shift finds work left open. Which human factor is in play?</p>
+    <div class="decide" id="pokeOpts" role="group" aria-label="Choose the factor">
+      <button type="button" class="btn" data-i="0">Lack of communication</button>
+      <button type="button" class="btn" data-i="1">Fatigue</button>
+      <button type="button" class="btn" data-i="2">Norms</button>
+    </div>
+    <div class="callout pokefb" id="pokeFb" aria-live="polite"><span class="lbl">Teaching</span> <span id="pokeFbText"></span></div>
+    <div class="callout"><span class="lbl">Ready rule</span> Call <span class="mono">__inkGate.ready("poke")</span> on the real action. Do not enable Continue from scroll.</div>
+    <div class="gatebar">
+      <p class="gatenote" id="gateNote-poke">Pick a call. Teaching shows on the choice.</p>
+      <button type="button" class="gate-next" data-clear="poke" data-need="1" disabled>Continue</button>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="check" data-beat="Check">
+  <div class="wrap">
+    <div class="kicker">Knowledge check</div>
+    <h2>Check yourself</h2>
+    <p class="lede" style="margin-top:12px">Steal this state machine. Swap ITEMS from PRACTICE-QUESTION-BANK.md. Template pass is 2 of 2 so you can feel the fail note.</p>
+    <div class="kc" id="kc" role="group" aria-label="Knowledge check">
+      <div class="kc-bezel" id="kcBezel" hidden>
+        <div class="kc-bezel-row">
+          <span class="kc-tag"><span class="kc-dot" aria-hidden="true"></span> Checkpoint // SWAP_TITLE</span>
+          <span class="kc-count" id="kcQtag">Q <b>01</b> / 02</span>
+        </div>
+        <div class="kc-rail" id="kcRail" aria-hidden="true"></div>
+      </div>
+      <div class="kc-stage" id="kcStage">
+        <div class="kc-screen on" id="kcCover" aria-label="Before you begin">
+          <span class="kc-eyebrow">Knowledge check</span>
+          <h3 class="kc-cover-h">When you are done you can</h3>
+          <ol class="kc-cover-los">
+            <li><span class="n">01</span><span>SWAP_LO1</span></li>
+            <li><span class="n">02</span><span>SWAP_LO2</span></li>
+          </ol>
+          <button class="btn active" type="button" id="kcBegin">Begin</button>
+        </div>
+        <div class="kc-screen" id="kcQuestion" aria-label="Question" aria-live="polite">
+          <p class="kc-note" id="kcNote"></p>
+          <h3 class="kc-stem" id="kcStem"></h3>
+          <div class="kc-opts" id="kcOpts" role="group" aria-label="Answer options"></div>
+          <div class="kc-fb" id="kcFb">
+            <div class="kc-verdict" id="kcVerdict"></div>
+            <div class="kc-fb-body">
+              <p id="kcFbText"></p>
+              <p class="ans" id="kcFbAns"></p>
+            </div>
+          </div>
+          <div class="kc-qfoot hide" id="kcQfoot">
+            <span class="kc-hint" id="kcHint"></span>
+            <div class="kc-nav" id="kcNav"></div>
+          </div>
+        </div>
+        <div class="kc-screen" id="kcEnd" aria-label="Your results">
+          <div class="kc-debrief-head">
+            <div class="kc-gauge-wrap">
+              <svg class="kc-gauge" viewBox="0 0 100 100" aria-hidden="true">
+                <circle class="track" cx="50" cy="50" r="42"></circle>
+                <circle class="arc" id="kcArc" cx="50" cy="50" r="42" stroke-linecap="butt" stroke-dasharray="0 264" transform="rotate(-90 50 50)"></circle>
+              </svg>
+              <div class="kc-gauge-face">
+                <span class="gn"><span id="kcScoreN">0</span><small>/<span id="kcScoreD">2</span></small></span>
+              </div>
+            </div>
+            <div class="kc-score-meta">
+              <span class="kicker">Debrief</span>
+              <span class="band" id="kcBand">Debrief</span>
+              <span class="pct" id="kcPct">0 percent correct</span>
+            </div>
+          </div>
+          <div class="kc-review" id="kcReview"></div>
+          <div class="kc-synth">
+            <span class="lab">From this lesson</span>
+            <ol class="kc-synth-los">
+              <li><span class="n">01</span><span>SWAP_LO1 keep-line</span></li>
+              <li><span class="n">02</span><span>SWAP_LO2 keep-line</span></li>
+            </ol>
+          </div>
+          <div class="kc-dfoot">
+            <button class="btn" type="button" id="kcAgain">Run it again</button>
+            <span class="note">Tap any row to re-read its feedback.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="gatebar">
+      <p class="gatenote" id="gateNote-check">Begin the check. You need 2 of 2 to continue.</p>
+      <button type="button" class="gate-next" data-clear="check" data-need="1" disabled>Continue</button>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="wrap-up" data-beat="Field card">
+  <div class="wrap">
+    <div class="kicker">Conclusion</div>
+    <h2>Field card</h2>
+    <div class="fsum">
+      <div class="fsum-grid">
+        <article class="fsum-card">
+          <div class="n">01</div>
+          <h3>SWAP_LO1 short name</h3>
+          <p class="big">Keep line</p>
+          <div class="plate">
+            <div class="pr"><span>On the floor</span><span class="lead"></span><span class="v">one line</span></div>
+          </div>
+        </article>
+        <article class="fsum-card">
+          <div class="n">02</div>
+          <h3>SWAP_LO2 short name</h3>
+          <p class="big">Keep line</p>
+          <div class="plate">
+            <div class="pr"><span>On the floor</span><span class="lead"></span><span class="v">one line</span></div>
+          </div>
+        </article>
+      </div>
+      <div class="fsum-synth">
+        <span class="lab">This day</span>
+        <p>One synth strip. The goal in one sentence.</p>
+      </div>
+    </div>
+    <div class="nextbar">
+      <div>
+        <div class="lbl">Closeout</div>
+        <div class="nx" id="lmsHint">Do the poke. Then pass the checkpoint (2 of 2).</div>
+      </div>
+      <div class="actions">
+        <button class="go" type="button" id="markComplete" disabled>Mark lesson complete</button>
+      </div>
+    </div>
+    <div class="src">SOURCE : Swap this line. Book and LOs. No invented accident facts.</div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="course-tag" style="justify-content:center">SWAP_COURSE</div>
+  </div>
+</footer>
+
+<script src="../../../AERO-Player/core/lesson-runtime.js"></script>
+<script>
+"use strict";
+(function(){
+  document.documentElement.classList.add("js");
+  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var work={ lab:false, check:false, checkN:0 };
+  var PASS_N=2;
+  function paintCompleteGate(){
+    var mark=document.getElementById("markComplete");
+    var nx=document.getElementById("lmsHint");
+    var passed=work.check && work.checkN>=PASS_N;
+    if(mark) mark.disabled=!(work.lab && passed);
+    if(!nx) return;
+    var miss=[];
+    if(!work.lab) miss.push("the poke");
+    if(!work.check) miss.push("checkpoint");
+    else if(work.checkN<PASS_N) miss.push("2 of 2 on the checkpoint");
+    nx.textContent = (work.lab && passed) ? "Work and score posted. Mark complete." : ("Still need: "+miss.join(", ")+".");
+    var checkNote=document.getElementById("gateNote-check");
+    if(checkNote && !passed && work.check){
+      checkNote.textContent="You need 2 of 2. Run it again.";
+      checkNote.classList.remove("is-ready");
+    }
+    if(passed && window.__inkGate) window.__inkGate.ready("check");
+  }
+
+  (function pokeDecide(){
+    var root=document.getElementById("pokeOpts");
+    if(!root) return;
+    var fb=document.getElementById("pokeFb");
+    var txt=document.getElementById("pokeFbText");
+    var lines=[
+      "Turnover is communication. If it is not written, the next shift does not have it.",
+      "Fatigue is hours and sleep. This miss is a missing handoff, not a tired tech.",
+      "Norms are unwritten shop habits. Skipping turnover is a communication break, even if the shop does it often."
+    ];
+    root.addEventListener("click", function(e){
+      var b=e.target.closest("[data-i]"); if(!b) return;
+      var i=+b.getAttribute("data-i");
+      [].forEach.call(root.querySelectorAll("[data-i]"), function(x){
+        x.classList.toggle("is-pick", x===b);
+        x.disabled=true;
+      });
+      if(txt) txt.textContent=lines[i]||"";
+      if(fb) fb.classList.add("on");
+      work.lab=true;
+      if(window.__inkGate) window.__inkGate.ready("poke");
+      if(window.AeroLesson){
+        window.AeroLesson.interaction({ id:"poke-decide", kind:"answer", response:String(i), correct:i===0 });
+        window.AeroLesson.saveState(work);
+      }
+      paintCompleteGate();
+    });
+  })();
+
+  (function lessonDock(){
+    var dock=document.getElementById("ldock");
+    if(!dock) return;
+    var num=dock.getAttribute("data-num")||"";
+    var title=dock.getAttribute("data-title")||"";
+    var course=dock.getAttribute("data-course")||"";
+    document.getElementById("ldNum").textContent=num;
+    document.getElementById("ldTitle").textContent=title;
+    document.getElementById("ldCourse").textContent=course;
+    var beats=[].map.call(document.querySelectorAll("[data-beat]"), function(el){
+      return {id:el.id, label:el.getAttribute("data-beat"), el:el};
+    }).filter(function(b){ return b.id && b.label; });
+    var rail=document.getElementById("ldBeats");
+    var nowEl=document.getElementById("ldNow");
+    var play=document.getElementById("ldPlay");
+    var seek=document.getElementById("ldSeek");
+    var t0=document.getElementById("ldT0");
+    var t1=document.getElementById("ldT1");
+    var audio=document.getElementById("lessonAudio");
+    var ICON_PLAY='<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>';
+    var ICON_PAUSE='<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="5" width="4" height="14"/><rect x="14" y="5" width="4" height="14"/></svg>';
+    var seeking=false;
+    var idx=-1;
+    var beatCleared={};
+    var beatReady={};
+    var hintEl=document.getElementById("ldHint");
+    var HINTS={
+      hero:"Press Begin to start.",
+      why:"Read this, then Continue.",
+      poke:"Pick a call. Teaching shows on the choice.",
+      check:"Begin the check. You need 2 of 2 to continue.",
+      "wrap-up":"Mark the lesson complete."
+    };
+    function pad2(n){ return (n<10?"0":"")+n; }
+    function fmtTime(s){
+      if(!isFinite(s) || s<0) return "0:00";
+      s=Math.floor(s);
+      return Math.floor(s/60)+":"+pad2(s%60);
+    }
+    function furthestOpen(){
+      for(var i=0;i<beats.length;i++) if(!beatCleared[beats[i].id]) return i;
+      return beats.length-1;
+    }
+    function setBeat(i, force){
+      if(i<0 || i>=beats.length) return;
+      if(i===idx && !force) return;
+      idx=i;
+      nowEl.textContent="";
+      nowEl.appendChild(document.createTextNode(pad2(i+1)+" / "+pad2(beats.length)+"  "));
+      var b=document.createElement("b");
+      b.textContent=beats[i].label;
+      nowEl.appendChild(b);
+      paintBeats();
+    }
+    function paintHint(){
+      if(!hintEl) return;
+      var open=furthestOpen();
+      var id=beats[open] && beats[open].id;
+      var ready=!!(id && beatReady[id] && !beatCleared[id]);
+      var line=ready?"Done. Continue.":(HINTS[id]||"");
+      hintEl.textContent=line;
+      hintEl.classList.toggle("is-ready", ready);
+      hintEl.hidden=!line;
+    }
+    function paintBeats(){
+      var open=furthestOpen();
+      var hereDone=idx>=0 && !!beatCleared[beats[idx].id];
+      nowEl.classList.toggle("is-done", hereDone);
+      nowEl.classList.toggle("is-open", !hereDone);
+      [].forEach.call(rail.children, function(btn,n){
+        var done=!!beatCleared[beats[n].id];
+        var locked=n>open;
+        btn.classList.toggle("done", done);
+        btn.classList.toggle("locked", locked);
+        btn.classList.toggle("open", !done && !locked);
+        btn.setAttribute("aria-disabled", locked?"true":"false");
+        btn.tabIndex=locked?-1:0;
+        if(n===idx) btn.setAttribute("aria-current","location");
+        else btn.removeAttribute("aria-current");
+      });
+      beats.forEach(function(b){
+        b.el.classList.toggle("is-locked", beats.indexOf(b)>open);
+        var note=document.getElementById("gateNote-"+b.id);
+        if(note){
+          if(b.id==="check" && work.check && work.checkN<PASS_N && !beatCleared[b.id]){
+            note.textContent="You need 2 of 2. Run it again.";
+            note.classList.remove("is-ready");
+          } else if(beatReady[b.id] && !beatCleared[b.id]){
+            note.textContent="Done. Continue.";
+            note.classList.add("is-ready");
+          } else if(!beatCleared[b.id]){
+            note.textContent=HINTS[b.id]||note.textContent;
+            note.classList.remove("is-ready");
+          }
+        }
+      });
+      [].forEach.call(document.querySelectorAll("[data-clear]"), function(btn){
+        var id=btn.getAttribute("data-clear");
+        var bar=btn.closest(".gatebar");
+        if(bar) bar.hidden=!!beatCleared[id];
+        if(btn.hasAttribute("data-need")){
+          btn.disabled=!(beatReady[id] || beatCleared[id]);
+        }
+      });
+      paintHint();
+    }
+    function persistBeats(){
+      work.cleared=beatCleared;
+      work.ready=beatReady;
+      if(window.AeroLesson) window.AeroLesson.saveState(work);
+    }
+    function readyBeat(id){
+      if(beatCleared[id] || beatReady[id]) return;
+      beatReady[id]=true;
+      persistBeats();
+      paintBeats();
+      var btn=document.querySelector('[data-clear="'+id+'"]');
+      if(btn) btn.scrollIntoView({behavior: reduce?"auto":"smooth", block:"nearest"});
+    }
+    function clearBeat(id, opts){
+      opts=opts||{};
+      if(beatCleared[id]){ paintBeats(); return; }
+      var at=-1;
+      for(var i=0;i<beats.length;i++) if(beats[i].id===id) at=i;
+      if(at<0) return;
+      beatCleared[id]=true;
+      beatReady[id]=true;
+      persistBeats();
+      var next=at+1<beats.length?at+1:at;
+      setBeat(next, true);
+      if(!opts.silent && beats[next] && next!==at){
+        beats[next].el.scrollIntoView({behavior: reduce?"auto":"smooth", block:"start"});
+      }
+    }
+    function restoreBeats(s){
+      if(!s) return;
+      if(s.cleared){
+        for(var k in s.cleared) if(s.cleared[k]) beatCleared[k]=true;
+      }
+      if(s.ready){
+        for(var rk in s.ready) if(s.ready[rk]) beatReady[rk]=true;
+      }
+      if(s.lab) beatReady.poke=true;
+      if(s.check && s.checkN>=PASS_N) beatReady.check=true;
+      setBeat(furthestOpen(), true);
+    }
+    beats.forEach(function(b,i){
+      var btn=document.createElement("button");
+      btn.type="button";
+      btn.className="ld-beat";
+      btn.setAttribute("role","listitem");
+      btn.setAttribute("aria-label", b.label);
+      btn.title=b.label;
+      var tick=document.createElement("i");
+      btn.appendChild(tick);
+      btn.addEventListener("click", function(){
+        if(i>furthestOpen()){
+          if(hintEl){
+            hintEl.classList.remove("is-flash");
+            void hintEl.offsetWidth;
+            hintEl.classList.add("is-flash");
+          }
+          var stay=beats[furthestOpen()];
+          if(stay) stay.el.scrollIntoView({behavior: reduce?"auto":"smooth", block:"start"});
+          return;
+        }
+        b.el.scrollIntoView({behavior: reduce?"auto":"smooth", block:"start"});
+        setBeat(i);
+      });
+      rail.appendChild(btn);
+    });
+    document.addEventListener("click", function(e){
+      var btn=e.target.closest("[data-clear]");
+      if(!btn || btn.disabled) return;
+      clearBeat(btn.getAttribute("data-clear"));
+    });
+    window.__inkGate={
+      clear:clearBeat,
+      ready:readyBeat,
+      restore:restoreBeats,
+      paint:paintBeats
+    };
+    setBeat(0, true);
+    var ticking=false;
+    function spy(){
+      var pick=0, line=88, open=furthestOpen();
+      for(var n=0;n<=open;n++){
+        if(beats[n].el.getBoundingClientRect().top<=line) pick=n;
+      }
+      setBeat(pick);
+    }
+    window.addEventListener("scroll", function(){
+      if(ticking) return;
+      ticking=true;
+      requestAnimationFrame(function(){ ticking=false; spy(); });
+    }, {passive:true});
+    spy();
+    function paintPlay(on){
+      play.setAttribute("aria-pressed", on?"true":"false");
+      play.setAttribute("aria-label", on?"Pause narration":"Play narration");
+      play.innerHTML=on?ICON_PAUSE:ICON_PLAY;
+      dock.classList.toggle("playing", on);
+    }
+    paintPlay(false);
+    if(!audio.getAttribute("src")){
+      play.disabled=true;
+      t0.textContent="No audio";
+    }
+    play.addEventListener("click", function(){
+      if(play.disabled) return;
+      if(audio.paused){ var p=audio.play(); if(p&&p.catch) p.catch(function(){}); }
+      else audio.pause();
+    });
+    audio.addEventListener("play", function(){ paintPlay(true); });
+    audio.addEventListener("pause", function(){ paintPlay(false); });
+    audio.addEventListener("ended", function(){ paintPlay(false); });
+    audio.addEventListener("loadedmetadata", function(){
+      seek.max=isFinite(audio.duration)?String(audio.duration):"0";
+      t1.textContent=fmtTime(audio.duration);
+    });
+    audio.addEventListener("timeupdate", function(){
+      if(seeking) return;
+      t0.textContent=fmtTime(audio.currentTime);
+      if(isFinite(audio.duration) && audio.duration>0){
+        seek.max=String(audio.duration);
+        seek.value=String(audio.currentTime);
+        t1.textContent=fmtTime(audio.duration);
+      }
+    });
+    audio.addEventListener("error", function(){
+      play.disabled=true;
+      t0.textContent="No audio";
+      t1.textContent="";
+    });
+    seek.addEventListener("input", function(){
+      seeking=true;
+      t0.textContent=fmtTime(+seek.value);
+    });
+    seek.addEventListener("change", function(){
+      audio.currentTime=+seek.value;
+      seeking=false;
+    });
+  })();
+
+  var KEYS=["A","B","C"];
+  var ITEMS=[
+    {
+      stem:"A lab Continue button stays disabled until which event?",
+      opts:["The student scrolls past the lab.","The student does the poke, then ready() fires.","The dock tick turns green on its own."],
+      ans:1,
+      miss:[
+        "Scroll does not count. The student has to do the thing this beat is about.",
+        "Correct. __inkGate.ready(id) fires on the poke. Then they press Continue.",
+        "Green means done after Continue, not a spectator skip."
+      ]
+    },
+    {
+      stem:"A Dirty Dozen day should use which poke recipe?",
+      opts:["The Resistance rho bench.","Decide: a short scenario, then a call.","Define, symbol, and unit on every lesson."],
+      ans:1,
+      miss:[
+        "The rho bench taught resistance. HF is a shop call, not a quantity slider.",
+        "Correct. Pick decide (or lookup, sequence, compare) from beat-recipes.md. The chassis stays. The poke changes.",
+        "Symbol and unit belong on quantity days. SDS and ARINC do not get a V I R row."
+      ]
+    }
+  ];
+  var qi=0, answers=[], locked=false, kcScored=false;
+  function pad2(n){ return (n<10?"0":"")+n; }
+  function showKc(which){
+    document.getElementById("kcCover").classList.toggle("on", which==="cover");
+    document.getElementById("kcQuestion").classList.toggle("on", which==="question");
+    document.getElementById("kcEnd").classList.toggle("on", which==="end");
+    document.getElementById("kcBezel").hidden = which==="cover";
+  }
+  function paintRail(){
+    var rail=document.getElementById("kcRail");
+    rail.innerHTML="";
+    ITEMS.forEach(function(it,i){
+      var s=document.createElement("span");
+      s.className="kc-seg"+(i===qi&&!answers[i]?" current":"")+(answers[i]?" done":"")+(answers[i]&&!answers[i].ok?" miss":"");
+      s.innerHTML="<i></i>";
+      rail.appendChild(s);
+    });
+    document.getElementById("kcQtag").innerHTML="Q <b>"+pad2(qi+1)+"</b> / "+pad2(ITEMS.length);
+  }
+  function showItem(){
+    locked=false;
+    showKc("question");
+    var it=ITEMS[qi];
+    document.getElementById("kcNote").textContent="Item "+(qi+1)+" of "+ITEMS.length+".";
+    document.getElementById("kcStem").textContent=it.stem;
+    var opts=document.getElementById("kcOpts");
+    opts.innerHTML="";
+    it.opts.forEach(function(t,i){
+      var b=document.createElement("button");
+      b.type="button"; b.className="kc-opt"; b.setAttribute("data-i", String(i));
+      b.innerHTML="<span class='key'>"+KEYS[i]+"</span><span>"+t+"</span>";
+      opts.appendChild(b);
+    });
+    document.getElementById("kcFb").className="kc-fb";
+    document.getElementById("kcQfoot").className="kc-qfoot hide";
+    paintRail();
+  }
+  function finish(){
+    showKc("end");
+    var n=0;
+    answers.forEach(function(a){ if(a&&a.ok) n++; });
+    document.getElementById("kcScoreN").textContent=String(n);
+    document.getElementById("kcScoreD").textContent=String(ITEMS.length);
+    document.getElementById("kcPct").textContent=Math.round((n/ITEMS.length)*100)+" percent correct";
+    document.getElementById("kcBand").textContent=n>=PASS_N?"Pass":"Not yet";
+    var circ=2*Math.PI*42;
+    document.getElementById("kcArc").setAttribute("stroke-dasharray", ((n/ITEMS.length)*circ).toFixed(1)+" 264");
+    var rev=document.getElementById("kcReview"); rev.innerHTML="";
+    ITEMS.forEach(function(it,idx){
+      var a=answers[idx]||{pick:0,ok:false};
+      var row=document.createElement("button"); row.type="button"; row.className="kc-rev-row";
+      row.innerHTML="<span class='mark "+(a.ok?"ok":"no")+"'>"+(a.ok?"+":"x")+"</span><span class='q'><b>"+pad2(idx+1)+"</b> "+it.stem+"</span>";
+      row.addEventListener("click",function(){
+        var next=row.nextSibling;
+        if(next && next.classList && next.classList.contains("kc-rev-fb")){ next.parentNode.removeChild(next); return; }
+        [].forEach.call(rev.querySelectorAll(".kc-rev-fb"),function(x){ x.parentNode.removeChild(x); });
+        var fb=document.createElement("div"); fb.className="kc-rev-fb";
+        var line=it.miss[a.pick];
+        if(!a.ok) line=line+" Answer: "+it.opts[it.ans];
+        fb.textContent=line;
+        if(row.nextSibling) rev.insertBefore(fb, row.nextSibling); else rev.appendChild(fb);
+      });
+      rev.appendChild(row);
+    });
+    paintRail();
+    work.check=true;
+    work.checkN=n;
+    if(!kcScored && window.AeroLesson){
+      kcScored=true;
+      window.AeroLesson.score({ correct:n, total:ITEMS.length, objectiveId:"SWAP_LO" });
+      window.AeroLesson.saveState(work);
+    }
+    paintCompleteGate();
+  }
+  document.getElementById("kcBegin").addEventListener("click",function(){
+    qi=0; answers=[]; showItem();
+  });
+  document.getElementById("kcOpts").addEventListener("click",function(e){
+    var btn=e.target.closest(".kc-opt"); if(!btn||locked) return;
+    locked=true;
+    var it=ITEMS[qi], i=+btn.getAttribute("data-i"), ok=i===it.ans;
+    answers[qi]={pick:i,ok:ok};
+    [].forEach.call(document.querySelectorAll("#kcOpts .kc-opt"),function(b){
+      b.disabled=true;
+      var j=+b.getAttribute("data-i");
+      if(j===it.ans) b.classList.add("is-key");
+      if(j===i && !ok) b.classList.add("is-miss");
+      if(j!==it.ans && j!==i) b.classList.add("dim");
+    });
+    var fb=document.getElementById("kcFb");
+    fb.className="kc-fb show"+(ok?"":" miss");
+    document.getElementById("kcVerdict").innerHTML=ok
+      ? '<span aria-hidden="true">&#10003;</span> Correct'
+      : '<span aria-hidden="true">&#10007;</span> Wrong';
+    document.getElementById("kcFbText").textContent=it.miss[i];
+    var ans=document.getElementById("kcFbAns");
+    if(!ok){ ans.style.display="block"; ans.textContent="Answer: "+it.opts[it.ans]; }
+    else { ans.style.display="none"; ans.textContent=""; }
+    var foot=document.getElementById("kcQfoot"); foot.className="kc-qfoot";
+    document.getElementById("kcHint").textContent=ok?"Next.":"Wrong. You can try this one again.";
+    var nav=document.getElementById("kcNav"); nav.innerHTML="";
+    if(!ok){
+      var r=document.createElement("button"); r.type="button"; r.className="btn retry"; r.textContent="Try this one again";
+      r.onclick=function(){ answers[qi]=null; showItem(); };
+      nav.appendChild(r);
+    }
+    var nx=document.createElement("button"); nx.type="button"; nx.className="btn active";
+    nx.textContent=qi<ITEMS.length-1?"Next":"See score";
+    nx.onclick=function(){ if(qi<ITEMS.length-1){qi++; showItem();} else finish(); };
+    nav.appendChild(nx);
+    paintRail();
+  });
+  document.getElementById("kcAgain").addEventListener("click",function(){
+    qi=0; answers=[]; kcScored=false; work.check=false; work.checkN=0; showKc("cover"); paintRail(); paintCompleteGate();
+  });
+  showKc("cover");
+
+  var mark=document.getElementById("markComplete");
+  if(mark){
+    mark.addEventListener("click",function(){
+      if(mark.disabled) return;
+      mark.disabled=true;
+      if(window.__inkGate) window.__inkGate.clear("wrap-up");
+      if(window.AeroLesson) window.AeroLesson.complete(true);
+    });
+  }
+  if(window.AeroLesson){
+    window.AeroLesson.onInit(function(payload){
+      var s=payload && payload.state;
+      if(!s) return;
+      work.lab=!!s.lab; work.check=!!s.check; work.checkN=+s.checkN||0;
+      if(window.__inkGate) window.__inkGate.restore(s);
+      paintCompleteGate();
+    });
+  }
+  paintCompleteGate();
+})();
+</script>
+</body>
+</html>

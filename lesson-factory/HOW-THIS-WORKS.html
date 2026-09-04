@@ -1,0 +1,909 @@
+<title>The Lesson Factory</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700&family=JetBrains+Mono:wght@400;700&family=Spectral:ital,wght@0,400;0,600;1,400&display=swap">
+<style>
+  :root{
+    --paper:#e9edf3; --card:#ffffff; --card-2:#f4f7fb; --inset:#eef2f7;
+    --ink:#141920; --ink-2:#47525f; --ink-3:#75808d;
+    --rule:#ccd5e0; --rule-strong:#a4b3c2;
+    --accent:#17456e; --accent-soft:#dbe6f2;
+    --pass:#2c6b4b; --pass-soft:#dceee4;
+    --warn:#83600f; --warn-soft:#f5ecd3;
+    --fail:#98301f; --fail-soft:#f7e1dd;
+    --shadow:0 1px 2px rgba(20,25,32,.06), 0 8px 24px rgba(20,25,32,.05);
+    --display:"Archivo","Helvetica Neue",Arial,sans-serif;
+    --body:"Spectral",Georgia,"Times New Roman",serif;
+    --mono:"JetBrains Mono","SFMono-Regular",Consolas,monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#0f1319; --card:#161c24; --card-2:#1c242e; --inset:#131920;
+      --ink:#e7edf4; --ink-2:#a8b4c2; --ink-3:#7d8895;
+      --rule:#2a333e; --rule-strong:#455260;
+      --accent:#79b0e0; --accent-soft:#16293a;
+      --pass:#6ec99c; --pass-soft:#142c21;
+      --warn:#d8ac52; --warn-soft:#2d2513;
+      --fail:#e97f70; --fail-soft:#331d19;
+      --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.3);
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#0f1319; --card:#161c24; --card-2:#1c242e; --inset:#131920;
+    --ink:#e7edf4; --ink-2:#a8b4c2; --ink-3:#7d8895;
+    --rule:#2a333e; --rule-strong:#455260;
+    --accent:#79b0e0; --accent-soft:#16293a;
+    --pass:#6ec99c; --pass-soft:#142c21;
+    --warn:#d8ac52; --warn-soft:#2d2513;
+    --fail:#e97f70; --fail-soft:#331d19;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.3);
+  }
+
+  *{box-sizing:border-box}
+  body{
+    background:var(--paper); color:var(--ink);
+    font-family:var(--body); font-size:17px; line-height:1.62;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1120px; margin:0 auto; padding:0 24px 96px}
+  p{margin:0 0 1em; max-width:68ch}
+  a{color:var(--accent)}
+  :focus-visible{outline:2px solid var(--accent); outline-offset:3px; border-radius:2px}
+
+  /* masthead */
+  .mast{padding:56px 0 0}
+  .mast-tag{
+    font-family:var(--mono); font-size:11.5px; letter-spacing:.16em;
+    text-transform:uppercase; color:var(--accent); margin-bottom:18px;
+  }
+  h1{
+    font-family:var(--display); font-weight:700; font-size:clamp(34px,5.2vw,58px);
+    line-height:1.04; letter-spacing:-.02em; margin:0 0 20px; text-wrap:balance;
+  }
+  .standfirst{font-size:20px; line-height:1.55; color:var(--ink-2); max-width:60ch; margin-bottom:36px}
+  .standfirst strong{color:var(--ink); font-weight:600}
+
+  /* spec-sheet header block */
+  .docblock{
+    border:1px solid var(--rule); background:var(--card); border-radius:3px;
+    display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+    overflow:hidden; box-shadow:var(--shadow); margin-bottom:64px;
+  }
+  .docfield{padding:15px 18px; border-right:1px solid var(--rule)}
+  .docfield:last-child{border-right:none}
+  .docfield dt{
+    font-family:var(--mono); font-size:10.5px; letter-spacing:.14em;
+    text-transform:uppercase; color:var(--ink-3); margin-bottom:6px;
+  }
+  .docfield dd{margin:0; font-family:var(--display); font-weight:600; font-size:14.5px; line-height:1.4}
+
+  /* sections */
+  section{margin-bottom:76px; scroll-margin-top:24px}
+  .shead{display:flex; align-items:baseline; gap:16px; border-bottom:2px solid var(--ink); padding-bottom:11px; margin-bottom:26px}
+  .snum{font-family:var(--mono); font-size:13px; font-weight:700; color:var(--accent); flex:none; padding-top:2px}
+  h2{font-family:var(--display); font-weight:700; font-size:clamp(23px,3vw,31px); letter-spacing:-.015em; margin:0; text-wrap:balance}
+  h3{font-family:var(--display); font-weight:600; font-size:18px; letter-spacing:-.005em; margin:34px 0 10px; text-wrap:balance}
+  .lede{font-size:19px; color:var(--ink-2); max-width:62ch; margin-bottom:26px}
+
+  /* figures */
+  figure{margin:32px 0; padding:0}
+  .figbox{
+    background:var(--card); border:1px solid var(--rule); border-radius:3px;
+    padding:22px 20px 16px; overflow-x:auto; box-shadow:var(--shadow);
+  }
+  .figbox svg{display:block; width:100%; min-width:640px; height:auto; color:var(--ink)}
+  figcaption{
+    font-family:var(--mono); font-size:12px; line-height:1.55; color:var(--ink-3);
+    margin-top:12px; max-width:78ch;
+  }
+
+  /* cards */
+  .grid{display:grid; gap:14px; margin:24px 0}
+  .g2{grid-template-columns:repeat(auto-fit,minmax(358px,1fr))}
+  .g3{grid-template-columns:repeat(auto-fit,minmax(232px,1fr))}
+  .card{background:var(--card); border:1px solid var(--rule); border-radius:3px; padding:17px 19px; box-shadow:var(--shadow)}
+  .card h4{
+    font-family:var(--mono); font-size:11px; letter-spacing:.13em; text-transform:uppercase;
+    color:var(--accent); margin:0 0 9px; font-weight:700;
+  }
+  .card p{font-size:15.5px; line-height:1.55; margin:0; color:var(--ink-2); max-width:none}
+  .card p + p{margin-top:9px}
+  .card strong{color:var(--ink); font-weight:600}
+
+  /* folder map */
+  .room{
+    display:grid; grid-template-columns:180px 1fr; gap:0;
+    border:1px solid var(--rule); border-radius:3px; background:var(--card);
+    box-shadow:var(--shadow); overflow:hidden; margin:24px 0;
+  }
+  .room > div{padding:14px 18px; border-bottom:1px solid var(--rule)}
+  .room > div:nth-last-child(-n+2){border-bottom:none}
+  .room .k{
+    font-family:var(--mono); font-size:13px; font-weight:700; color:var(--accent);
+    background:var(--card-2); border-right:1px solid var(--rule); word-break:break-word;
+  }
+  .room .v{font-size:15.5px; line-height:1.55; color:var(--ink-2)}
+  .room .v strong{color:var(--ink); font-weight:600}
+  @media (max-width:620px){
+    .room{grid-template-columns:1fr}
+    .room .k{border-right:none; border-bottom:1px solid var(--rule)}
+    .room > div:nth-last-child(-n+2){border-bottom:1px solid var(--rule)}
+    .room > div:last-child{border-bottom:none}
+  }
+
+  /* table */
+  .tablewrap{overflow-x:auto; margin:24px 0; border:1px solid var(--rule); border-radius:3px; background:var(--card); box-shadow:var(--shadow)}
+  table{border-collapse:collapse; width:100%; min-width:620px; font-family:var(--mono); font-size:13px; font-variant-numeric:tabular-nums}
+  th{
+    text-align:right; font-size:10.5px; letter-spacing:.12em; text-transform:uppercase;
+    color:var(--ink-3); font-weight:700; padding:13px 14px; border-bottom:1px solid var(--rule-strong); white-space:nowrap;
+  }
+  th:first-child, td:first-child{text-align:left}
+  td{padding:11px 14px; border-bottom:1px solid var(--rule); text-align:right; white-space:nowrap; color:var(--ink-2)}
+  tr:last-child td{border-bottom:none}
+  td:first-child{color:var(--ink); font-weight:700}
+  tr.gold td{background:var(--pass-soft)}
+  .pill{
+    display:inline-block; font-family:var(--mono); font-size:10.5px; font-weight:700;
+    letter-spacing:.08em; padding:3px 9px; border-radius:2px;
+  }
+  .ttable th, .ttable td{text-align:left; white-space:normal}
+  .ttable td:first-child{white-space:nowrap}
+  .cmd{
+    font-family:var(--mono); font-size:13.5px; background:var(--card); color:var(--ink);
+    border:1px solid var(--rule); border-left:3px solid var(--accent); border-radius:3px;
+    padding:14px 18px; margin:22px 0; overflow-x:auto; box-shadow:var(--shadow);
+  }
+  .p-pass{background:var(--pass-soft); color:var(--pass)}
+  .p-warn{background:var(--warn-soft); color:var(--warn)}
+  .p-fail{background:var(--fail-soft); color:var(--fail)}
+
+  /* flaw entries */
+  .flaw{
+    background:var(--card); border:1px solid var(--rule); border-left:4px solid var(--rule-strong);
+    border-radius:3px; padding:18px 20px; margin-bottom:13px; box-shadow:var(--shadow);
+  }
+  .flaw.high{border-left-color:var(--fail)}
+  .flaw.med{border-left-color:var(--warn)}
+  .flaw.low{border-left-color:var(--ink-3)}
+  .flaw-top{display:flex; align-items:baseline; gap:12px; flex-wrap:wrap; margin-bottom:9px}
+  .flaw-n{font-family:var(--mono); font-size:12px; font-weight:700; color:var(--ink-3)}
+  .flaw-t{font-family:var(--display); font-weight:600; font-size:17.5px; letter-spacing:-.005em; flex:1; min-width:220px}
+  .flaw p{font-size:15.5px; line-height:1.58; color:var(--ink-2); margin:0 0 9px; max-width:620px}
+  .flaw p:last-child{margin-bottom:0}
+  .flaw .fix{
+    font-family:var(--mono); font-size:12.5px; line-height:1.6; color:var(--ink-2);
+    background:var(--inset); border-radius:2px; padding:10px 13px; margin-top:11px; max-width:620px;
+  }
+  .flaw .fix b{color:var(--accent); font-weight:700}
+
+  /* callout */
+  .note{
+    border-left:3px solid var(--accent); background:var(--accent-soft);
+    padding:16px 20px; margin:26px 0; border-radius:0 3px 3px 0;
+  }
+  .note p{margin:0; font-size:16px; color:var(--ink); max-width:66ch}
+  .note p + p{margin-top:10px}
+
+  ul.plain{margin:0 0 18px; padding-left:20px; max-width:68ch}
+  ul.plain li{margin-bottom:7px; color:var(--ink-2)}
+  ul.plain li strong{color:var(--ink); font-weight:600}
+  code{font-family:var(--mono); font-size:.87em; background:var(--inset); padding:1.5px 5px; border-radius:2px; color:var(--ink)}
+
+  /* section index */
+  .toc{
+    background:var(--card); border:1px solid var(--rule); border-radius:3px;
+    padding:18px 20px; margin-bottom:64px; box-shadow:var(--shadow);
+  }
+  .toc h5{
+    font-family:var(--mono); font-size:10.5px; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--ink-3); margin:0 0 12px; font-weight:700;
+  }
+  .toc ol{
+    margin:0; padding:0; list-style:none;
+    display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:2px 22px;
+    counter-reset:toc;
+  }
+  .toc li{counter-increment:toc; font-size:15px; line-height:1.7}
+  .toc li a{text-decoration:none; color:var(--ink-2); display:flex; gap:11px}
+  .toc li a:hover{color:var(--accent)}
+  .toc li a::before{
+    content:counter(toc,decimal-leading-zero);
+    font-family:var(--mono); font-size:11.5px; color:var(--accent); font-weight:700;
+    padding-top:3px; flex:none;
+  }
+  .closer{
+    border-top:2px solid var(--ink); padding-top:22px; margin-top:8px;
+    font-size:16px; color:var(--ink-2); max-width:70ch;
+  }
+</style>
+
+<div class="wrap">
+
+  <header class="mast">
+    <div class="mast-tag">Quality system / CAET training library</div>
+    <h1>The Lesson Factory</h1>
+    <p class="standfirst">A folder that teaches any AI how to build a CAET lesson to your standard, and a script that measures whether it did. <strong>This page explains how it works, what it cannot do, and where it is weak.</strong></p>
+  </header>
+
+  <dl class="docblock">
+    <div class="docfield"><dt>Lives at</dt><dd>E-Learning Development / lesson-factory</dd></div>
+    <div class="docfield"><dt>Covers</dt><dd>Electric Ink player lessons</dd></div>
+    <div class="docfield"><dt>Entry point</dt><dd>START.md</dd></div>
+    <div class="docfield"><dt>Enforced by</dt><dd>tools / quality-gate.py</dd></div>
+    <div class="docfield"><dt>Signed by</dt><dd>Nick, at two gates</dd></div>
+  </dl>
+
+  <nav class="toc">
+    <h5>Sections</h5>
+    <ol>
+      <li><a href="#s1">Why the system exists</a></li>
+      <li><a href="#s2">What START.md is</a></li>
+      <li><a href="#s3">What is in the folder</a></li>
+      <li><a href="#s4">The pipeline and its gates</a></li>
+      <li><a href="#s5">The pedagogy layer</a></li>
+      <li><a href="#s6">Writing the checkpoint</a></li>
+      <li><a href="#s7">Keeping old skills out</a></li>
+      <li><a href="#s8">What the script can and cannot judge</a></li>
+      <li><a href="#s9">The proof run</a></li>
+      <li><a href="#s10">What it runs on</a></li>
+      <li><a href="#s11">Where this system is weak</a></li>
+      <li><a href="#s12">What I would fix first</a></li>
+    </ol>
+  </nav>
+
+  <section id="s1">
+    <div class="shead"><span class="snum">01</span><h2>Why the system exists</h2></div>
+    <p class="lede">The root cause is not that the AI got lazy. It is that an AI has no memory between sessions.</p>
+
+    <p>Every time you open a new chat, the model starts from nothing. It does not remember the Resistance lesson, your corrections, or the standard you set last week. It only knows what it reads at the start of that session.</p>
+
+    <p>Before this kit, what it read was whatever it happened to find: fifteen or so documents spread across six folders, some contradicting each other, none of them required. Session one found the good ones and built Resistance. Session four found a different handful and built Multimeter. Nobody was being careless. The instructions were simply optional.</p>
+
+    <figure>
+      <div class="figbox">
+        <svg viewBox="0 0 900 458" role="img" aria-label="Before, each build session reads a different subset of scattered documents and produces different quality. After, every session enters through one door that fixes the reading order, and all builds land at the same bar.">
+          <defs>
+            <marker id="ar" markerWidth="9" markerHeight="9" refX="8" refY="3" orient="auto">
+              <path d="M0,0 L8,3 L0,6 z" fill="currentColor"/>
+            </marker>
+            <marker id="arA" markerWidth="9" markerHeight="9" refX="8" refY="3" orient="auto">
+              <path d="M0,0 L8,3 L0,6 z" fill="#17456e"/>
+            </marker>
+          </defs>
+
+          <text x="0" y="16" font-family="monospace" font-size="12" font-weight="700" letter-spacing="1.6" fill="currentColor" opacity=".55">BEFORE</text>
+          <line x1="0" y1="26" x2="900" y2="26" stroke="currentColor" stroke-opacity=".18"/>
+
+          <g font-family="sans-serif" font-size="12" fill="currentColor">
+            <rect x="0" y="52" width="92" height="32" rx="2" fill="none" stroke="currentColor" stroke-opacity=".45"/>
+            <text x="46" y="72" text-anchor="middle">Build 1</text>
+            <rect x="0" y="104" width="92" height="32" rx="2" fill="none" stroke="currentColor" stroke-opacity=".45"/>
+            <text x="46" y="124" text-anchor="middle">Build 2</text>
+            <rect x="0" y="156" width="92" height="32" rx="2" fill="none" stroke="currentColor" stroke-opacity=".45"/>
+            <text x="46" y="176" text-anchor="middle">Build 3</text>
+          </g>
+
+          <g fill="currentColor" fill-opacity=".13">
+            <rect x="250" y="40" width="72" height="15" rx="2"/>
+            <rect x="352" y="56" width="72" height="15" rx="2"/>
+            <rect x="238" y="82" width="72" height="15" rx="2"/>
+            <rect x="366" y="104" width="72" height="15" rx="2"/>
+            <rect x="256" y="128" width="72" height="15" rx="2"/>
+            <rect x="344" y="152" width="72" height="15" rx="2"/>
+            <rect x="242" y="174" width="72" height="15" rx="2"/>
+            <rect x="360" y="196" width="72" height="15" rx="2"/>
+          </g>
+          <text x="240" y="232" font-family="monospace" font-size="11.5" fill="currentColor" opacity=".6">15+ docs, 6 folders, none required</text>
+
+          <g stroke="currentColor" stroke-opacity=".5" fill="none" marker-end="url(#ar)">
+            <path d="M96,64 L246,48"/><path d="M96,70 L234,88"/>
+            <path d="M96,118 L348,62"/><path d="M96,122 L252,132"/>
+            <path d="M96,170 L238,180"/><path d="M96,176 L340,158"/>
+          </g>
+          <text x="120" y="205" font-family="monospace" font-size="11.5" fill="currentColor" opacity=".6">each grabs a different subset</text>
+
+          <g font-family="sans-serif" font-size="12">
+            <rect x="600" y="52" width="220" height="32" rx="2" fill="#2c6b4b" fill-opacity=".13"/>
+            <rect x="600" y="52" width="4" height="32" fill="#2c6b4b"/>
+            <text x="616" y="72" fill="currentColor">Resistance, excellent</text>
+            <rect x="600" y="104" width="220" height="32" rx="2" fill="#83600f" fill-opacity=".15"/>
+            <rect x="600" y="104" width="4" height="32" fill="#83600f"/>
+            <text x="616" y="124" fill="currentColor">Voltage, thinner</text>
+            <rect x="600" y="156" width="220" height="32" rx="2" fill="#98301f" fill-opacity=".14"/>
+            <rect x="600" y="156" width="4" height="32" fill="#98301f"/>
+            <text x="616" y="176" fill="currentColor">Multimeter, thin</text>
+          </g>
+          <g stroke="currentColor" stroke-opacity=".35" fill="none" marker-end="url(#ar)">
+            <path d="M446,60 L594,66"/><path d="M446,112 L594,118"/><path d="M446,184 L594,170"/>
+          </g>
+
+          <text x="0" y="286" font-family="monospace" font-size="12" font-weight="700" letter-spacing="1.6" fill="#17456e">AFTER</text>
+          <line x1="0" y1="296" x2="900" y2="296" stroke="#17456e" stroke-opacity=".45"/>
+
+          <g font-family="sans-serif" font-size="12" fill="currentColor">
+            <rect x="0" y="318" width="92" height="30" rx="2" fill="none" stroke="currentColor" stroke-opacity=".45"/>
+            <text x="46" y="337" text-anchor="middle">Build 1</text>
+            <rect x="0" y="358" width="92" height="30" rx="2" fill="none" stroke="currentColor" stroke-opacity=".45"/>
+            <text x="46" y="377" text-anchor="middle">Build 2</text>
+            <rect x="0" y="398" width="92" height="30" rx="2" fill="none" stroke="currentColor" stroke-opacity=".45"/>
+            <text x="46" y="417" text-anchor="middle">Build 3</text>
+          </g>
+
+          <g stroke="#17456e" fill="none" marker-end="url(#arA)">
+            <path d="M96,333 L166,363"/><path d="M96,373 L166,373"/><path d="M96,413 L166,383"/>
+          </g>
+
+          <rect x="172" y="318" width="112" height="110" rx="2" fill="#17456e" fill-opacity=".12" stroke="#17456e"/>
+          <text x="228" y="366" text-anchor="middle" font-family="monospace" font-size="12.5" font-weight="700" fill="#17456e">START</text>
+          <text x="228" y="384" text-anchor="middle" font-family="monospace" font-size="12.5" font-weight="700" fill="#17456e">.md</text>
+          <text x="228" y="446" text-anchor="middle" font-family="monospace" font-size="11.5" fill="#17456e">one door</text>
+
+          <line x1="284" y1="373" x2="360" y2="373" stroke="#17456e" marker-end="url(#arA)"/>
+          <text x="322" y="365" text-anchor="middle" font-family="monospace" font-size="11" fill="#17456e">routes</text>
+
+          <rect x="366" y="318" width="200" height="110" rx="2" fill="none" stroke="currentColor" stroke-opacity=".45"/>
+          <g font-family="monospace" font-size="11.5" fill="currentColor">
+            <text x="380" y="340">1  the job and the rules</text>
+            <text x="380" y="362">2  what to read, per stage</text>
+            <text x="380" y="384">3  the measurable bar</text>
+            <text x="380" y="406">4  the gates</text>
+          </g>
+          <text x="466" y="446" text-anchor="middle" font-family="monospace" font-size="11.5" fill="currentColor" opacity=".6">same order, every time</text>
+
+          <g stroke="currentColor" stroke-opacity=".35" fill="none" marker-end="url(#ar)">
+            <path d="M568,340 L594,336"/><path d="M568,373 L594,373"/><path d="M568,406 L594,410"/>
+          </g>
+          <g font-family="sans-serif" font-size="12">
+            <rect x="600" y="318" width="220" height="30" rx="2" fill="#2c6b4b" fill-opacity=".13"/>
+            <rect x="600" y="318" width="4" height="30" fill="#2c6b4b"/>
+            <text x="616" y="337" fill="currentColor">at the bar</text>
+            <rect x="600" y="358" width="220" height="30" rx="2" fill="#2c6b4b" fill-opacity=".13"/>
+            <rect x="600" y="358" width="4" height="30" fill="#2c6b4b"/>
+            <text x="616" y="377" fill="currentColor">at the bar</text>
+            <rect x="600" y="398" width="220" height="30" rx="2" fill="#2c6b4b" fill-opacity=".13"/>
+            <rect x="600" y="398" width="4" height="30" fill="#2c6b4b"/>
+            <text x="616" y="417" fill="currentColor">at the bar</text>
+          </g>
+        </svg>
+      </div>
+      <figcaption>The drift was never a talent problem. Optional instructions produce optional quality, because every session is a new hire who reads only what you hand them at the door.</figcaption>
+    </figure>
+  </section>
+
+  <section id="s2">
+    <div class="shead"><span class="snum">02</span><h2>What START.md is</h2></div>
+    <p class="lede">It is the card taped inside the lid of the toolbox. First thing you see, tells you the job and where everything is.</p>
+
+    <p>The <code>.md</code> just means it is a plain text file. Nothing technical about it. You can open it in Notepad and read it like a memo, and you can edit it yourself if a rule needs to change.</p>
+
+    <p>Its whole purpose is to be the one thing a session reads first, so nothing after that is left to chance. Four things are in it.</p>
+
+    <div class="grid g2">
+      <div class="card">
+        <h4>The job, in one paragraph</h4>
+        <p>You are building <strong>one</strong> Electric Ink lesson, and this folder is the entire operating system for that job. It says outright that it beats every other document in the workspace, so a session never has to guess which of two conflicting notes wins.</p>
+      </div>
+      <div class="card">
+        <h4>A reading table, by stage</h4>
+        <p>Not "read everything." A table that says: at the planning stage read these four files, before writing prose read those three, before touching HTML read those two. <strong>Reading everything is what made lessons generic</strong>, because the model spreads its attention thin.</p>
+      </div>
+      <div class="card">
+        <h4>Ten absolute rules</h4>
+        <p>One lesson per session. No HTML until you sign the plan. Never copy Resistance content into another lesson. Definitions come from your book. Manual prose, not magazine prose. Short, blunt, unmissable.</p>
+      </div>
+      <div class="card">
+        <h4>A list of past failures</h4>
+        <p>The five specific ways this job has gone wrong before, written down. A new session reads how the last one failed. <strong>This is the part that no scattered folder could ever do</strong>, because the lessons learned lived only in your head.</p>
+      </div>
+    </div>
+
+    <div class="note">
+      <p>The plain-English version, if someone asks you at a conference: <em>"It is a folder that onboards the AI. Every session reads the same first page, in the same order, and gets graded by the same script at the end. The AI does not remember, so the folder remembers for it."</em></p>
+    </div>
+  </section>
+
+  <section id="s3">
+    <div class="shead"><span class="snum">03</span><h2>What is in the folder</h2></div>
+    <p class="lede">Eight areas. Four are instructions, four are raw material.</p>
+
+    <div class="room">
+      <div class="k">START.md</div>
+      <div class="v"><strong>The door.</strong> Job, reading table, rules, past failures.</div>
+      <div class="k">PIPELINE.md</div>
+      <div class="v"><strong>The order of work.</strong> Four stages, four gates, who closes each one.</div>
+      <div class="k">QUALITY-BAR.md</div>
+      <div class="v"><strong>The bar, as numbers.</strong> Every measurable standard in one table. The only place a floor can be changed, and only you change it.</div>
+      <div class="k">SPEC-TEMPLATE.md</div>
+      <div class="v"><strong>The plan form.</strong> A blank a session fills in before any lesson exists, including the actual teaching prose and a word budget per beat.</div>
+      <div class="k">tools /</div>
+      <div class="v"><strong>The gauge.</strong> One script that measures a finished lesson against the bar and prints a scorecard.</div>
+      <div class="k">gold /</div>
+      <div class="v"><strong>The reference part.</strong> The Resistance lesson plus a written teardown of why it works, and what may never be copied out of it.</div>
+      <div class="k">chassis /</div>
+      <div class="v"><strong>The frame.</strong> The blank lesson shell with the dock, gates and checkpoint already wired, plus the menu of interaction types to choose from.</div>
+      <div class="k">voice / identity / content /</div>
+      <div class="v"><strong>The house standards.</strong> How you write, how it looks, and the approved objective wording. Copied in so a session never has to go hunting.</div>
+    </div>
+
+    <p>Everything links to everything else by relative path, which is the boring reason it is portable. Copy the folder to another computer, a new repo, a different AI tool, and it still works. Nothing in it points at a location on your machine.</p>
+  </section>
+
+  <section id="s4">
+    <div class="shead"><span class="snum">04</span><h2>The pipeline and its gates</h2></div>
+    <p class="lede">The single biggest change: the writing now happens before the web page exists.</p>
+
+    <p>In the four weak lessons, the session opened the HTML file almost immediately and wrote prose into it as it went. When your attention is on making a slider work, the sentences around the slider become filler. That is the mechanism behind the writing you dislike, and it is a sequencing problem, not a talent problem.</p>
+
+    <p>Now the prose is written first, in the plan, against your cert book, with a word count assigned to each section. You read it as prose, when changing it costs nothing. Only after you sign it does anyone open an HTML file.</p>
+
+    <figure>
+      <div class="figbox">
+        <svg viewBox="0 0 900 300" role="img" aria-label="Four stages run left to right, spec then skeleton then build then ship. Gate zero is signed by Nick, gates one and two are closed by the script, gate three is signed by Nick. A failed gate sends the work back to the previous stage.">
+          <defs>
+            <marker id="ar2" markerWidth="9" markerHeight="9" refX="8" refY="3" orient="auto">
+              <path d="M0,0 L8,3 L0,6 z" fill="currentColor"/>
+            </marker>
+            <marker id="ar2f" markerWidth="9" markerHeight="9" refX="8" refY="3" orient="auto">
+              <path d="M0,0 L8,3 L0,6 z" fill="#98301f"/>
+            </marker>
+          </defs>
+
+          <g font-family="sans-serif">
+            <rect x="0" y="86" width="164" height="72" rx="2" fill="#17456e" fill-opacity=".1" stroke="#17456e"/>
+            <text x="82" y="112" text-anchor="middle" font-size="13" font-weight="700" fill="currentColor">S0 PLAN</text>
+            <text x="82" y="131" text-anchor="middle" font-size="11.5" fill="currentColor" opacity=".75">prose written here</text>
+            <text x="82" y="147" text-anchor="middle" font-size="11.5" fill="currentColor" opacity=".75">word budget per beat</text>
+
+            <rect x="246" y="86" width="164" height="72" rx="2" fill="none" stroke="currentColor" stroke-opacity=".5"/>
+            <text x="328" y="112" text-anchor="middle" font-size="13" font-weight="700" fill="currentColor">S1 FRAME</text>
+            <text x="328" y="131" text-anchor="middle" font-size="11.5" fill="currentColor" opacity=".75">chassis cloned</text>
+            <text x="328" y="147" text-anchor="middle" font-size="11.5" fill="currentColor" opacity=".75">beats and gates wired</text>
+
+            <rect x="492" y="86" width="164" height="72" rx="2" fill="none" stroke="currentColor" stroke-opacity=".5"/>
+            <text x="574" y="112" text-anchor="middle" font-size="13" font-weight="700" fill="currentColor">S2 BUILD</text>
+            <text x="574" y="131" text-anchor="middle" font-size="11.5" fill="currentColor" opacity=".75">prose onto the page</text>
+            <text x="574" y="147" text-anchor="middle" font-size="11.5" fill="currentColor" opacity=".75">figures, photos, one poke</text>
+
+            <rect x="738" y="86" width="162" height="72" rx="2" fill="#2c6b4b" fill-opacity=".12" stroke="#2c6b4b"/>
+            <text x="819" y="112" text-anchor="middle" font-size="13" font-weight="700" fill="currentColor">S3 SHIP</text>
+            <text x="819" y="131" text-anchor="middle" font-size="11.5" fill="currentColor" opacity=".75">into the course</text>
+            <text x="819" y="147" text-anchor="middle" font-size="11.5" fill="currentColor" opacity=".75">SCORM package</text>
+          </g>
+
+          <g stroke="currentColor" stroke-opacity=".55" fill="none" marker-end="url(#ar2)">
+            <line x1="164" y1="122" x2="242" y2="122"/>
+            <line x1="410" y1="122" x2="488" y2="122"/>
+            <line x1="656" y1="122" x2="734" y2="122"/>
+          </g>
+
+          <g font-family="monospace" font-size="11" text-anchor="middle">
+            <circle cx="203" cy="58" r="15" fill="#17456e"/>
+            <text x="203" y="62" fill="#ffffff" font-weight="700">G0</text>
+            <text x="203" y="30" fill="#17456e" font-weight="700">NICK SIGNS</text>
+            <line x1="203" y1="73" x2="203" y2="114" stroke="#17456e" stroke-dasharray="3 3"/>
+
+            <circle cx="449" cy="58" r="15" fill="none" stroke="currentColor" stroke-opacity=".6"/>
+            <text x="449" y="62" fill="currentColor" font-weight="700">G1</text>
+            <text x="449" y="30" fill="currentColor" opacity=".7">SCRIPT</text>
+            <line x1="449" y1="73" x2="449" y2="114" stroke="currentColor" stroke-opacity=".4" stroke-dasharray="3 3"/>
+
+            <circle cx="669" cy="58" r="15" fill="none" stroke="currentColor" stroke-opacity=".6"/>
+            <text x="669" y="62" fill="currentColor" font-weight="700">G2</text>
+            <text x="669" y="30" fill="currentColor" opacity=".7">SCRIPT</text>
+            <line x1="669" y1="73" x2="669" y2="114" stroke="currentColor" stroke-opacity=".4" stroke-dasharray="3 3"/>
+
+            <circle cx="712" cy="58" r="15" fill="#17456e"/>
+            <text x="712" y="62" fill="#ffffff" font-weight="700">G3</text>
+            <line x1="712" y1="73" x2="712" y2="114" stroke="#17456e" stroke-dasharray="3 3"/>
+            <text x="800" y="30" fill="#17456e" font-weight="700">NICK SIGNS</text>
+            <line x1="726" y1="46" x2="756" y2="34" stroke="#17456e"/>
+          </g>
+
+          <path d="M669,178 C669,232 574,236 574,196" stroke="#98301f" fill="none" stroke-dasharray="4 4" marker-end="url(#ar2f)"/>
+          <text x="622" y="256" text-anchor="middle" font-family="monospace" font-size="11.5" fill="#98301f">any red axis sends it back</text>
+          <line x1="669" y1="160" x2="669" y2="174" stroke="#98301f" stroke-dasharray="4 4" stroke-opacity=".5"/>
+        </svg>
+      </div>
+      <figcaption>You are in the loop twice: once on the plan, once on the finished lesson. The script sits in between so your two reviews are spent on judgment, not on catching missing photographs.</figcaption>
+    </figure>
+  </section>
+
+  <section id="s5">
+    <div class="shead"><span class="snum">05</span><h2>The pedagogy layer</h2></div>
+    <p class="lede">Your research folder is now inside the kit, and it is read at plan time, not build time.</p>
+
+    <p>The foundation files you built (cognitive goals, research foundations, frameworks, craft principles, vocabulary) are copied into <code>pedagogy/</code>. A short README sits with them that does the job those files could not do on their own: it maps your beat spine to the research, one row per beat.</p>
+
+    <p>That mapping matters because without it a builder treats the beats as house style and starts cutting them for time. With it, each beat is a named mechanism, and cutting one has a stated cost.</p>
+
+    <div class="tablewrap">
+      <table>
+        CLASSMARK_A<thead><tr><th>Beat</th><th>Is exploiting</th><th>Cutting it costs</th></tr></thead>
+        <tbody>
+          <tr><td>Ticket</td><td>problem-centered opening</td><td>the abstraction has no reason to exist</td></tr>
+          <tr><td>Define</td><td>pre-training principle</td><td>vocabulary load lands later, on top of the concept</td></tr>
+          <tr><td>Predict, then poke</td><td>generation and testing effect</td><td>the correction stops sticking</td></tr>
+          <tr><td>Walked number</td><td>worked example effect</td><td>novices are left to solve unsupported</td></tr>
+          <tr><td>Photograph on the flip</td><td>dual coding</td><td>they know the symbol, not the part</td></tr>
+          <tr><td>One poke per beat</td><td>cognitive load theory</td><td>two interactions compete, neither lands</td></tr>
+          <tr><td>Checkpoint with retry</td><td>retrieval practice</td><td>the check measures instead of teaching</td></tr>
+          <tr><td>Field card</td><td>integration</td><td>the knowledge stays on the screen</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>The spec now opens by naming the cognitive goal, and every beat in the map has to name which of Merrill's five principles it serves. A beat that cannot name one is decoration, and the spec says to cut it.</p>
+
+    <div class="note">
+      <p>One thing the kit deliberately did <em>not</em> copy in: the Merrill mapping document in your reference folder. It maps Merrill to the narrative module format (cold open, crucible, pivot), so following it here produces the wrong lesson. The kit carries a mapping written for this format instead, and the old one is named on the do-not-load list.</p>
+    </div>
+
+    <h3>The gap your format still has</h3>
+    <p>Spacing. Every effect above is exploited inside a single lesson, but the spacing effect works across days and weeks, and nothing in the product does spaced review. Your own research file puts the cost at 50 to 80 percent of the learning by day 30. That is a course-level problem, not a lesson-level one, and it is worth deciding what to do about it once the library is moving.</p>
+  </section>
+
+  <section id="s6">
+    <div class="shead"><span class="snum">06</span><h2>Writing the checkpoint</h2></div>
+    <p class="lede">The checkpoint is not a test. It is the last teaching beat, and it happens to keep score.</p>
+
+    <p>That single distinction drives the whole standard. A test tries to separate strong students from weak ones. A practice item tries to make one idea stick by forcing a commitment and then correcting it. Writing practice items like exam questions is the most common way this beat gets wasted.</p>
+
+    <p><code>assessment/ASSESSMENT.md</code> now carries the rules. The integrity rules first, unchanged and absolute: never open the certification workbook, items come from the practice bank, never reuse the exam's numbers or stories. Then the craft rules.</p>
+
+    <div class="grid g2">
+      <div class="card">
+        <h4>Stems</h4>
+        <p>Ask one thing. Put the whole question in the stem, so the student can answer before reading the options. <strong>Never write a negative stem</strong>; "which is NOT correct" tests reading care and plants the wrong answer in memory as a sentence they read.</p>
+      </div>
+      <div class="card">
+        <h4>Distractors</h4>
+        <p>Wrong answers are <strong>real misconceptions</strong>, not noise. For CAET that means the other two parts of Ohm's Law, a swapped series and parallel rule, or a live-circuit meter mistake. Your psychometric work on the exam already identified which ones candidates actually fall for.</p>
+      </div>
+      <div class="card">
+        <h4>Options</h4>
+        <p>Four, all plausible. Match them in length, because a correct answer that is noticeably longer is answerable without knowing anything. No "all of the above". No absolutes in the distractors. <strong>Move the correct answer around.</strong></p>
+      </div>
+      <div class="card">
+        <h4>Feedback</h4>
+        <p>Every option gets a teaching line, including the correct one. A miss line names the confusion, gives the rule, and points at the object on the page that proves it. Never scolds. Retry on a miss, because the item is a learning event.</p>
+      </div>
+    </div>
+
+    <p>Seven of those rules are now checked by the script, including one that turned up something serious in the lessons you have already shipped. That is in section 09.</p>
+  </section>
+
+  <section id="s7">
+    <div class="shead"><span class="snum">07</span><h2>Keeping old skills out</h2></div>
+    <p class="lede">You asked how you will know it will not drag in an old skill. Until today, the honest answer was that you would not.</p>
+
+    <p>The kit said it superseded everything else. That was a promise in a document, and a promise is exactly what failed you before. Here is what the workspace actually contains, counted:</p>
+
+    <div class="grid g3">
+      <div class="card">
+        <h4>15 skill definitions</h4>
+        <p>On disk in the bundle. Four are the right ones, now folded into the kit. The other eleven build different products: narrative modules, ACE player acts, standalone visual cards, video.</p>
+      </div>
+      <div class="card">
+        <h4>13 conflict copies</h4>
+        <p>OneDrive sync duplicates ending <code>-NickDesktop_01</code>, in the foundation and reference folders alone. Stale twins of real files, and <strong>nothing tells a session which one is current.</strong></p>
+      </div>
+      <div class="card">
+        <h4>~10 more named</h4>
+        <p>Referenced by the old routers but living outside the bundle. A session following those routers goes looking for them.</p>
+      </div>
+    </div>
+
+    <p>Vague instructions cannot stop this. "Do not use old skills" gives a model nothing to match against. Names do. So there are now three mechanisms, not one promise.</p>
+
+    <figure>
+      <div class="figbox">
+        <svg viewBox="0 0 900 336" role="img" aria-label="Three mechanisms: a named policy blocks old skills from reaching the session, the notes declaration records what was loaded and the gate fails blocklisted names, and the self-check sweeps the kit for contamination.">
+          <defs>
+            <marker id="ar4" markerWidth="9" markerHeight="9" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 z" fill="currentColor"/></marker>
+            <marker id="ar4g" markerWidth="9" markerHeight="9" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 z" fill="#2c6b4b"/></marker>
+            <marker id="ar4r" markerWidth="9" markerHeight="9" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 z" fill="#98301f"/></marker>
+            <marker id="ar4b" markerWidth="9" markerHeight="9" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 z" fill="#17456e"/></marker>
+          </defs>
+
+          <g font-family="sans-serif" font-size="12">
+            <rect x="0" y="30" width="168" height="58" rx="2" fill="#2c6b4b" fill-opacity=".12" stroke="#2c6b4b"/>
+            <text x="84" y="54" text-anchor="middle" font-weight="700" fill="currentColor">the kit</text>
+            <text x="84" y="73" text-anchor="middle" font-size="11.5" fill="currentColor" opacity=".75">everything needed</text>
+
+            <rect x="0" y="132" width="168" height="106" rx="2" fill="#98301f" fill-opacity=".09" stroke="#98301f" stroke-opacity=".6"/>
+            <text x="84" y="156" text-anchor="middle" font-weight="700" fill="currentColor">the rest of</text>
+            <text x="84" y="173" text-anchor="middle" font-weight="700" fill="currentColor">the workspace</text>
+            <text x="84" y="196" text-anchor="middle" font-size="11.5" fill="currentColor" opacity=".75">15 skills</text>
+            <text x="84" y="213" text-anchor="middle" font-size="11.5" fill="currentColor" opacity=".75">13 conflict copies</text>
+            <text x="84" y="230" text-anchor="middle" font-size="11.5" fill="currentColor" opacity=".75">10 more named</text>
+          </g>
+
+          <line x1="252" y1="120" x2="252" y2="250" stroke="#98301f" stroke-width="2"/>
+          <text x="262" y="150" font-family="monospace" font-size="11.5" font-weight="700" fill="#98301f">1  SKILLS-POLICY.md</text>
+          <text x="262" y="169" font-family="monospace" font-size="11.5" fill="#98301f">names every one</text>
+          <text x="262" y="186" font-family="monospace" font-size="11.5" fill="#98301f">USE / ASK / NEVER</text>
+
+          <line x1="168" y1="59" x2="392" y2="115" stroke="#2c6b4b" fill="none" marker-end="url(#ar4g)"/>
+          <g stroke="#98301f" fill="none" marker-end="url(#ar4r)" stroke-dasharray="4 4">
+            <line x1="168" y1="175" x2="244" y2="175"/>
+            <line x1="168" y1="205" x2="244" y2="205"/>
+          </g>
+
+          <rect x="398" y="96" width="150" height="66" rx="2" fill="none" stroke="currentColor" stroke-opacity=".55"/>
+          <text x="473" y="126" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="700" fill="currentColor">the session</text>
+          <text x="473" y="145" text-anchor="middle" font-family="sans-serif" font-size="11.5" fill="currentColor" opacity=".75">builds the lesson</text>
+
+          <line x1="473" y1="162" x2="473" y2="196" stroke="currentColor" stroke-opacity=".55" marker-end="url(#ar4)"/>
+          <rect x="384" y="202" width="178" height="62" rx="2" fill="#17456e" fill-opacity=".1" stroke="#17456e"/>
+          <text x="473" y="226" text-anchor="middle" font-family="monospace" font-size="11.5" font-weight="700" fill="#17456e">2  DECLARATION</text>
+          <text x="473" y="247" text-anchor="middle" font-family="sans-serif" font-size="11.5" fill="currentColor" opacity=".8">notes list what was loaded</text>
+
+          <line x1="562" y1="233" x2="626" y2="233" stroke="currentColor" stroke-opacity=".55" marker-end="url(#ar4)"/>
+          <rect x="632" y="202" width="168" height="62" rx="2" fill="none" stroke="currentColor" stroke-opacity=".55"/>
+          <text x="716" y="226" text-anchor="middle" font-family="sans-serif" font-size="12.5" font-weight="700" fill="currentColor">the gate</text>
+          <text x="716" y="247" text-anchor="middle" font-family="sans-serif" font-size="11.5" fill="currentColor" opacity=".75">fails on a blocked name</text>
+
+          <rect x="632" y="96" width="168" height="66" rx="2" fill="#17456e" fill-opacity=".1" stroke="#17456e"/>
+          <text x="716" y="120" text-anchor="middle" font-family="monospace" font-size="11.5" font-weight="700" fill="#17456e">3  SELFCHECK</text>
+          <text x="716" y="140" text-anchor="middle" font-family="sans-serif" font-size="11.5" fill="currentColor" opacity=".8">sweeps the kit for</text>
+          <text x="716" y="155" text-anchor="middle" font-family="sans-serif" font-size="11.5" fill="currentColor" opacity=".8">twins, blocked files, drift</text>
+
+          <path d="M632,116 C560,60 240,44 92,26" stroke="#17456e" fill="none" stroke-dasharray="4 4" marker-end="url(#ar4b)"/>
+          <text x="392" y="26" text-anchor="middle" font-family="monospace" font-size="11" fill="#17456e">sweeps the kit itself</text>
+          <text x="300" y="78" text-anchor="middle" font-family="monospace" font-size="11.5" fill="#2c6b4b">allowed in</text>
+          <text x="206" y="292" text-anchor="middle" font-family="monospace" font-size="11.5" fill="#98301f">blocked by name</text>
+        </svg>
+      </div>
+      <figcaption>One barrier on the way in, one check on the way out, one sweep of the kit itself. A session that loads an old skill either declares it and fails the gate, or hides it and is lying in a file you read.</figcaption>
+    </figure>
+
+    <h3>How to check it yourself, any time</h3>
+    <p>One command, and you do not need to understand its output to use it:</p>
+    <p class="cmd">python3 lesson-factory/tools/quality-gate.py --selfcheck</p>
+    <p>It reports four things: whether all 24 required kit files are present, whether any conflict copies have crept in, whether any blocklisted file has appeared, and whether the kit's copies still match the originals they were taken from. Run today on your machine it returned <strong>KIT CLEAN, 21 of 21 copies identical</strong>.</p>
+
+    <div class="note">
+      <p>The honest limit, stated plainly: none of this stops a model from using an old skill that <em>a person hands it directly in the opening prompt</em>. The policy protects against a model wandering off and finding one, which is the failure you actually hit. The other hole is closed by using the prompts in <code>PROMPTS.md</code> rather than improvising one.</p>
+    </div>
+  </section>
+
+  <section id="s8">
+    <div class="shead"><span class="snum">08</span><h2>What the script can and cannot judge</h2></div>
+    <p class="lede">This is the part worth understanding properly, because it is where the honest limits are.</p>
+
+    <p>The script reads the lesson file and counts things. It is very good at facts and completely blind to quality. It can tell you a lesson has 1,642 words and zero photographs. It cannot tell you whether the words are any good.</p>
+
+    <figure>
+      <div class="figbox">
+        <svg viewBox="0 0 900 320" role="img" aria-label="A finished lesson passes through the script, which rejects mechanical faults, then through Nick's review, which rejects taste faults, before shipping.">
+          <defs>
+            <marker id="ar3" markerWidth="9" markerHeight="9" refX="8" refY="3" orient="auto">
+              <path d="M0,0 L8,3 L0,6 z" fill="currentColor"/>
+            </marker>
+            <marker id="ar3f" markerWidth="9" markerHeight="9" refX="8" refY="3" orient="auto">
+              <path d="M0,0 L8,3 L0,6 z" fill="#98301f"/>
+            </marker>
+          </defs>
+
+          <g font-family="sans-serif" font-size="12.5">
+            <rect x="0" y="60" width="132" height="56" rx="2" fill="none" stroke="currentColor" stroke-opacity=".5"/>
+            <text x="66" y="94" text-anchor="middle" fill="currentColor">finished lesson</text>
+
+            <rect x="204" y="46" width="176" height="84" rx="2" fill="#17456e" fill-opacity=".1" stroke="#17456e"/>
+            <text x="292" y="80" text-anchor="middle" font-size="13" font-weight="700" fill="currentColor">the script</text>
+            <text x="292" y="102" text-anchor="middle" font-size="11.5" fill="currentColor" opacity=".75">counts what is countable</text>
+
+            <rect x="452" y="46" width="176" height="84" rx="2" fill="#17456e" fill-opacity=".1" stroke="#17456e"/>
+            <text x="540" y="80" text-anchor="middle" font-size="13" font-weight="700" fill="currentColor">your read</text>
+            <text x="540" y="102" text-anchor="middle" font-size="11.5" fill="currentColor" opacity=".75">judges what is not</text>
+
+            <rect x="700" y="60" width="132" height="56" rx="2" fill="#2c6b4b" fill-opacity=".13" stroke="#2c6b4b"/>
+            <text x="766" y="94" text-anchor="middle" fill="currentColor">ships</text>
+          </g>
+
+          <g stroke="currentColor" stroke-opacity=".55" fill="none" marker-end="url(#ar3)">
+            <line x1="132" y1="88" x2="200" y2="88"/>
+            <line x1="380" y1="88" x2="448" y2="88"/>
+            <line x1="628" y1="88" x2="696" y2="88"/>
+          </g>
+
+          <g stroke="#98301f" fill="none" marker-end="url(#ar3f)">
+            <line x1="292" y1="130" x2="292" y2="168"/>
+            <line x1="540" y1="130" x2="540" y2="168"/>
+          </g>
+
+          <g font-family="monospace" font-size="11.5" fill="currentColor">
+            <text x="292" y="190" text-anchor="middle" fill="#98301f" font-weight="700">mechanical faults</text>
+            <text x="292" y="212" text-anchor="middle" opacity=".75">too few words</text>
+            <text x="292" y="230" text-anchor="middle" opacity=".75">missing figures or photos</text>
+            <text x="292" y="248" text-anchor="middle" opacity=".75">broken gate wiring</text>
+            <text x="292" y="266" text-anchor="middle" opacity=".75">dead audio links</text>
+            <text x="292" y="284" text-anchor="middle" opacity=".75">answer always in slot A</text>
+            <text x="292" y="302" text-anchor="middle" opacity=".75">a blocklisted skill declared</text>
+
+            <text x="540" y="190" text-anchor="middle" fill="#98301f" font-weight="700">judgment faults</text>
+            <text x="540" y="212" text-anchor="middle" opacity=".75">is the writing any good</text>
+            <text x="540" y="230" text-anchor="middle" opacity=".75">does the example land</text>
+            <text x="540" y="248" text-anchor="middle" opacity=".75">is the physics right</text>
+            <text x="540" y="266" text-anchor="middle" opacity=".75">does it sound like you</text>
+            <text x="540" y="284" text-anchor="middle" opacity=".75">are the wrong answers</text>
+            <text x="540" y="302" text-anchor="middle" opacity=".75">tempting enough</text>
+          </g>
+        </svg>
+      </div>
+      <figcaption>The script is a floor, not a ceiling. Its real job is protecting your attention: by the time a lesson reaches you, no mechanical fault is left to distract you from the writing.</figcaption>
+    </figure>
+
+    <p>A useful way to hold it: the script cannot make a lesson good, it can only make a bad one impossible to ship quietly. Everything above the floor is still your call, which is why you sign twice.</p>
+  </section>
+
+  <section id="s9">
+    <div class="shead"><span class="snum">09</span><h2>The proof run</h2></div>
+    <p class="lede">A rule you cannot test is just an opinion. So the script was pointed at the six lessons you already have.</p>
+
+    <p>You had already told me the ranking by feel: Resistance was the best, the others were noticeably weaker. The script had never seen your opinion. It produced the same ranking from the files alone.</p>
+
+    <div class="tablewrap">
+      <table>
+        <thead>
+          <tr><th>Lesson</th><th>Min</th><th>Words</th><th>Figures</th><th>Photos</th><th>Pokes</th><th>Verdict</th></tr>
+        </thead>
+        <tbody>
+          <tr class="gold"><td>01 resistance</td><td>30</td><td>2,079</td><td>15</td><td>5</td><td>6</td><td><span class="pill p-pass">PASS</span></td></tr>
+          <tr><td>04 voltage</td><td>20</td><td>1,943</td><td>12</td><td>3</td><td>3</td><td><span class="pill p-fail">FAIL</span></td></tr>
+          <tr><td>05 current</td><td>20</td><td>1,622</td><td>11</td><td>1</td><td>3</td><td><span class="pill p-fail">FAIL</span></td></tr>
+          <tr><td>07 ohms law</td><td>22</td><td>2,177</td><td>7</td><td>1</td><td>3</td><td><span class="pill p-fail">FAIL</span></td></tr>
+          <tr><td>08 multimeter</td><td>22</td><td>1,642</td><td>8</td><td>0</td><td>3</td><td><span class="pill p-fail">FAIL</span></td></tr>
+          <tr><td>09 course check</td><td>12</td><td>479</td><td>3</td><td>0</td><td>2</td><td><span class="pill p-warn">N/A</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>Read across the Resistance row and then any other row. The pattern is not subtle once it is in columns: half the pokes, a third to a fifth of the photographs, and in two cases the prose sits below the floor.</p>
+
+    <h3>Specific faults it found</h3>
+    <ul class="plain">
+      <li><strong>Multimeter has zero photographs.</strong> A lesson about recognizing a physical tool, with no picture of the tool.</li>
+      <li><strong>Ohm's Law has less than half the figure density of Resistance.</strong> Seven figures across twenty-two minutes.</li>
+      <li><strong>Current and Multimeter are below the prose floor.</strong> About 1,600 words where the standard is 2,400 and up.</li>
+      <li><strong>All four reference audio files that do not exist.</strong> Voltage.mp3, Current.mp3, Ohms-Law.mp3 and Multimeter.mp3 were never recorded or packaged. That audio is silently dead in the SCORM you have already built. Nobody would have caught this by reading the code.</li>
+    </ul>
+
+    <h3>Then the assessment checks found something worse</h3>
+
+    <p>In <strong>five of the six lessons, the correct answer is option A on every single item.</strong> Not most items. Every one.</p>
+
+    <div class="tablewrap">
+      <table>
+        CLASSMARK_C<thead><tr><th>Lesson</th><th>Answer position, item 1 to 5</th><th>Verdict</th></tr></thead>
+        <tbody>
+          <tr class="gold"><td>01 resistance</td><td>A, B, A, A, B</td><td><span class="pill p-pass">VARIED</span></td></tr>
+          <tr><td>04 voltage</td><td>A, A, A, A, A</td><td><span class="pill p-fail">FIXED</span></td></tr>
+          <tr><td>05 current</td><td>A, A, A, A, A</td><td><span class="pill p-fail">FIXED</span></td></tr>
+          <tr><td>07 ohms law</td><td>A, A, A, A, A</td><td><span class="pill p-fail">FIXED</span></td></tr>
+          <tr><td>08 multimeter</td><td>A, A, A, A, A</td><td><span class="pill p-fail">FIXED</span></td></tr>
+          <tr><td>09 course check</td><td>A, A, A, A, A, A, A, A, A, A</td><td><span class="pill p-fail">FIXED</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>The course check is the one that matters. It is ten items, pass is 8 of 10, and it gates completion of the whole course. <strong>A student who clicks the first option ten times scores 10 out of 10 and completes the course having learned nothing.</strong> Resistance is the only lesson that varies, and it varies because it was written first, by hand, with more care.</p>
+
+    <p>This is worth fixing this week, ahead of anything else in this document. It is a small edit: reorder the options and move the answer index. Nothing else in those lessons has to change.</p>
+
+    <p>Both of these findings make the same argument for the approach. Dead audio links and a fixed answer key are boring, mechanical and invisible on the page, and they made it through every human review you and I did.</p>
+  </section>
+
+  <section id="s10">
+    <div class="shead"><span class="snum">10</span><h2>What it runs on</h2></div>
+    <p class="lede">Any LLM. Everything in the kit is plain text except one file, and that one file is a single Python script with no dependencies.</p>
+
+    <div class="tablewrap">
+      <table>
+        CLASSMARK_B<thead><tr><th>If the AI can</th><th>It can</th></tr></thead>
+        <tbody>
+          <tr><td>read files</td><td>read the kit, follow the pipeline, write the spec and the prose</td></tr>
+          <tr><td>read and write files</td><td>the full job, start to finish</td></tr>
+          <tr><td>also run Python 3</td><td>the full job plus automated measurement</td></tr>
+          <tr><td>only chat</td><td>the job, if you paste the key files in and score by hand</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>The script uses only what comes with Python. No installs, no internet, no packages, and it works on Windows, Mac and Linux on Python 3.8 or newer. Your machine has 3.10, so it runs there today.</p>
+
+    <p>If a session cannot run code, it scores the table in <code>QUALITY-BAR.md</code> by hand and shows the filled table in its report. Every axis is countable in a text editor. What you lose is speed and consistency, not the standard.</p>
+
+    <p>The one practical difference between tools is context size. A model with a small window should follow the staged reading table in START.md strictly rather than trying to load the kit at once, which is what that table is for in the first place.</p>
+  </section>
+
+  <section id="s11">
+    <div class="shead"><span class="snum">11</span><h2>Where this system is weak</h2></div>
+    <p class="lede">Nine holes, worst first. Two of the original eight are now closed, and closing them exposed two new ones.</p>
+
+    <div class="flaw high">
+      <div class="flaw-top"><span class="flaw-n">01</span><span class="flaw-t">The sameness check still misses the sameness you complained about</span><span class="pill p-fail">HIGH</span></div>
+      <p>Unchanged and still the worst one. The script compares lessons by their <em>words</em>, and on that measure your four weak lessons look fine at two to six percent overlap. Your complaint was structural: they all run the same beat skeleton with different labels. My check answers a question you were not asking.</p>
+      <p class="fix"><b>Fix:</b> compare the beat pattern and the chosen recipe instead of the prose. Flag any two lessons sharing more than about half their beats in the same order. Roughly thirty lines of script.</p>
+    </div>
+
+    <div class="flaw high">
+      <div class="flaw-top"><span class="flaw-n">02</span><span class="flaw-t">The script reads the lesson, it never runs it</span><span class="pill p-fail">HIGH</span></div>
+      <p>Unchanged. Everything checked is visible in the file sitting still. It cannot tell whether Continue actually unlocks, whether a simulation computes the right number, or whether the checkpoint scores. A lesson can be green on every axis and broken the moment a student clicks it.</p>
+      <p class="fix"><b>Fix:</b> a headless browser pass that clicks through like a student. Removes most of the mechanical half of your audit.</p>
+    </div>
+
+    <div class="flaw med">
+      <div class="flaw-top"><span class="flaw-n">03</span><span class="flaw-t">The skills declaration is self-reported</span><span class="pill p-warn">MEDIUM</span></div>
+      <p>This replaces the old "honor system gates" flaw, which is now closed: strict is the default, and a missing plan or missing declaration fails the lesson outright.</p>
+      <p>What remains is smaller but real. The declaration is written by the session that did the work. A model that loaded <code>training-architect</code> and simply does not mention it passes. The check catches carelessness and honest reporting, not deception.</p>
+      <p>Two things limit the damage. The declaration is in a file you read, so a false one is a visible lie rather than an invisible drift. And the blocklist also scans the lesson HTML itself, so a skill that left fingerprints gets caught regardless of what the notes claim.</p>
+      <p class="fix"><b>Partial fix:</b> widen the fingerprint scan. Each blocked skill has telltale markup or class names; matching those in the HTML catches a silent load. Worth doing only if you see it happen.</p>
+    </div>
+
+    <div class="flaw med">
+      <div class="flaw-top"><span class="flaw-n">04</span><span class="flaw-t">The blocklist is a snapshot and will go stale</span><span class="pill p-warn">MEDIUM</span></div>
+      <p>New, and created by the fix itself. The list names the fifteen skills and the conflict-copy pattern that exist today. A skill added next spring is not on it, and the kit will wave it straight through while looking like it is protecting you.</p>
+      <p>This is the same disease in a new place: a list that is correct on the day it is written and quietly rots.</p>
+      <p class="fix"><b>Fix:</b> have the self-check scan the workspace for skill definitions and report any it does not recognise, instead of only checking names it already knows. Then a new skill announces itself the first time you run it.</p>
+    </div>
+
+    <div class="flaw med">
+      <div class="flaw-top"><span class="flaw-n">05</span><span class="flaw-t">You are the bottleneck, by design</span><span class="pill p-warn">MEDIUM</span></div>
+      <p>Unchanged. Two of the four gates need you. Correct for quality, and the reason Resistance is good, but at two reviews per lesson your calendar is the ceiling on how fast the library grows.</p>
+      <p class="fix"><b>Fix:</b> the rule already in your own notes. Full audit on the first lesson of a family, spot check the siblings. Review plans in batches of four or five.</p>
+    </div>
+
+    <div class="flaw med">
+      <div class="flaw-top"><span class="flaw-n">06</span><span class="flaw-t">Word count is a crude stand-in for good writing</span><span class="pill p-warn">MEDIUM</span></div>
+      <p>Unchanged, and there is no clean technical fix. Twenty-six hundred words of padding passes the floor as easily as twenty-six hundred good ones. The script catches thin. It cannot catch dull.</p>
+      <p>The protection is structural, not technical: the prose is written in the plan and read by you before any HTML exists, so dull writing is caught when it is cheap to rewrite.</p>
+      <p class="fix"><b>Partial fix:</b> require every concept named in the plan to appear in the finished page, which catches prose that wandered off the plan.</p>
+    </div>
+
+    <div class="flaw low">
+      <div class="flaw-top"><span class="flaw-n">07</span><span class="flaw-t">Distractor quality is still unjudged</span><span class="pill p-warn">LOW</span></div>
+      <p>Downgraded from the original list. The script now checks seven item-writing rules, including the one that found the fixed answer key. It still cannot tell whether a wrong answer is <em>tempting</em>, which is what separates a good distractor from a filler one.</p>
+      <p>Your psychometric analysis of the real exam is the answer here, and it is human work, not script work: it already knows which misconceptions candidates actually fall for.</p>
+      <p class="fix"><b>Fix:</b> when a lesson covers ground the psychometrics analysed, take the distractors from the real misconceptions rather than inventing them. This is a writing instruction, now in the assessment standard.</p>
+    </div>
+
+    <div class="flaw low">
+      <div class="flaw-top"><span class="flaw-n">08</span><span class="flaw-t">Duplicated files can still drift, if nobody runs the check</span><span class="pill p-warn">LOW</span></div>
+      <p>Downgraded. The self-check now compares all 21 copied files against their originals and reports any that differ, so drift is detectable. But it is only detected when someone runs the command, and nothing schedules that.</p>
+      <p class="fix"><b>Fix:</b> either run it monthly, or delete the originals so the kit is the only copy and there is nothing to drift from.</p>
+    </div>
+
+    <div class="flaw low">
+      <div class="flaw-top"><span class="flaw-n">09</span><span class="flaw-t">The reference lesson is frozen in place</span><span class="pill p-warn">LOW</span></div>
+      <p>Unchanged. Resistance is the benchmark, but you want new lessons written better than Resistance. The day one is better, the benchmark is out of date and nothing notices or promotes the new one.</p>
+      <p class="fix"><b>Fix:</b> a written rule for when a shipped lesson replaces the reference, and a rerun of the measurement to refresh the stored numbers.</p>
+    </div>
+  </section>
+
+  <section id="s12">
+    <div class="shead"><span class="snum">12</span><h2>What I would fix first</h2></div>
+    <p class="lede">One thing this week, then three system fixes. The rest can wait until the library is moving.</p>
+
+    <div class="note">
+      <p><strong>This week, ahead of everything else:</strong> reorder the checkpoint options in the five lessons with the fixed answer key, starting with the course check. Right now a student can complete the DC course by clicking the first option every time. It is a small edit and it is live in front of learners today.</p>
+    </div>
+
+    <div class="grid g3">
+      <div class="card">
+        <h4>First</h4>
+        <p><strong>Structural sameness check.</strong> Still the flaw closest to your original complaint, and until it exists the kit is not measuring the thing that started this conversation.</p>
+      </div>
+      <div class="card">
+        <h4>Second</h4>
+        <p><strong>Drive the lesson automatically.</strong> The biggest single return on your time: it takes the mechanical clicking out of your audit and leaves you reading.</p>
+      </div>
+      <div class="card">
+        <h4>Third</h4>
+        <p><strong>Make the self-check discover new skills.</strong> Turns the blocklist from a snapshot that rots into something that tells you when the workspace has changed underneath it.</p>
+      </div>
+    </div>
+
+    <p class="closer">One caution, restated because it matters more now that the kit does more. A measured bar is a floor, and floors have a way of becoming ceilings: a lesson that scores green can still be merely adequate, and a system this tidy can quietly talk you into trusting the scorecard over your own read. Every number in here exists to protect your judgment, not to replace it. Keep signing twice.</p>
+  </section>
+
+</div>
