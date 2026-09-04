@@ -21,6 +21,8 @@ const schema = z.object({
   AI_PROVIDER: z.enum(["mock", "anthropic"]).default("mock"),
   AI_MODEL: z.string().default("claude-sonnet-4-5"),
   ANTHROPIC_API_KEY: z.string().optional(),
+  /** Hosted-preview only: accept a trusted reverse-proxy X-Visitor-Id header as a session binding when cookies are blocked. */
+  AUTH_VISITOR_HEADER: z.enum(["true", "false"]).default("false"),
   ANTHROPIC_BASE_URL: z.string().optional(),
   EMBEDDINGS_PROVIDER: z.enum(["none"]).default("none"),
   LOG_LEVEL: z.enum(["debug", "info", "warn", "error"]).default("info"),

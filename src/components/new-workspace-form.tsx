@@ -1,11 +1,10 @@
 "use client";
+import { withBase } from "@/lib/base-path";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { Button, Input } from "./ui";
 import { api } from "@/lib/api";
 
 export function NewWorkspaceForm() {
-  const router = useRouter();
   const [name, setName] = useState("");
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
@@ -18,8 +17,7 @@ export function NewWorkspaceForm() {
         setErr(null);
         try {
           const r = await api<{ workspace: { id: string } }>("/api/workspaces", { method: "POST", json: { name } });
-          router.push(`/w/${r.workspace.id}`);
-          router.refresh();
+          window.location.assign(withBase(`/w/${r.workspace.id}`));
         } catch (e) {
           setErr(e instanceof Error ? e.message : "Failed");
         } finally {

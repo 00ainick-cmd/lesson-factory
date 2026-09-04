@@ -13,7 +13,7 @@ export default async function ObjectivesPage({ params }: { params: Promise<{ wsI
   return (
     <>
       <PageHeader kicker="Workspace" title="Objectives">
-        <p className="mt-2 max-w-3xl text-[13px] text-muted">{rows.length} objectives parsed from the seed kit's content register. Beats link to these codes; the audit flags beats without objective coverage.</p>
+        <p className="mt-2 max-w-3xl text-[13px] text-muted">{rows.length} objectives parsed from the seed kit&rsquo;s content register. Beats link to these codes; the audit flags beats without objective coverage.</p>
       </PageHeader>
       <div className="space-y-6 px-8 py-6">
         {cats.map((c) => (

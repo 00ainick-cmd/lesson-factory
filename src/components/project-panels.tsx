@@ -1,4 +1,5 @@
 "use client";
+import { withBase } from "@/lib/base-path";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Download, FileCheck2, Play, RotateCcw } from "lucide-react";
@@ -55,7 +56,7 @@ export function ProjectPanels({ projectId, wsId, canWrite, versions, exportsInit
               <Badge tone="info">{counts?.info ?? 0} info</Badge>
               <Badge tone={audit.openProposals ? "accent" : "muted"}>{audit.openProposals} open proposals</Badge>
             </div>
-            <a href={`/w/${wsId}/projects/${projectId}/editor?panel=copilot`} className="mt-3 inline-block text-accent hover:underline">Review in editor →</a>
+            <a href={withBase(`/w/${wsId}/projects/${projectId}/editor?panel=copilot`)} className="mt-3 inline-block text-accent hover:underline">Review in editor →</a>
           </div>
         ) : (
           <p className="text-[13px] text-muted">No audit yet. Open the editor and run an Import Audit.</p>
@@ -90,7 +91,7 @@ export function ProjectPanels({ projectId, wsId, canWrite, versions, exportsInit
                   <p className="font-mono text-[11px] text-faint">{v.contentHash.slice(0, 16)} · {fmtDate(v.createdAt)}</p>
                 </div>
                 <div className="flex shrink-0 gap-1.5">
-                  <a className="inline-flex h-7 items-center gap-1 rounded border border-line-2 px-2 text-[12px] text-muted hover:text-ink" href={`/api/preview/${projectId}?versionId=${v.id}&mode=learner`} target="_blank" rel="noreferrer"><Play size={12} /> Preview</a>
+                  <a className="inline-flex h-7 items-center gap-1 rounded border border-line-2 px-2 text-[12px] text-muted hover:text-ink" href={withBase(`/api/preview/${projectId}?versionId=${v.id}&mode=learner`)} target="_blank" rel="noreferrer"><Play size={12} /> Preview</a>
                   {canWrite && (
                     <Button size="sm" variant="ghost" title="Restore this version as the working document" onClick={() => confirm(`Restore v${v.number} "${v.name}" as the working document? The current working state is snapshotted first.`) && run("restore", async () => { await api(`/api/projects/${projectId}/versions/${v.id}/restore`, { method: "POST" }); router.refresh(); })}><RotateCcw size={12} /> Restore</Button>
                   )}
@@ -125,7 +126,7 @@ export function ProjectPanels({ projectId, wsId, canWrite, versions, exportsInit
                       <span className="font-mono text-[11.5px] text-muted">{e.format}</span> <Badge tone={e.status === "passed" ? "ok" : e.status === "failed" ? "bad" : "gold"}>{e.status}</Badge>
                       <span className="ml-2 text-[11.5px] text-faint">{fmtDate(e.createdAt)}</span>
                     </div>
-                    {e.artifactId && <a className="inline-flex h-7 items-center gap-1 rounded border border-line-2 px-2 text-[12px] text-ink hover:border-accent" href={`/api/projects/${projectId}/exports/${e.id}/download`}><Download size={12} /> Download</a>}
+                    {e.artifactId && <a className="inline-flex h-7 items-center gap-1 rounded border border-line-2 px-2 text-[12px] text-ink hover:border-accent" href={withBase(`/api/projects/${projectId}/exports/${e.id}/download`)}><Download size={12} /> Download</a>}
                   </div>
                   {v && (
                     <details className="mt-1.5">

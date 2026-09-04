@@ -4,6 +4,9 @@
 
 /* AERO shell chrome (seed kit identity/tokens.css header): dark aviation instrument register. */
 :root {
+  --font-saira: "Saira";
+  --font-plex: "IBM Plex Sans";
+  --font-jet: "JetBrains Mono";
   --shell: #0f1419;
   --rail: #0c1119;
   --panel: #131a22;

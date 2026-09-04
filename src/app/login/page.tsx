@@ -1,12 +1,11 @@
 "use client";
+import { withBase } from "@/lib/base-path";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { AuthFrame } from "@/components/auth-frame";
 import { Button, Field, Input } from "@/components/ui";
 import { api, HttpError } from "@/lib/api";
 
 export default function LoginPage() {
-  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -17,8 +16,7 @@ export default function LoginPage() {
     setError(null);
     try {
       await api("/api/auth/login", { method: "POST", json: { email, password } });
-      router.push("/");
-      router.refresh();
+      window.location.assign(withBase("/"));
     } catch (err) {
       setError(err instanceof HttpError ? err.message : "Sign-in failed");
     } finally {

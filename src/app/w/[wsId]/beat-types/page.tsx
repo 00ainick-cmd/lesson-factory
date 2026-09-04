@@ -12,7 +12,7 @@ export default async function BeatTypesPage({ params }: { params: Promise<{ wsId
   return (
     <>
       <PageHeader kicker="Workspace" title="Beat Types">
-        <p className="mt-2 max-w-3xl text-[13px] text-muted">The seed kit's beat grammar. A beat is an instructional event with a purpose, an objective link, a learner action, and optional completion evidence — blocks live inside beats.</p>
+        <p className="mt-2 max-w-3xl text-[13px] text-muted">The seed kit&rsquo;s beat grammar. A beat is an instructional event with a purpose, an objective link, a learner action, and optional completion evidence — blocks live inside beats.</p>
       </PageHeader>
       <ol className="grid gap-3 px-8 py-6 md:grid-cols-2 2xl:grid-cols-3">
         {rows.map((b) => (

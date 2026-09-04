@@ -1,4 +1,5 @@
 "use client";
+import { withBase } from "./base-path";
 export class HttpError extends Error {
   constructor(
     public status: number,
@@ -11,7 +12,7 @@ export class HttpError extends Error {
 
 export async function api<T = unknown>(url: string, init: RequestInit & { json?: unknown } = {}): Promise<T> {
   const { json, ...rest } = init;
-  const res = await fetch(url, {
+  const res = await fetch(withBase(url), {
     ...rest,
     headers: { ...(json !== undefined ? { "Content-Type": "application/json" } : {}), ...(rest.headers ?? {}) },
     body: json !== undefined ? JSON.stringify(json) : rest.body,

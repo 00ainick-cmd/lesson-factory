@@ -1,12 +1,11 @@
 "use client";
+import { withBase } from "@/lib/base-path";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import { AuthFrame } from "@/components/auth-frame";
 import { Button, Field, Input } from "@/components/ui";
 import { api, HttpError } from "@/lib/api";
 
 export default function SetupPage() {
-  const router = useRouter();
   const [needs, setNeeds] = useState<boolean | null>(null);
   const [form, setForm] = useState({ name: "", email: "", password: "", workspaceName: "AERO Studio" });
   const [error, setError] = useState<string | null>(null);
@@ -20,8 +19,7 @@ export default function SetupPage() {
     setError(null);
     try {
       const r = await api<{ workspace: { id: string } }>("/api/auth/setup", { method: "POST", json: form });
-      router.push(`/w/${r.workspace.id}`);
-      router.refresh();
+      window.location.assign(withBase(`/w/${r.workspace.id}`));
     } catch (err) {
       setError(err instanceof HttpError ? err.message : "Setup failed");
     } finally {
@@ -32,7 +30,7 @@ export default function SetupPage() {
   if (!needs)
     return (
       <AuthFrame title="Setup already completed" subtitle="An administrator account exists. Sign in or ask an admin for an invite.">
-        <Button variant="primary" className="w-full" onClick={() => router.push("/login")}>Go to sign in</Button>
+        <Button variant="primary" className="w-full" onClick={() => window.location.assign(withBase("/login"))}>Go to sign in</Button>
       </AuthFrame>
     );
   return (

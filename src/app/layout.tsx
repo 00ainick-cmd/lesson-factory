@@ -1,20 +1,25 @@
 import type { Metadata } from "next";
-import { IBM_Plex_Sans, JetBrains_Mono, Saira } from "next/font/google";
 import "./globals.css";
+import { withBase } from "@/lib/base-path";
 
-const saira = Saira({ subsets: ["latin"], weight: ["500", "600", "700"], variable: "--font-saira", display: "swap" });
-const plex = IBM_Plex_Sans({ subsets: ["latin"], weight: ["400", "500", "600"], variable: "--font-plex", display: "swap" });
-const jet = JetBrains_Mono({ subsets: ["latin"], weight: ["400", "500"], variable: "--font-jet", display: "swap" });
+// Fonts are loaded via a stylesheet link (not next/font) so builds do not depend on fetching Google
+// Fonts at compile time. CSS variables are defined in globals.css.
+const FONTS = "https://fonts.googleapis.com/css2?family=Saira:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap";
 
 export const metadata: Metadata = {
   title: "Lesson Factory Studio",
   description: "Private authoring studio for AERO avionics lessons",
-  icons: { icon: "/favicon.svg" },
+  icons: { icon: withBase("/favicon.svg") },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${saira.variable} ${plex.variable} ${jet.variable} dark`}>
+    <html lang="en" className="dark">
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="stylesheet" href={FONTS} />
+      </head>
       <body className="min-h-full">{children}</body>
     </html>
   );

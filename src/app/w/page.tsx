@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { withBase } from "@/lib/base-path";
 import { getCurrentUser } from "@/server/auth/session";
 import { listWorkspacesForUser } from "@/server/services/workspaces";
 import { AuthFrame } from "@/components/auth-frame";
@@ -15,7 +16,7 @@ export default async function WorkspacesPage() {
       <ul className="space-y-2">
         {ws.map((w) => (
           <li key={w.id}>
-            <a href={`/w/${w.id}`} className="flex items-center justify-between rounded border border-line-2 px-3 py-2 hover:border-accent">
+            <a href={withBase(`/w/${w.id}`)} className="flex items-center justify-between rounded border border-line-2 px-3 py-2 hover:border-accent">
               <span>{w.name}</span>
               <span className="font-mono text-[11px] uppercase text-muted">{w.role}</span>
             </a>

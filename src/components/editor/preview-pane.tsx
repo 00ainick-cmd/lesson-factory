@@ -1,4 +1,5 @@
 "use client";
+import { withBase } from "@/lib/base-path";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { z } from "zod";
 import { useEditor } from "./store";
@@ -114,7 +115,7 @@ export function PreviewPane() {
     else if (selectedBeatId) send({ type: "lfs:scrollTo", beatId: selectedBeatId });
   }, [selectedBlockId, selectedBeatId, ready, send]);
 
-  const src = `/api/preview/${projectId}?mode=${previewMode}&n=${nonce}`;
+  const src = withBase(`/api/preview/${projectId}?mode=${previewMode}&n=${nonce}`);
   const w = width === "full" ? "100%" : width === "tablet" ? 820 : 390;
 
   return (

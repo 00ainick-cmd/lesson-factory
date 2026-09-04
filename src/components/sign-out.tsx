@@ -1,16 +1,14 @@
 "use client";
-import { useRouter } from "next/navigation";
+import { withBase } from "@/lib/base-path";
 import { api } from "@/lib/api";
 
 export function SignOutButton() {
-  const router = useRouter();
   return (
     <button
       className="text-[12px] text-muted hover:text-ink"
       onClick={async () => {
         await api("/api/auth/logout", { method: "POST" });
-        router.push("/login");
-        router.refresh();
+        window.location.assign(withBase("/login"));
       }}
     >
       Sign out

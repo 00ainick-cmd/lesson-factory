@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { withBase } from "@/lib/base-path";
 import { notFound } from "next/navigation";
 import { requireProject } from "@/server/auth/rbac";
 import { getProjectFull, listExports, latestAudit } from "@/server/services/projects";
@@ -47,7 +48,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ wsId: 
                 <dt className="text-muted">Size</dt><dd>{fmtBytes(original.sizeBytes)}</dd>
                 <dt className="text-muted">SHA-256</dt><dd className="break-all font-mono text-[11.5px] text-ok">{original.sha256}</dd>
                 <dt className="text-muted">Stored</dt><dd>{fmtDate(original.createdAt)}</dd>
-                <dt className="text-muted">Download</dt><dd><a className="text-accent hover:underline" href={`/api/projects/${id}/original`}>byte-identical copy</a></dd>
+                <dt className="text-muted">Download</dt><dd><a className="text-accent hover:underline" href={withBase(`/api/projects/${id}/original`)}>byte-identical copy</a></dd>
               </dl>
             ) : (
               <p className="text-muted">No original artifact (authored from scratch).</p>

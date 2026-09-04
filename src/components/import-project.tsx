@@ -1,12 +1,11 @@
 "use client";
+import { withBase } from "@/lib/base-path";
 import { useRef, useState } from "react";
-import { useRouter } from "next/navigation";
 import { Upload } from "lucide-react";
 import { Button, Field, Input } from "./ui";
 import { HttpError } from "@/lib/api";
 
 export function ImportProjectDialog({ wsId }: { wsId: string }) {
-  const router = useRouter();
   const ref = useRef<HTMLDialogElement>(null);
   const [title, setTitle] = useState("");
   const [file, setFile] = useState<File | null>(null);
@@ -20,7 +19,7 @@ export function ImportProjectDialog({ wsId }: { wsId: string }) {
     const fd = new FormData();
     fd.set("title", title || file.name.replace(/\.html?$/i, ""));
     fd.set("file", file);
-    const res = await fetch(`/api/workspaces/${wsId}/projects`, { method: "POST", body: fd });
+    const res = await fetch(withBase(`/api/workspaces/${wsId}/projects`), { method: "POST", body: fd });
     const data = await res.json().catch(() => ({}));
     setBusy(false);
     if (!res.ok) {
@@ -28,8 +27,7 @@ export function ImportProjectDialog({ wsId }: { wsId: string }) {
       return;
     }
     ref.current?.close();
-    router.push(`/w/${wsId}/projects/${(data as { project: { id: string } }).project.id}`);
-    router.refresh();
+    window.location.assign(withBase(`/w/${wsId}/projects/${(data as { project: { id: string } }).project.id}`));
   }
   return (
     <>

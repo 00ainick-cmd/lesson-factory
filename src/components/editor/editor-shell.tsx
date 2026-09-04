@@ -11,6 +11,7 @@ import { CopilotPanel } from "./copilot-panel";
 import { Button, Input, Textarea } from "../ui";
 import { Logo } from "../logo";
 import { api, HttpError } from "@/lib/api";
+import { withBase } from "@/lib/base-path";
 
 type Props = { projectId: string; wsId: string; role: string; initialTab: "inspector" | "copilot"; beatTypes: { key: string; name: string }[]; objectives: { code: string; wording: string }[] };
 
@@ -280,7 +281,7 @@ function ExportDialog({ projectId, wsId, onClose, saveState, onFlush }: { projec
           {msg && <p className={state === "error" ? "text-bad" : "text-muted"}>{msg}</p>}
           <div className="flex justify-end gap-2">
             <Button variant="ghost" onClick={onClose}>Close</Button>
-            {result && result.status === "passed" && <a className="inline-flex items-center gap-1.5 rounded-md bg-accent px-3 py-1.5 text-[13px] font-medium text-white hover:bg-accent-dim" href={`/api/projects/${projectId}/exports/${result.id}/download`}>Download HTML</a>}
+            {result && result.status === "passed" && <a className="inline-flex items-center gap-1.5 rounded-md bg-accent px-3 py-1.5 text-[13px] font-medium text-white hover:bg-accent-dim" href={withBase(`/api/projects/${projectId}/exports/${result.id}/download`)}>Download HTML</a>}
             <Link href={`/w/${wsId}/projects/${projectId}#exports`} className="inline-flex items-center rounded-md border border-line-2 px-3 py-1.5 text-[13px] text-muted hover:text-ink">Export history</Link>
           </div>
         </div>

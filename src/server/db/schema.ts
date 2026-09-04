@@ -73,9 +73,11 @@ export const sessions = pgTable(
     expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
     userAgent: text("user_agent"),
     ip: text("ip"),
+    // Hosted-preview fallback only (AUTH_VISITOR_HEADER=true): proxy-injected browser id bound to this session.
+    visitorId: text("visitor_id"),
     createdAt: ts("created_at"),
   },
-  (t) => [index("sessions_user_idx").on(t.userId)],
+  (t) => [index("sessions_user_idx").on(t.userId), index("sessions_visitor_idx").on(t.visitorId)],
 );
 
 export const workspaces = pgTable("workspaces", {
