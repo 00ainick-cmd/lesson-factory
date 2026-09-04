@@ -1,12 +1,13 @@
 #!/usr/bin/env node
 /**
- * Hosted-preview launcher. The preview proxy strips its "/port/3000" prefix before forwarding, while
- * the Next build is compiled with BASE_PATH=/port/3000 so every link and asset resolves through the
+ * Hosted-preview launcher. The preview proxy strips its "/port/5000" prefix before forwarding, while
+ * the Next build is compiled with BASE_PATH=/port/5000 so every link and asset resolves through the
  * proxy. This shim re-adds the prefix and forwards to Next on the internal port. Not used in a normal
  * deployment (run `next start` directly and leave BASE_PATH unset).
  */
 import http from "node:http";
 import { execSync, spawn } from "node:child_process";
+import { relativeRootFor } from "./preview-paths.mjs";
 
 const PUBLIC_PORT = Number(process.env.PORT || 5000);
 const NEXT_PORT = Number(process.env.NEXT_INTERNAL_PORT || 5001);
@@ -21,15 +22,29 @@ next.on("exit", (code) => process.exit(code ?? 1));
 
 const server = http.createServer((req, res) => {
   const incomingPath = new URL(req.url, "http://preview.local").pathname;
+  // Depending on the gateway hop, the request can arrive with /port/5000
+  // already present or with that mount stripped. Measure depth only inside
+  // the application route, never across the mount segments themselves.
+  // Browser URLs do not end in a slash, so the final route segment already
+  // occupies the current URL slot. Climb once for each preceding segment.
+  const relativeRoot = relativeRootFor(incomingPath, PREFIX);
   let path = req.url === "/" || req.url === "" ? PREFIX : req.url;
   if (!(path === PREFIX || path.startsWith(PREFIX + "/") || path.startsWith(PREFIX + "?"))) path = PREFIX + path;
   const headers = { ...req.headers, host: `127.0.0.1:${NEXT_PORT}`, "accept-encoding": "identity" };
   const up = http.request({ host: "127.0.0.1", port: NEXT_PORT, method: req.method, path, headers }, (r) => {
     const outHeaders = { ...r.headers };
     const location = outHeaders.location;
-    if (typeof location === "string" && location.startsWith(PREFIX + "/")) {
-      // A relative Location stays under the private deploy_website prefix.
-      outHeaders.location = "." + location.slice(PREFIX.length);
+    if (typeof location === "string" && (location === PREFIX || location.startsWith(PREFIX + "/"))) {
+      // Keep Next redirects inside the private deploy_website mount, regardless of
+      // the depth of the current route.
+      const suffix = location.slice(PREFIX.length).replace(/^\/+/, "");
+      outHeaders.location = relativeRoot + suffix;
+    }
+    if (typeof outHeaders.refresh === "string") {
+      outHeaders.refresh = outHeaders.refresh.replace(
+        new RegExp(`url=${PREFIX.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}(?:/([^;]*))?`),
+        (_, suffix = "") => `url=${relativeRoot}${suffix}`,
+      );
     }
     const type = String(outHeaders["content-type"] ?? "");
     const isHtml = type.includes("text/html");
@@ -60,8 +75,6 @@ const server = http.createServer((req, res) => {
       }
 
       let html = body;
-      const routeParts = incomingPath.split("/").filter(Boolean);
-      const relativeRoot = routeParts.length <= 1 ? "./" : "../".repeat(routeParts.length - 1);
       // Next repeats asset URLs in both tag attributes and its serialized bootstrap data. Rewriting
       // every occurrence prevents the bootstrap loader from issuing a second, root-absolute request.
       html = html.replaceAll("/port/5000/", relativeRoot);
@@ -95,10 +108,18 @@ const server = http.createServer((req, res) => {
     const anchor = event.target instanceof Element ? event.target.closest("a[href]") : null;
     if (!anchor || anchor.target || anchor.hasAttribute("download")) return;
     const url = new URL(anchor.href, location.href);
-    if (url.origin === location.origin && url.pathname.lastIndexOf(marker) > 0) {
+    const targetMarkerAt = url.pathname.lastIndexOf(marker);
+    if (url.origin === location.origin && targetMarkerAt >= 0) {
       event.preventDefault();
       event.stopImmediatePropagation();
-      location.assign(url.href);
+      // Hydration can restore Next's root-absolute /port/5000 href after the
+      // HTML rewriter made it relative. Reattach that URL to this preview's
+      // opaque outer mount before navigating.
+      const target =
+        targetMarkerAt === 0 && at > 0
+          ? location.origin + mount + url.pathname.slice(marker.length) + url.search + url.hash
+          : url.href;
+      location.assign(target);
     }
   }, true);
 })();
