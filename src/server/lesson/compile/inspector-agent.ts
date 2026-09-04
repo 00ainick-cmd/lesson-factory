@@ -1,7 +1,8 @@
 /**
  * Script injected into the sandboxed preview iframe. It only talks to the parent through
  * postMessage with a fixed set of message types; the parent validates every message with zod.
- * It never receives HTML or code from the parent — only block ids for highlight/scroll.
+ * Host→agent messages are ids plus, for lfs:patch, compiler output for one managed block (the
+ * same HTML a reload would produce; see docs/decisions.md D14). The agent never sends HTML to the host.
  */
 export const INSPECTOR_AGENT_SOURCE = `
 (function(){
@@ -47,12 +48,25 @@ export const INSPECTOR_AGENT_SOURCE = `
     } else if (d.type === "lfs:scrollTo") {
       var target = d.blockId ? document.querySelector('[data-lfs-block="' + String(d.blockId).replace(/"/g, "") + '"]') : d.beatId ? document.querySelector('[data-lfs-beat="' + String(d.beatId).replace(/"/g, "") + '"]') : null;
       if (target) { target.scrollIntoView({ behavior: "smooth", block: "center" }); if (d.blockId) select(target); }
+    } else if (d.type === "lfs:patch") {
+      var cur = d.blockId ? document.querySelector('[data-lfs-block="' + String(d.blockId).replace(/"/g, "") + '"]') : null;
+      if (cur && typeof d.html === "string") {
+        var wasSelected = cur === selected;
+        var tpl = document.createElement("template");
+        tpl.innerHTML = d.html;
+        var next = tpl.content.querySelector('[data-lfs-block]') || tpl.content.firstElementChild;
+        if (next) { cur.replaceWith(next); if (wasSelected) select(next); post("lfs:patched", { blockId: d.blockId }); }
+      }
+    } else if (d.type === "lfs:setScroll") {
+      window.scrollTo(0, Number(d.y) || 0);
     } else if (d.type === "lfs:ping") {
       post("lfs:pong", {});
     }
   });
   window.addEventListener("error", function(e){ post("lfs:error", { message: String(e.message || e), line: e.lineno || null }); });
   window.addEventListener("unhandledrejection", function(e){ post("lfs:error", { message: String(e.reason && e.reason.message || e.reason || "unhandled rejection") }); });
+  var scrollTimer = null;
+  window.addEventListener("scroll", function(){ if (scrollTimer) return; scrollTimer = setTimeout(function(){ scrollTimer = null; post("lfs:scroll", { y: window.scrollY }); }, 150); }, { passive: true });
   var beats = [].map.call(document.querySelectorAll("[data-lfs-beat]"), function(b){ return { beatId: b.getAttribute("data-lfs-beat"), blocks: b.querySelectorAll(SEL).length }; });
   post("lfs:ready", { beats: beats, title: document.title });
 })();
