@@ -1,0 +1,702 @@
+<title>The Beat Typology</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;600&family=Public+Sans:wght@400;600&display=swap">
+<style>
+  :root{
+    --paper:#eceee9; --card:#f9faf8; --sunk:#e3e7e1; --rule:#ccd2cb; --rule-2:#a8b2a7;
+    --ink:#191c19; --ink-2:#4a524b; --ink-3:#79827a;
+    --frame:#3d5a80; --deliver:#2f6b5f; --apply:#8a6620; --verify:#8f4426; --close:#5f3c70;
+    --good:#2f6b5f; --bad:#8f4426;
+    --shadow:0 1px 2px rgba(25,28,25,.05), 0 10px 26px rgba(25,28,25,.055);
+    --disp:"Fraunces",Georgia,"Times New Roman",serif;
+    --body:"Public Sans","Helvetica Neue",Arial,sans-serif;
+    --mono:"IBM Plex Mono","SFMono-Regular",Consolas,monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#131614; --card:#1b201d; --sunk:#0f1211; --rule:#2f3733; --rule-2:#4b554f;
+      --ink:#e9eee9; --ink-2:#a9b3ac; --ink-3:#7e887f;
+      --frame:#8bb0dd; --deliver:#5fbfa6; --apply:#d5aa4c; --verify:#e28a63; --close:#b394c9;
+      --good:#5fbfa6; --bad:#e28a63;
+      --shadow:0 1px 2px rgba(0,0,0,.45), 0 10px 26px rgba(0,0,0,.32);
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#131614; --card:#1b201d; --sunk:#0f1211; --rule:#2f3733; --rule-2:#4b554f;
+    --ink:#e9eee9; --ink-2:#a9b3ac; --ink-3:#7e887f;
+    --frame:#8bb0dd; --deliver:#5fbfa6; --apply:#d5aa4c; --verify:#e28a63; --close:#b394c9;
+    --good:#5fbfa6; --bad:#e28a63;
+    --shadow:0 1px 2px rgba(0,0,0,.45), 0 10px 26px rgba(0,0,0,.32);
+  }
+
+  *{box-sizing:border-box}
+  body{background:var(--paper); color:var(--ink); font-family:var(--body);
+       font-size:16.5px; line-height:1.65; -webkit-font-smoothing:antialiased}
+  .wrap{max-width:1140px; margin:0 auto; padding:0 26px 110px}
+  p{margin:0 0 1em; max-width:70ch}
+  button{font:inherit; color:inherit}
+  :focus-visible{outline:2px solid var(--frame); outline-offset:3px; border-radius:2px}
+  @media (prefers-reduced-motion: reduce){*{transition:none !important; animation:none !important}}
+
+  /* masthead */
+  .mast{padding:60px 0 0; border-bottom:1px solid var(--rule); margin-bottom:14px}
+  .eyebrow{font-family:var(--mono); font-size:11px; letter-spacing:.2em; text-transform:uppercase;
+           color:var(--ink-3); margin-bottom:20px}
+  h1{font-family:var(--disp); font-weight:700; font-size:clamp(36px,6vw,66px); line-height:1.02;
+     letter-spacing:-.015em; margin:0 0 18px; text-wrap:balance}
+  .sub{font-size:20px; line-height:1.55; color:var(--ink-2); max-width:56ch; margin-bottom:30px}
+  .sub b{color:var(--ink); font-weight:600}
+  .credit{font-family:var(--mono); font-size:11.5px; color:var(--ink-3); margin-bottom:24px; line-height:1.8}
+
+  /* section furniture */
+  section{margin:74px 0; scroll-margin-top:20px}
+  .shead{display:flex; gap:15px; align-items:baseline; margin-bottom:8px}
+  .sn{font-family:var(--mono); font-size:12px; font-weight:600; color:var(--ink-3); flex:none; padding-top:6px}
+  h2{font-family:var(--disp); font-weight:600; font-size:clamp(25px,3.4vw,36px); letter-spacing:-.01em;
+     margin:0; text-wrap:balance}
+  .slede{font-size:18.5px; color:var(--ink-2); max-width:64ch; margin:0 0 26px 0}
+  h3{font-family:var(--disp); font-weight:600; font-size:20px; margin:36px 0 12px; text-wrap:balance}
+
+  /* phase map */
+  .phasemap{display:grid; grid-template-columns:repeat(auto-fit,minmax(178px,1fr)); gap:12px; margin:26px 0 12px}
+  .col{background:var(--card); border:1px solid var(--rule); border-top:3px solid var(--pc);
+       border-radius:3px; padding:13px 13px 14px; box-shadow:var(--shadow)}
+  .col h4{font-family:var(--mono); font-size:10.5px; letter-spacing:.16em; text-transform:uppercase;
+          color:var(--pc); margin:0 0 4px; font-weight:600}
+  .col .cw{font-size:12.5px; color:var(--ink-3); margin:0 0 11px; line-height:1.45}
+  .chip{display:flex; gap:9px; align-items:baseline; width:100%; text-align:left; background:none;
+        border:none; border-radius:2px; padding:6px 7px; margin:0 0 2px; cursor:pointer;
+        transition:background .12s}
+  .chip:hover,.chip:focus-visible{background:var(--sunk)}
+  .chip i{font-family:var(--mono); font-size:11px; font-style:normal; color:var(--pc); font-weight:600; flex:none}
+  .chip span{font-size:14.5px; font-weight:600}
+
+  /* instrument panels */
+  .panel{background:var(--card); border:1px solid var(--rule-2); border-radius:4px;
+         box-shadow:var(--shadow); margin:26px 0; overflow:hidden}
+  .panel-top{padding:14px 20px; border-bottom:1px solid var(--rule); background:var(--sunk);
+             display:flex; gap:16px; align-items:center; flex-wrap:wrap; justify-content:space-between}
+  .panel-lab{font-family:var(--mono); font-size:10.5px; letter-spacing:.16em; text-transform:uppercase;
+             color:var(--ink-3); font-weight:600}
+  .panel-body{padding:20px}
+
+  /* toggles */
+  .tg{display:flex; gap:7px; flex-wrap:wrap}
+  .tg button{background:var(--card); border:1px solid var(--rule-2); border-radius:2px;
+             padding:6px 12px; font-size:13px; cursor:pointer; transition:all .12s;
+             font-family:var(--mono); letter-spacing:.02em}
+  .tg button:hover{border-color:var(--ink-3)}
+  .tg button[aria-pressed="true"]{background:var(--ink); color:var(--paper); border-color:var(--ink)}
+
+  /* plates */
+  .plate{background:var(--card); border:1px solid var(--rule); border-left:4px solid var(--pc);
+         border-radius:3px; margin-bottom:10px; box-shadow:var(--shadow); overflow:hidden}
+  .plate-hd{display:flex; gap:15px; align-items:flex-start; width:100%; text-align:left;
+            background:none; border:none; padding:16px 19px; cursor:pointer}
+  .plate-hd:hover{background:var(--sunk)}
+  .plate-n{font-family:var(--mono); font-size:12px; font-weight:600; color:var(--pc); flex:none; padding-top:5px; width:22px}
+  .plate-t{flex:1; min-width:0}
+  .plate-t h4{font-family:var(--disp); font-weight:600; font-size:20px; margin:0 0 3px; letter-spacing:-.005em}
+  .plate-t p{font-size:14.5px; color:var(--ink-2); margin:0; max-width:72ch; line-height:1.5}
+  .plate-meta{font-family:var(--mono); font-size:10px; letter-spacing:.13em; text-transform:uppercase;
+              color:var(--pc); flex:none; padding-top:7px; text-align:right; line-height:1.7}
+  .plate-body{padding:2px 19px 20px 56px; border-top:1px solid var(--rule)}
+  .plate-body[hidden]{display:none}
+  .fieldlab{font-family:var(--mono); font-size:10px; letter-spacing:.15em; text-transform:uppercase;
+            color:var(--ink-3); font-weight:600; margin:20px 0 7px}
+  .plate-body p{font-size:15.5px; margin:0 0 10px; color:var(--ink-2); max-width:74ch}
+  .plate-body ol{margin:0; padding-left:20px; max-width:74ch}
+  .plate-body ol li{font-size:15.5px; color:var(--ink-2); margin-bottom:7px}
+  .plate-body ol li b, .plate-body p b{color:var(--ink); font-weight:600}
+  .inst{background:var(--sunk); border-radius:3px; padding:13px 16px; margin:0 0 4px; max-width:74ch}
+  .inst .dm{font-family:var(--mono); font-size:10.5px; letter-spacing:.12em; text-transform:uppercase;
+            color:var(--pc); font-weight:600; margin-bottom:5px}
+  .inst p{margin:0; font-size:15.5px; color:var(--ink)}
+  .tag{display:inline-block; font-family:var(--mono); font-size:9.5px; letter-spacing:.1em;
+       padding:2px 7px; border-radius:2px; margin-left:8px; vertical-align:2px; font-weight:600}
+  .t-built{background:var(--good); color:var(--paper)}
+  .t-spec{background:var(--sunk); color:var(--ink-3); border:1px solid var(--rule-2)}
+
+  /* composer */
+  .cmp{display:grid; grid-template-columns:minmax(240px,1fr) minmax(300px,1.25fr); gap:26px}
+  @media (max-width:760px){.cmp{grid-template-columns:1fr}}
+  .ctrl{margin-bottom:22px}
+  .ctrl > label{display:block; font-family:var(--mono); font-size:10.5px; letter-spacing:.14em;
+                text-transform:uppercase; color:var(--ink-3); font-weight:600; margin-bottom:9px}
+  .ctrl .hint{font-size:13px; color:var(--ink-3); margin:7px 0 0; line-height:1.5}
+  input[type=range]{width:100%; accent-color:var(--deliver); margin:2px 0}
+  .rv{font-family:var(--mono); font-size:13px; color:var(--ink); font-weight:600}
+  .beatlist{list-style:none; margin:0 0 18px; padding:0}
+  .beatlist li{display:flex; gap:12px; align-items:baseline; padding:7px 0; border-bottom:1px solid var(--rule);
+               font-size:14.5px}
+  .beatlist li:last-child{border-bottom:none}
+  .beatlist .bn{font-family:var(--mono); font-size:11px; color:var(--ink-3); width:18px; flex:none}
+  .beatlist .bt{flex:1; font-weight:600}
+  .beatlist .bw{font-family:var(--mono); font-size:12.5px; color:var(--ink-2); font-variant-numeric:tabular-nums}
+  .bar{position:relative; height:34px; background:var(--sunk); border:1px solid var(--rule);
+       border-radius:2px; overflow:hidden; margin:6px 0 8px}
+  .band{position:absolute; top:0; bottom:0; background:var(--deliver); opacity:.2;
+        border-left:1px dashed var(--deliver); border-right:1px dashed var(--deliver)}
+  .fill{position:absolute; top:0; bottom:0; left:0; background:var(--ink); opacity:.22; transition:width .18s}
+  .mark{position:absolute; top:-2px; bottom:-2px; width:3px; background:var(--ink);
+        border-radius:2px; transition:left .18s}
+  .mark.out{background:var(--bad)}
+  .barlab{display:flex; justify-content:space-between; font-family:var(--mono); font-size:11px; color:var(--ink-3)}
+  .verdict{font-size:15px; margin-top:12px; padding:11px 14px; border-radius:3px; border-left:3px solid}
+  .v-in{border-color:var(--good); background:var(--sunk)}
+  .v-out{border-color:var(--bad); background:var(--sunk)}
+  .verdict b{font-weight:600}
+
+  /* matrix + evidence tables */
+  .tw{overflow-x:auto; border:1px solid var(--rule); border-radius:3px; background:var(--card);
+      box-shadow:var(--shadow); margin:22px 0}
+  table{border-collapse:collapse; width:100%; min-width:600px}
+  th{font-family:var(--mono); font-size:10px; letter-spacing:.13em; text-transform:uppercase;
+     color:var(--ink-3); font-weight:600; text-align:left; padding:13px 15px;
+     border-bottom:1px solid var(--rule-2); white-space:nowrap}
+  td{padding:12px 15px; border-bottom:1px solid var(--rule); font-size:14.5px; color:var(--ink-2);
+     vertical-align:top}
+  tr:last-child td{border-bottom:none}
+  td:first-child{color:var(--ink); font-weight:600; white-space:nowrap}
+  td b{color:var(--ink); font-weight:600}
+
+  /* rules */
+  .rules{display:grid; grid-template-columns:repeat(auto-fit,minmax(310px,1fr)); gap:12px; margin:24px 0}
+  .rule{background:var(--card); border:1px solid var(--rule); border-radius:3px; padding:18px 20px;
+        box-shadow:var(--shadow)}
+  .rule h4{font-family:var(--disp); font-weight:600; font-size:17.5px; margin:0 0 8px}
+  .rule p{font-size:15px; color:var(--ink-2); margin:0 0 8px; max-width:none}
+  .rule p:last-child{margin:0}
+  .rule .why{font-family:var(--mono); font-size:12.5px; color:var(--ink-3); line-height:1.6;
+             border-top:1px solid var(--rule); padding-top:9px; margin-top:11px}
+
+  .note{border-left:3px solid var(--frame); background:var(--card); padding:16px 20px; margin:26px 0;
+        border-radius:0 3px 3px 0; box-shadow:var(--shadow)}
+  .note p{margin:0; max-width:68ch}
+  .note p + p{margin-top:10px}
+  .closer{border-top:1px solid var(--rule-2); padding-top:22px; color:var(--ink-2); max-width:70ch}
+</style>
+
+<div class="wrap">
+
+  <header class="mast">
+    <div class="eyebrow">Instructional design methodology</div>
+    <h1>The Beat Typology</h1>
+    <p class="sub">Ten instructional functions a block of a technical lesson can perform, each defined by what it does to the learner rather than by what it looks like on screen. <b>Choose the function first. The interaction is the last decision, not the first.</b></p>
+    <div class="credit">Aircraft Electronics Association, Workforce Development<br>CAET and AET training programs</div>
+  </header>
+
+  <section id="spine">
+    <div class="shead"><span class="sn">01</span><h2>The spine of a lesson</h2></div>
+    <p class="slede">Five phases, ten types. Select any type to read its full description.</p>
+    <div class="phasemap" id="phasemap"></div>
+    <p style="font-size:14.5px;color:var(--ink-3);max-width:74ch">Mandatory in every lesson: Orientation, at least one applied type, Check, Consolidation. Everything else must justify its inclusion against a stated objective. A beat that cannot name the objective it serves and the principle it enacts is decoration, and decoration is removed.</p>
+  </section>
+
+  <section id="types">
+    <div class="shead"><span class="sn">02</span><h2>The ten types</h2></div>
+    <p class="slede">Each entry gives the function, the evidence it rests on, the design requirements, and the ways it is observed to fail. The worked example shown inside each type follows the domain you select here.</p>
+
+    <div class="panel">
+      <div class="panel-top">
+        <span class="panel-lab">Show examples from</span>
+        <div class="tg" id="domainpick" role="group" aria-label="Training domain"></div>
+      </div>
+    </div>
+
+    <div id="plates"></div>
+  </section>
+
+  <section id="universal">
+    <div class="shead"><span class="sn">03</span><h2>The same ten types, six subjects</h2></div>
+    <p class="slede">The typology is defined by instructional function, so it does not change when the subject does. What changes is the instantiation. This is the whole claim, laid out in one grid.</p>
+    <div class="tw"><table id="matrix"></table></div>
+    <div class="note">
+      <p>The electrical column carries the most entries marked <b>built</b> because those lessons were constructed first, not because the method is electrical. The applied types in particular are frequently misread as requiring a physical system. They do not. They require a rule-governed model whose state the learner changes and whose response is computed. Information lost across a shift handover is such a model.</p>
+    </div>
+  </section>
+
+  <section id="composer">
+    <div class="shead"><span class="sn">04</span><h2>Compose a lesson</h2></div>
+    <p class="slede">Type selection is driven by the objective's performance verb, and the word budget follows from the types selected. Set the conditions below and watch the lesson assemble.</p>
+
+    <div class="panel">
+      <div class="panel-top"><span class="panel-lab">Lesson composer</span>
+        <span class="panel-lab" id="cmpcount"></span></div>
+      <div class="panel-body">
+        <div class="cmp">
+          <div>
+            <div class="ctrl">
+              <label id="lb-verb">What must the learner be able to do</label>
+              <div class="tg" id="verbpick" role="group" aria-labelledby="lb-verb"></div>
+              <p class="hint">The performance verb selects the applied type. Two verbs mean two applied beats, or an objective that should have been split.</p>
+            </div>
+            <div class="ctrl">
+              <label id="lb-opt">Optional delivery beats</label>
+              <div class="tg" id="optpick" role="group" aria-labelledby="lb-opt"></div>
+            </div>
+            <div class="ctrl">
+              <label for="sl-expl">Explanation weight <span class="rv" id="v-expl"></span></label>
+              <input type="range" id="sl-expl" min="200" max="1200" step="50" value="900">
+              <p class="hint">The sustained prose that builds the mental model. Drag it down and watch what happens.</p>
+            </div>
+            <div class="ctrl">
+              <label for="sl-def">Definition weight <span class="rv" id="v-def"></span></label>
+              <input type="range" id="sl-def" min="150" max="700" step="25" value="550">
+            </div>
+          </div>
+          <div>
+            <div class="panel-lab" style="margin-bottom:10px">Assembled beat map</div>
+            <ol class="beatlist" id="beatlist"></ol>
+            <div class="panel-lab" style="margin-bottom:6px">Learner-visible words</div>
+            <div class="bar" id="bar">
+              <div class="band" id="bandmark"></div>
+              <div class="fill" id="fillmark"></div>
+              <div class="mark" id="totalmark"></div>
+            </div>
+            <div class="barlab"><span>0</span><span>target band 2400 to 3600</span><span>4400</span></div>
+            <div class="verdict" id="verdict"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="note">
+      <p>Pull the Explanation slider to its floor and the lesson drops out of the band with every interactive beat still present. That is not an artifact of the arithmetic. It is the finding that produced this methodology: the four weakest lessons in the first shipped course each retained their simulations and their checks, and thinned the prose. They kept everything that looked like instruction and removed the part that was.</p>
+    </div>
+  </section>
+
+  <section id="evidence">
+    <div class="shead"><span class="sn">05</span><h2>What each type rests on</h2></div>
+    <p class="slede">No type is included because it is conventional. Each enacts a specific finding, and removing the type forfeits the effect.</p>
+    <div class="tw"><table id="evtable"></table></div>
+  </section>
+
+  <section id="rules">
+    <div class="shead"><span class="sn">06</span><h2>The governing rules</h2></div>
+    <p class="slede">Six constraints that hold in every lesson, in every domain. Each states what it prevents, because a rule whose cost is invisible is the first one dropped.</p>
+
+    <div class="rules">
+      <div class="rule">
+        <h4>Function before interaction</h4>
+        <p>The instructional function is chosen from the objective. The interaction is chosen from the subject. The build comes last.</p>
+        <p class="why">Prevents: a lesson designed around an available component, which satisfies every surface rule and teaches the wrong thing well.</p>
+      </div>
+      <div class="rule">
+        <h4>Prediction precedes manipulation</h4>
+        <p>On an applied beat the learner commits to an outcome first, and that commitment drives the model.</p>
+        <p class="why">Prevents: exploration in place of instruction. The learning sits in the gap between what was predicted and what occurred, and a control operated without commitment closes no gap.</p>
+      </div>
+      <div class="rule">
+        <h4>The prose carries the model</h4>
+        <p>Definition and Explanation together account for roughly half the learner-visible words. They are not connective material between the interactions.</p>
+        <p class="why">Prevents: learners who can operate the controls and cannot explain the system. For low prior knowledge readers, more explicit causal text produces better comprehension, not less.</p>
+      </div>
+      <div class="rule">
+        <h4>The wrong path stays reachable</h4>
+        <p>On a Procedure beat the incorrect action can be taken and its consequence is shown.</p>
+        <p class="why">Prevents: a demonstration wearing an interface. An error committed and immediately corrected retains better than an error prevented.</p>
+      </div>
+      <div class="rule">
+        <h4>Nothing is fabricated</h4>
+        <p>Measured values, indications, citations and quotations come from source documentation. Where a source is silent the build stops and asks.</p>
+        <p class="why">Prevents: a plausible number entering a training library and being taught as fact. This constraint outranks completeness, schedule, and the appearance of finish.</p>
+      </div>
+      <div class="rule">
+        <h4>One function per beat</h4>
+        <p>A beat performs exactly one instructional function and controls exactly one gate.</p>
+        <p class="why">Prevents: two interactions competing for the same working memory, where neither is consolidated. Also makes the lesson auditable, since every beat can be checked against the objective it claims.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="limits">
+    <div class="shead"><span class="sn">07</span><h2>What this methodology does not yet establish</h2></div>
+    <p class="slede">Stated plainly, because a design standard that hides its limits invites the wrong kind of confidence.</p>
+
+    <div class="tw"><table>
+      <thead><tr><th>Open question</th><th>Current position</th></tr></thead>
+      <tbody>
+        <tr><td>Learning evidence</td><td>The typology has been validated against expert judgment and internal consistency, not against learner outcomes. No lesson built to this standard has been compared with one that was not on any measure of retention or transfer.</td></tr>
+        <tr><td>Exhaustiveness</td><td>The ten types were abstracted from one mature course and cross-checked against Gagné and Merrill. That produces a working catalog, open to extension. It does not establish that a eleventh type is impossible.</td></tr>
+        <tr><td>Category boundaries</td><td>Practice and Procedure both admit ordered tasks and require a discriminating criterion. The working boundary is whether the action changes system state.</td></tr>
+        <tr><td>Phase ordering</td><td>Stated as a default with rationale, not as a law. Productive failure research supports attempting before instruction in some conditions, which would place an applied beat before Explanation.</td></tr>
+        <tr><td>Spacing</td><td>The unit of analysis is one lesson. Retention across weeks is the largest single effect in the supporting literature and is out of scope here, which means the typology is incomplete as a curriculum method.</td></tr>
+        <tr><td>Expertise</td><td>The design assumes a first-exposure learner. For experienced technicians, heavy Definition and Demonstration are counterproductive by the same literature that justifies them for novices.</td></tr>
+      </tbody>
+    </table></div>
+
+    <p class="closer">The claim this methodology makes is narrow and it is worth stating exactly. It is that a lesson whose every block performs a named instructional function, chosen from the objective and built to a stated requirement, is more defensible and more consistent than one assembled from whatever interactions were available. That claim is supportable today. The stronger claim, that lessons built this way teach better, requires evidence that has not been gathered, and until it is, the honest register is a house standard rather than a finding.</p>
+  </section>
+
+</div>
+
+<script>
+const PH = {
+  frame:{k:"FRAME", w:"Establish why this matters and what it covers", c:"var(--frame)"},
+  deliver:{k:"DELIVER", w:"Fix the terms, build the model, work an instance", c:"var(--deliver)"},
+  apply:{k:"APPLY", w:"The learner performs against a responding system", c:"var(--apply)"},
+  verify:{k:"VERIFY", w:"Retrieval, scored, with correction", c:"var(--verify)"},
+  close:{k:"CLOSE", w:"Integrate into the work and close the problem", c:"var(--close)"}
+};
+
+const DOMAINS = [
+  ["electrical","Electrical theory"], ["hf","Human factors"], ["safety","Safety practice"],
+  ["esd","Wiring and ESD"], ["bus","Digital databus"], ["reg","Regulatory"]
+];
+
+const T = [
+  { n:1, id:"orientation", name:"Orientation", ph:"frame", gate:"Releases on arrival", budget:[120,200],
+    def:"The opening beat, establishing the lesson's goal, the objectives it owns, and the terminal performance expected.",
+    fn:"To supply the organizing structure into which the material that follows is assimilated. A learner who does not know what is being taught spends early capacity building the frame instead of filling it.",
+    ev:"Ausubel (1960) on advance organizers: material preceded by an organizing structure is retained substantially better than the same material without one. Gagne's second and third instructional events.",
+    req:["State the goal as learner performance, not curriculum coverage.",
+         "Reproduce objective wording verbatim from the controlled registry. Paraphrase is prohibited, because the objective is the contract the lesson and its assessment are both validated against.",
+         "Name the terminal performance in the vocabulary of the work.",
+         "Do not teach here. Orientation frames; it does not deliver."],
+    fail:"A promotional hook in place of a stated goal. Objectives written in taxonomy language nobody reads. Delivering content, which converts the frame into the lesson and leaves the real opening unframed.",
+    inst:{ electrical:["built","Quantity name, symbol, unit, and the objectives the day owns."],
+           hf:["spec","The factor under study, the maintenance decision it distorts, and the objective."],
+           safety:["spec","The hazard class and the standard the learner will be held to."],
+           esd:["spec","The susceptibility being controlled and the handling standard that governs it."],
+           bus:["spec","The standard under study, where it appears on the aircraft, and the objective."],
+           reg:["spec","The rule or inspection, its citation, and what compliance requires."]}},
+
+  { n:2, id:"case", name:"Case", ph:"frame", gate:"Releases on arrival", budget:[150,250],
+    def:"A bounded account of an authentic work problem, stated with its real particulars and left unresolved.",
+    fn:"To establish necessity. Instruction offered before a problem is received as information; the same instruction offered after a problem is received as a tool. The case also supplies the context in which the knowledge will later be retrieved.",
+    ev:"Merrill (2002), first principle: learning is promoted when learners engage a real-world problem. Research on inert knowledge indicates content acquired without a context of use frequently fails to transfer.",
+    req:["One case per lesson. A second divides attention without deepening it.",
+         "Particulars must be authentic. Fabricating accident specifics, citations, quotations or instrument readings is prohibited without exception.",
+         "State the symptom and stop. The case stays open until Consolidation.",
+         "The case must be resolvable by the objectives this lesson owns."],
+    fail:"Dramatization in place of specificity. Invented particulars. A case general enough to open any lesson. Immediate resolution, which spends the tension before the instruction arrives.",
+    inst:{ electrical:["built","A cabin fan on a 13.6 volt bus reading 9.1 volts at the load. The missing volts stay unexplained until the lesson supplies the method."],
+           hf:["spec","A shift handover conducted verbally under time pressure, with the omission not yet visible to anyone."],
+           safety:["spec","A solvent in use at a bench with no data sheet consulted and no ventilation decision made."],
+           esd:["spec","A component that passed bench test and failed in service after handling without protection."],
+           bus:["spec","A receiver that will not respond to a transmitter, with the topology not yet explained."],
+           reg:["spec","An aircraft presented for return to service with an inspection interval in question."]}},
+
+  { n:3, id:"definition", name:"Definition", ph:"deliver", gate:"Releases on arrival", budget:[400,700],
+    def:"The concept fixed: term, notation, units or categories, boundaries, and the governing rule.",
+    fn:"To establish terminology and structure before any later beat depends on them. Definition fixes what the words mean and what the rule states. It does not yet explain why.",
+    ev:"Mayer's pre-training principle: learners given component names and characteristics before the process learn the process better than learners meeting both at once. Cognitive load theory: unfamiliar terminology met during a procedure competes with the procedure for working memory.",
+    req:["Reproduce the source definition exactly. An improved definition is a different definition, and the learner is assessed against the source.",
+         "State notation and units, or categories and boundaries, adjacent to the definition.",
+         "State the governing rule completely, including behaviour under change, before any beat asks the learner to observe it.",
+         "Write complete sentences carrying technical content."],
+    fail:"A definition card followed by fragments. Paraphrase that reads more smoothly and specifies less. Distributing the definition across later beats so no beat states it whole.",
+    inst:{ electrical:["built","Definition, symbol, unit, the series rule, the parallel rule, and the effect of removing an element."],
+           hf:["spec","The factor named and bounded, its observable indicators, and the conditions under which it is recognised."],
+           safety:["spec","The hazard defined, the classification scheme, and the controlling standard."],
+           esd:["spec","Electrostatic discharge defined, the susceptibility classes, and the withstand thresholds as published."],
+           bus:["spec","Topology, signalling method, direction of flow, and the controlled vocabulary of the standard."],
+           reg:["spec","The rule stated as written, its applicability, and the intervals it establishes."]}},
+
+  { n:4, id:"explanation", name:"Explanation", ph:"deliver", gate:"Releases on arrival", budget:[600,1200],
+    def:"Sustained expository prose developing the mechanism: how the system behaves as it does, why it behaves that way, and what follows when conditions change. Figures are referenced from within the prose and subordinate to it.",
+    fn:"To construct the learner's mental model. Definition fixes the terms; Explanation builds the causal structure those terms describe. An applied beat lets a learner test a model. It does not supply one. This beat is instruction of equal standing with any simulation, and in a technical curriculum it carries the larger share of the understanding.",
+    ev:"McNamara, Kintsch, Songer and Kintsch (1996): readers with low prior knowledge learn substantially more from explanatory text made MORE explicit, with causal connectives stated and inferential gaps closed, than from terse text requiring the reader to supply the connections. The effect diminishes and reverses for experts. The audience here is first-exposure technicians, exactly the population the finding covers. Supporting: Kintsch's construction-integration model; Mayer's coherence and signalling principles; the seductive details effect; Chi et al. (1989) on self-explanation, which prose exposing causal structure invites and terse prose forecloses.",
+    req:["Develop the mechanism, do not restate the definition. If a paragraph could be deleted without removing an explanatory step, it is not carrying one.",
+         "State the causal connectives explicitly. Because, which means, so that, if this changes then. These are the load-bearing elements and the first thing lost when prose is compressed.",
+         "Write complete sentences of ordinary technical length. A run of three-word declaratives is not concision; it is the removal of the connectives.",
+         "Follow one line of reasoning to its end before starting the next.",
+         "Reference figures from within the prose, at the point the prose needs them.",
+         "Include the failure or abnormal case. A mechanism explained only in its normal state does not support diagnosis, which is what the technician is being trained to do.",
+         "Exclude material that is interesting but not explanatory.",
+         "This beat and Definition together carry roughly half the lesson's words."],
+    fail:"Compression into declarative fragments, which is the observed failure across the weaker lessons of the first shipped course and the reason this type is specified separately from Definition. Restating the definition at greater length. Figures with no prose invoking them. Explaining only the normal case. Substituting an applied beat for the explanation on the assumption that manipulation teaches mechanism. Treating the prose as what gets cut when the lesson runs long, when it is what carries the understanding.",
+    inst:{ electrical:["built","Why opposition arises in a conductor, developed from free electron movement through the lattice to the effect of length, cross-section, material and temperature, each step connected to the next and tied back to the measured quantity."],
+           hf:["spec","How an interruption displaces the working memory contents holding an unfinished task, why the task is then resumed at the wrong step, and why the error is not visible to the person who made it."],
+           safety:["spec","How the exposure route determines the control, why substitution outranks protective equipment, and what the hierarchy implies when neither is available."],
+           esd:["spec","How charge accumulates on an insulated body, why the resulting potential exceeds device withstand, and why the damage is frequently latent rather than immediate."],
+           bus:["spec","Why a one-to-many topology removes the need for arbitration, what that costs in return path, and what therefore happens when a receiver has data to send."],
+           reg:["spec","What the rule requires, why the requirement exists, how the intervals interact, and what condition returns the aircraft to non-compliance."]}},
+
+  { n:5, id:"demonstration", name:"Demonstration", ph:"deliver", gate:"Releases on arrival", budget:[250,450],
+    def:"A single instance worked through completely with the expert reasoning visible, including intermediate steps and any approximation.",
+    fn:"To model the reasoning rather than deliver its product. The learner observes how an expert moves from given conditions to conclusion.",
+    ev:"The worked example effect (Sweller and Cooper, 1985): novices acquire procedural skill more efficiently from studying worked examples than from equivalent time solving problems unsupported. The effect reverses at higher prior knowledge (Kalyuga, 2007). Chi et al. (1989): examples exposing intermediate reasoning produce better transfer than examples presenting only the result.",
+    req:["One instance, carried end to end with no omitted step.",
+         "Number the steps where the procedure is ordered.",
+         "Disclose approximation and rounding explicitly. Concealing it teaches that the method is more exact than it is.",
+         "Every value originates in source documentation. Where the source is silent the build stops and asks."],
+    fail:"Stating the relationship and presenting the result without the reasoning. Animated computation displaying an incorrect intermediate value. Several partial examples in place of one complete one.",
+    inst:{ electrical:["built","A 9 volt source across 20, 15 and 30 ohms, with the three drops computed, the sum stated as 8.45 volts, and the rounding acknowledged."],
+           hf:["spec","A documented event traced decision by decision, with each contributing factor named at the point it operated."],
+           safety:["spec","A substance assessed through the data sheet section by section to a stated handling decision."],
+           esd:["spec","A handling sequence walked through with accumulated potential stated at each step against the device class."],
+           bus:["spec","A single data word decoded field by field against the word format in the standard."],
+           reg:["spec","A compliance determination worked through the applicable rule clause by clause to a stated conclusion."]}},
+
+  { n:6, id:"simulation", name:"Simulation", ph:"apply", gate:"Locked until the first genuine manipulation", budget:[200,350],
+    def:"A manipulable model of a system whose state is computed from the learner's inputs according to the system's actual governing rules. Those rules may be physical, procedural, protocol-based, or causal within a human or organisational system.",
+    fn:"To let the learner derive a relationship through interaction with a system that responds correctly, rather than receive it as an assertion.",
+    ev:"The generation effect (Slamecka and Graf, 1978): information produced by the learner is retained better than equivalent information read. Productive failure (Kapur, 2008): an incorrect prediction subsequently corrected by the model produces stronger encoding than a correct answer obtained without commitment. The value sits in the discrepancy between prediction and result, so a simulation operable without prior commitment forfeits most of its effect.",
+    req:["<b>Prediction precedes manipulation.</b> The learner commits to an expected outcome and that commitment drives the model. A control that merely responds is instrumentation; a control that first contradicts the learner is instruction.",
+         "The model computes honestly at every reachable state. Preset positions or a lookup of three staged outcomes will misteach at the states between them.",
+         "One independent variable per manipulation.",
+         "State is externalised as an explicit readout, not conveyed only through an image.",
+         "One simulation per lesson."],
+    fail:"A control that resizes artwork rather than computing state. Feedback beside an object that does not itself change. Permitting manipulation before prediction. A second model added for the appearance of richness.",
+    inst:{ electrical:["built","Material, length, area and temperature set by the learner; resistance and the resulting current computed from physical law."],
+           hf:["spec","A shift handover in which the learner selects what is recorded, and the model computes what the incoming shift knows, what it assumes, and what it will not discover until failure."],
+           safety:["spec","Control measures selected against a hazard, with the model computing residual exposure through the control hierarchy."],
+           esd:["spec","Handling conditions set by the learner; accumulated charge and junction stress computed against the published withstand for the device class."],
+           bus:["spec","One transmitter and several receivers; the learner attempts a reply and the topology refuses it."],
+           reg:["spec","Inspection dates and equipment configuration set by the learner; the model computes compliance status and the date it lapses."]}},
+
+  { n:7, id:"practice", name:"Practice", ph:"apply", gate:"Locked until the first correct application", budget:[150,300],
+    def:"Discrete, repeated manipulation of instances against a rule, building recognition, classification or discrimination. No system state changes; the judgement is against the rule.",
+    fn:"To convert a rule the learner has read into a rule the learner has applied. Definition states that a category has boundaries; Practice requires the learner to place instances on either side of them.",
+    ev:"Retrieval practice (Roediger and Karpicke, 2006). Interleaved and varied practice: learners required to discriminate among related categories in mixed presentation outperform those given the same items blocked (Rohrer and Taylor, 2007). Dual coding governs the recognition case: a symbolic representation teaches the symbol, and only a veridical image teaches identification of the referent in the physical environment.",
+    req:["Five instances or fewer. Beyond that the beat becomes an inventory.",
+         "Every instance plausible to a learner who has not yet mastered the rule.",
+         "The manipulation produces an observable consequence consistent with the rule.",
+         "Recognition beats use authentic photographs with attribution. A drawn approximation does not support identification.",
+         "Release on the first correct application. Requiring exhaustive completion converts practice into compliance."],
+    fail:"A matching exercise with no consequence attached to the result. A catalogue presented without a task. Symbolic representations on both faces of a recognition card. Requiring all instances when one demonstrates the skill.",
+    inst:{ electrical:["built","Component families identified from schematic and photograph; network elements added and removed with the total responding per the rule."],
+           hf:["built","A described maintenance situation classified against the contributing-factor taxonomy, with a teaching line attached to the option selected."],
+           safety:["spec","A substance located in the correct data sheet section; an extinguisher matched to a fire class."],
+           esd:["spec","Protective packaging discriminated from non-protective on the same frame."],
+           bus:["spec","Two standards discriminated on the same frame by topology and direction."],
+           reg:["spec","A maintenance record classified against the category of work it documents."]}},
+
+  { n:8, id:"procedure", name:"Procedure", ph:"apply", gate:"Locked until the correct path yields a genuine result", budget:[250,400],
+    def:"Rehearsal of an ordered task on an instrument or system, where sequence and completeness carry consequence in that system and the incorrect path remains reachable.",
+    fn:"To build the decision and action sequence of the technician's actual task in an environment where error is instructive rather than costly.",
+    ev:"Cognitive apprenticeship (Collins, Brown and Newman, 1989): model, coach, scaffold, fade. Gagne's fifth and sixth events. Metcalfe (2017) on learning from errors: an error committed and immediately corrected retains better than an error prevented, provided the correction is immediate, specific and explains the mechanism.",
+    req:["The ordered instructions appear in prose adjacent to the instrument, numbered, in the source's wording.",
+         "<b>The incorrect path must be reachable and must instruct.</b> A procedure that cannot be performed incorrectly is a demonstration wearing an interface.",
+         "Typographic emphasis is reserved for the single rule that prevents injury or equipment damage.",
+         "Release on completion of the correct path to a genuine result, not on any interaction.",
+         "One procedure per beat."],
+    fail:"Preventing the error instead of instructing through it. An ordered task where order carries no consequence. Instrument readings not present in source documentation. Two configurations combined into one beat.",
+    inst:{ electrical:["built","Resistance measured with power removed and the element isolated, with the energised attempt reachable and consequential."],
+           hf:["spec","An escalation sequence rehearsed where each omitted step changes what the other party understands and what is finally decided."],
+           safety:["spec","A response to an electrical contact event performed in order, with the consequence of reordering shown."],
+           esd:["spec","A workstation established for electrostatic protection, with each omission producing accumulated charge."],
+           bus:["spec","A differential waveform read and characterised against the standard."],
+           reg:["spec","A return to service assembled step by step, with an incomplete entry shown as it would be found on audit."]}},
+
+  { n:9, id:"check", name:"Check", ph:"verify", gate:"Locked until the pass threshold is met; a miss earns reattempt", budget:null,
+    def:"A scored retrieval beat presenting a fixed item set with immediate item-level instructional feedback and permitted reattempt.",
+    fn:"Instruction, scored. The Check is the final teaching beat and not primarily a measurement instrument, though it does gate completion. Its purpose is to force retrieval and correct the result.",
+    ev:"The testing effect (Roediger and Karpicke, 2006; Karpicke and Blunt, 2011): retrieval attempts strengthen retention more than additional study of the same material, and the attempt is itself the learning event. It follows that feedback quality governs the beat's value more than item difficulty does. Item construction follows Haladyna, Downing and Rodriguez (2002).",
+    req:["One construct per item, with the complete question in the stem.",
+         "Negative stems are prohibited. They assess reading care and expose the learner to an incorrect proposition as read text.",
+         "Four options comparable in length and grammatical form. Systematic length differences render items answerable without knowledge.",
+         "Distractors represent documented misconceptions, not arbitrary incorrect statements.",
+         "Every option receives instructional feedback, including the correct option.",
+         "<b>The keyed position varies across the item set.</b>",
+         "Every objective claimed by the lesson is assessed by at least one item.",
+         "Items derive from the controlled practice bank. The certification instrument is never consulted for item construction."],
+    fail:"A fixed keyed position, which permits a learner to satisfy the beat without knowledge. This condition was present in five of six lessons in the first shipped course, including the ten-item assessment gating course completion. Feedback that evaluates rather than instructs. Items assessing material the lesson did not present.",
+    inst:{ electrical:["built","Five items, pass four, drawn from the controlled bank for the lesson."],
+           hf:["spec","Five items on factor recognition and countermeasure selection, distractors drawn from the confusions the taxonomy is known to produce."],
+           safety:["spec","Five items on classification and control selection."],
+           esd:["spec","Five items on susceptibility class, packaging and handling."],
+           bus:["spec","Five items on topology, direction and signalling."],
+           reg:["spec","Five items on applicability, interval and required entry."]}},
+
+  { n:10, id:"consolidation", name:"Consolidation", ph:"close", gate:"Completion releases when applied work and the pass threshold are both satisfied", budget:[150,250],
+    def:"The closing beat, restating each objective as achieved performance and resolving the case opened in beat 2.",
+    fn:"To integrate the content into the learner's working context and close the problem the lesson opened.",
+    ev:"Merrill (2002), fifth principle: learning is promoted when new knowledge is integrated into the learner's world. Retrieval-based summarisation outperforms review as a closing activity. Closing the case exploits the encoding relationship between the problem context set in beat 2 and the knowledge acquired since.",
+    req:["One statement per objective owned by the lesson. Not a fixed number by habit.",
+         "Each statement expresses the objective as performance in the vocabulary of the work, not as a restatement of the objective's own wording.",
+         "The case from beat 2 is resolved here, with the particular that resolves it.",
+         "Completion is recorded here, and only after both the applied work and the pass threshold are satisfied. Never on scroll position."],
+    fail:"A generic summary heading in place of objective-level statements. A fixed count of statements irrespective of objective count. Closing on the score. Leaving the case unresolved, which teaches that the opening problem was ornamental.",
+    inst:{ electrical:["built","One statement per objective, and the cabin fan case resolved by the added series resistance in the feed."],
+           hf:["spec","One statement per objective, and the omitted handover item identified with the countermeasure that would have captured it."],
+           safety:["spec","One statement per objective, and the solvent decision stated with the control selected."],
+           esd:["spec","One statement per objective, and the latent failure traced back to the handling step that caused it."],
+           bus:["spec","One statement per objective, and the unresponsive receiver explained by the topology."],
+           reg:["spec","One statement per objective, and the compliance determination stated with its citation."]}}
+];
+
+let domain = "electrical";
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;");
+
+/* phase map */
+(function(){
+  const order = ["frame","deliver","apply","verify","close"];
+  $("#phasemap").innerHTML = order.map(p=>{
+    const list = T.filter(t=>t.ph===p).map(t=>
+      `<button class="chip" data-goto="${t.id}"><i>${t.n}</i><span>${t.name}</span></button>`).join("");
+    return `<div class="col" style="--pc:${PH[p].c}"><h4>${PH[p].k}</h4><p class="cw">${PH[p].w}</p>${list}</div>`;
+  }).join("");
+  $("#phasemap").addEventListener("click", e=>{
+    const b = e.target.closest("[data-goto]"); if(!b) return;
+    const id = b.dataset.goto, body = document.getElementById("body-"+id);
+    if(body && body.hidden) document.getElementById("hd-"+id).click();
+    document.getElementById("plate-"+id).scrollIntoView({behavior:"smooth", block:"start"});
+  });
+})();
+
+/* domain picker */
+(function(){
+  $("#domainpick").innerHTML = DOMAINS.map(([k,l])=>
+    `<button data-dom="${k}" aria-pressed="${k===domain}">${l}</button>`).join("");
+  $("#domainpick").addEventListener("click", e=>{
+    const b = e.target.closest("[data-dom]"); if(!b) return;
+    domain = b.dataset.dom;
+    $("#domainpick").querySelectorAll("[data-dom]").forEach(x=>
+      x.setAttribute("aria-pressed", x.dataset.dom===domain));
+    T.forEach(t=>{
+      const el = document.getElementById("inst-"+t.id);
+      if(el) el.innerHTML = instHTML(t);
+    });
+  });
+})();
+
+function instHTML(t){
+  const [state, text] = t.inst[domain];
+  const label = DOMAINS.find(d=>d[0]===domain)[1];
+  const tag = state==="built" ? '<span class="tag t-built">BUILT</span>'
+                              : '<span class="tag t-spec">SPECIFIED</span>';
+  return `<div class="dm">${label}${tag}</div><p>${esc(text)}</p>`;
+}
+
+/* plates */
+(function(){
+  $("#plates").innerHTML = T.map(t=>{
+    const c = PH[t.ph].c;
+    const budget = t.budget ? `${t.budget[0]} to ${t.budget[1]} words` : "item text";
+    return `<article class="plate" id="plate-${t.id}" style="--pc:${c}">
+      <button class="plate-hd" id="hd-${t.id}" aria-expanded="false" aria-controls="body-${t.id}">
+        <span class="plate-n">${t.n}</span>
+        <span class="plate-t"><h4>${t.name}</h4><p>${esc(t.def)}</p></span>
+        <span class="plate-meta">${PH[t.ph].k}<br>${budget}</span>
+      </button>
+      <div class="plate-body" id="body-${t.id}" hidden>
+        <div class="fieldlab">Function</div><p>${esc(t.fn)}</p>
+        <div class="fieldlab">Theoretical basis</div><p>${esc(t.ev)}</p>
+        <div class="fieldlab">Design requirements</div><ol>${t.req.map(r=>`<li>${r}</li>`).join("")}</ol>
+        <div class="fieldlab">Worked instantiation</div>
+        <div class="inst" id="inst-${t.id}">${instHTML(t)}</div>
+        <div class="fieldlab">Failure modes</div><p>${esc(t.fail)}</p>
+        <div class="fieldlab">Gate</div><p>${esc(t.gate)}</p>
+      </div>
+    </article>`;
+  }).join("");
+  $("#plates").addEventListener("click", e=>{
+    const b = e.target.closest(".plate-hd"); if(!b) return;
+    const body = document.getElementById(b.getAttribute("aria-controls"));
+    const open = body.hidden;
+    body.hidden = !open;
+    b.setAttribute("aria-expanded", open);
+  });
+})();
+
+/* matrix */
+(function(){
+  const head = `<thead><tr><th>Type</th>${DOMAINS.map(d=>`<th>${d[1]}</th>`).join("")}</tr></thead>`;
+  const rows = T.map(t=>`<tr><td>${t.n}. ${t.name}</td>${
+    DOMAINS.map(d=>{
+      const [st,tx] = t.inst[d[0]];
+      const dot = st==="built" ? '<span class="tag t-built">BUILT</span>' : '';
+      return `<td>${esc(tx)}${dot}</td>`;
+    }).join("")}</tr>`).join("");
+  $("#matrix").innerHTML = head + "<tbody>" + rows + "</tbody>";
+})();
+
+/* evidence table */
+(function(){
+  const rows = T.map(t=>`<tr><td>${t.n}. ${t.name}</td><td>${esc(t.ev)}</td></tr>`).join("");
+  $("#evtable").innerHTML =
+    `<thead><tr><th>Type</th><th>Rests on</th></tr></thead><tbody>${rows}</tbody>`;
+})();
+
+/* composer */
+(function(){
+  const VERBS = [
+    ["simulation","Derive or predict a relationship"],
+    ["practice","Recognise, classify or discriminate"],
+    ["procedure","Perform an ordered task correctly"]
+  ];
+  const OPTS = [["case","Case"],["demonstration","Demonstration"]];
+  let applied = new Set(["simulation"]);
+  let opts = new Set(["case","demonstration"]);
+
+  $("#verbpick").innerHTML = VERBS.map(([k,l])=>
+    `<button data-v="${k}" aria-pressed="${applied.has(k)}">${l}</button>`).join("");
+  $("#optpick").innerHTML = OPTS.map(([k,l])=>
+    `<button data-o="${k}" aria-pressed="${opts.has(k)}">${l}</button>`).join("");
+
+  $("#verbpick").addEventListener("click", e=>{
+    const b = e.target.closest("[data-v]"); if(!b) return;
+    const k = b.dataset.v;
+    if(applied.has(k)){ if(applied.size>1) applied.delete(k); } else applied.add(k);
+    $("#verbpick").querySelectorAll("[data-v]").forEach(x=>
+      x.setAttribute("aria-pressed", applied.has(x.dataset.v)));
+    render();
+  });
+  $("#optpick").addEventListener("click", e=>{
+    const b = e.target.closest("[data-o]"); if(!b) return;
+    const k = b.dataset.o;
+    opts.has(k) ? opts.delete(k) : opts.add(k);
+    $("#optpick").querySelectorAll("[data-o]").forEach(x=>
+      x.setAttribute("aria-pressed", opts.has(x.dataset.o)));
+    render();
+  });
+  $("#sl-expl").addEventListener("input", render);
+  $("#sl-def").addEventListener("input", render);
+
+  const MAXBAR = 4400, LO = 2400, HI = 3600;
+
+  function render(){
+    const expl = +$("#sl-expl").value, def = +$("#sl-def").value;
+    $("#v-expl").textContent = expl + " words";
+    $("#v-def").textContent = def + " words";
+
+    const chosen = [];
+    const add = (id, words) => {
+      const t = T.find(x=>x.id===id);
+      chosen.push({name:t.name, ph:t.ph, words});
+    };
+    add("orientation", 160);
+    if(opts.has("case")) add("case", 200);
+    add("definition", def);
+    add("explanation", expl);
+    if(opts.has("demonstration")) add("demonstration", 350);
+    ["simulation","practice","procedure"].forEach(k=>{
+      if(applied.has(k)){ const t=T.find(x=>x.id===k); add(k, Math.round((t.budget[0]+t.budget[1])/2)); }
+    });
+    add("check", 0);
+    add("consolidation", 200);
+
+    const total = chosen.reduce((s,b)=>s+b.words,0);
+    $("#cmpcount").textContent = chosen.length + " beats";
+    $("#beatlist").innerHTML = chosen.map((b,i)=>
+      `<li><span class="bn">${i+1}</span><span class="bt" style="color:${PH[b.ph].c}">${b.name}</span>
+       <span class="bw">${b.words? b.words+" w" : "items"}</span></li>`).join("");
+
+    $("#bandmark").style.left  = (LO/MAXBAR*100)+"%";
+    $("#bandmark").style.width = ((HI-LO)/MAXBAR*100)+"%";
+    const pct = Math.min(100, total/MAXBAR*100);
+    $("#fillmark").style.width = pct+"%";
+    const mk = $("#totalmark");
+    if(mk){
+      mk.style.left = "calc(" + pct + "% - 1.5px)";
+      mk.className = (total < LO || total > HI) ? "mark out" : "mark";
+    }
+
+    const v = $("#verdict");
+    if(total < LO){
+      v.className = "verdict v-out";
+      v.innerHTML = `<b>${total} words. Below the band.</b> This lesson has every interactive beat it needs and will still teach thinly, because the mental model is never built. Raise Explanation.`;
+    } else if(total > HI){
+      v.className = "verdict v-out";
+      v.innerHTML = `<b>${total} words. Above the band.</b> Either the objective covers more than one lesson, or a beat is restating rather than developing.`;
+    } else {
+      v.className = "verdict v-in";
+      v.innerHTML = `<b>${total} words. In the band.</b> Prose and application are in proportion. Definition and Explanation account for ${Math.round((def+expl)/total*100)} percent of the words.`;
+    }
+  }
+  render();
+})();
+</script>

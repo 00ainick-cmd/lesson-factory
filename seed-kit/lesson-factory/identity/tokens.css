@@ -1,0 +1,49 @@
+/* ===== AERO Design Tokens (core, locked) =====
+   Two surfaces, one system:
+   1) The SHELL surface (dark aviation chrome) is styled inside
+      core/index.html and is not overridable by lessons. Its values are
+      documented here for reference:
+        shell #0f1419 · rail #0c1119 · ink #eaf2ff · muted #9fadc2
+        accent #2b8fff · ok #3fd9d4 · gold #f5a623
+        mono 'JetBrains Mono' · ui 'IBM Plex Sans' · display 'Saira'
+   2) The LESSON surface (Field Manual, below) is what cards and lesson
+      pages render on. Lessons consume these variables and NEVER redefine
+      them. */
+
+:root {
+  /* Field Manual lesson surface */
+  --paper:      #efe9dc;
+  --paper-2:    #e6dfce;
+  --paper-hi:   #fbf8f1;
+  --rule:       #bdb29a;
+  --rule-2:     #d4ccba;
+  --ink:        #11151a;
+  --ink-2:      #454f58;
+  --ink-3:      #7c8893;
+  --cyan:       #0d6b7b;
+  --red:        #b23a2c;
+  --amber:      #9a6a10;
+  --gold:       #dd9b2a;
+  --green:      #2f6b3a;
+
+  /* dark instrument sub-register (panel scenes inside cards) */
+  --panel:      #10171c;
+  --panel-2:    #0b1115;
+  --panel-ink:  #cfe3e6;
+  --panel-line: #26424b;
+
+  /* PEAR element colors (fixed; always paired with letter + name labels) */
+  --pear-p:     #8a2f6e;
+  --pear-e:     #2f6b3a;
+  --pear-a:     #0a5d7f;
+  --pear-r:     #9a5a12;
+
+  /* type stacks (system fallbacks; packages are offline-safe) */
+  --font-display: 'Fraunces', 'Iowan Old Style', Georgia, serif;
+  --font-body:    'Inter', 'IBM Plex Sans', 'Segoe UI', system-ui, sans-serif;
+  --font-mono:    'JetBrains Mono', 'IBM Plex Mono', Consolas, monospace;
+
+  /* rhythm */
+  --card-radius: 0px;            /* the field-manual register is squared */
+  --focus-ring:  2px solid var(--red);
+}
