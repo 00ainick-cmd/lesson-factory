@@ -5,7 +5,9 @@ import { db } from "@/server/db/client";
 import { sessions, users } from "@/server/db/schema";
 import { env } from "@/server/env";
 
-export const SESSION_COOKIE = "lfs_session";
+// Published *.pplx.app sandboxes only forward cookies with the __Host- prefix.
+// That prefix also requires Secure and Path=/, both supplied by sessionCookieOptions in production.
+export const SESSION_COOKIE = process.env.NODE_ENV === "production" ? "__Host-lfs_session" : "lfs_session";
 const SESSION_TTL_MS = 1000 * 60 * 60 * 24 * 14; // 14 days
 
 function sign(value: string): string {

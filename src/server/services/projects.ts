@@ -159,9 +159,9 @@ export async function readArtifactForProject(projectId: string, artifactId: stri
 
 export async function latestAudit(projectId: string) {
   const [run] = await db.select().from(auditRuns).where(eq(auditRuns.projectId, projectId)).orderBy(desc(auditRuns.createdAt)).limit(1);
-  if (!run) return { run: null, findings: [], proposals: [] };
-  const findings = await db.select().from(auditFindings).where(eq(auditFindings.runId, run.id)).orderBy(sql`case ${auditFindings.severity} when 'blocker' then 0 when 'error' then 1 when 'warning' then 2 else 3 end`, auditFindings.ruleKey);
   const props = await db.select().from(proposals).where(eq(proposals.projectId, projectId)).orderBy(desc(proposals.createdAt)).limit(200);
+  if (!run) return { run: null, findings: [], proposals: props };
+  const findings = await db.select().from(auditFindings).where(eq(auditFindings.runId, run.id)).orderBy(sql`case ${auditFindings.severity} when 'blocker' then 0 when 'error' then 1 when 'warning' then 2 else 3 end`, auditFindings.ruleKey);
   return { run, findings, proposals: props };
 }
 

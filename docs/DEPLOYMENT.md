@@ -130,6 +130,8 @@ EMBEDDINGS_PROVIDER=none
 
 Never expose the API key through `NEXT_PUBLIC_*` variables or client-side code.
 
+The block-level **Remove AI slop** action uses the same provider settings. With `AI_PROVIDER=anthropic`, the server sends only the selected block's editable text units and the no-ai-slop editing guidance to the configured model. With `AI_PROVIDER=mock`, it applies a deterministic subset of those rules. Both paths validate that the block's HTML elements, attributes, comments, and nesting are unchanged, then store a proposal instead of editing the lesson directly.
+
 ### Production security switches
 
 These settings are only for the Perplexity attachment preview and must not be enabled in production:

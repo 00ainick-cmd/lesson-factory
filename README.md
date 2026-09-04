@@ -16,6 +16,7 @@ The editor preserves the behavior of an imported lesson instead of regenerating 
 - Preserve script-sensitive custom markup through the patch-mode compiler.
 - Autosave with optimistic concurrency, undo and redo, named versions, and version restore.
 - Run deterministic instructional-design audits with source evidence.
+- Rewrite any supported text block with the MIT-licensed `no-ai-slop` editing rules while preserving its HTML structure.
 - Review proposal-only fixes with JSON Patch, HTML diff, and provenance.
 - Export standalone HTML and validate it in a clean Chromium session.
 - Manage workspace knowledge, objectives, beat types, quality rules, members, and activity.
@@ -126,9 +127,12 @@ The package also reserves `npm test` and `npm run test:e2e` for Vitest and Playw
 5. Open the editor.
 6. Select a beat or managed block from the Beat Map.
 7. Edit content in the Inspector and verify it in Author and Learner preview modes.
-8. Review ID Copilot findings and explicitly accept, edit, reject, or ignore proposals.
-9. Save a named version.
-10. Export and inspect the stored validation report before downloading the HTML.
+8. To humanize a block, select it and choose **Remove AI slop** in the Inspector.
+9. Review the generated HTML diff in ID Copilot, then explicitly accept, reject, or ignore the proposal.
+10. Save a named version.
+11. Export and inspect the stored validation report before downloading the HTML.
+
+The block rewrite uses the [`no-ai-slop`](https://github.com/petergyang/no-ai-slop) skill by Peter Yang at pinned commit `000650b156983f5159695b441477f4e63b25dc85`. The server records that revision with every rewrite proposal. In `mock` mode, a deterministic subset of the rules is applied; in `anthropic` mode, the full editing guidance is supplied to the configured model. In both modes, the app validates that HTML structure is unchanged and requires a human to accept the proposal.
 
 ## Environment summary
 

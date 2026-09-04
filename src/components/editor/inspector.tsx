@@ -6,8 +6,9 @@ import type { Op } from "@/server/lesson/ops";
 import { useEditor } from "./store";
 import { RichEditor } from "./rich-editor";
 import { ClassBadge } from "./beat-map";
-import { Badge, Field, Input, Select, Textarea } from "../ui";
+import { Badge, Button, Field, Input, Select, Textarea } from "../ui";
 import { api } from "@/lib/api";
+import { Sparkles } from "lucide-react";
 
 export function Inspector({ canWrite, beatTypes, objectives }: { canWrite: boolean; beatTypes: { key: string; name: string }[]; objectives: { code: string; wording: string }[] }) {
   const doc = useEditor((s) => s.doc);
@@ -76,8 +77,35 @@ function BeatPanel({ beat, index, canWrite, beatTypes, objectives, compact }: { 
 
 function BlockPanel({ block, beat, doc, canWrite }: { block: Block; beat: Beat; doc: LessonDocument; canWrite: boolean }) {
   const apply = useEditor((s) => s.apply);
+  const projectId = useEditor((s) => s.projectId);
+  const revision = useEditor((s) => s.revision);
+  const saveState = useEditor((s) => s.saveState);
+  const setRightTab = useEditor((s) => s.setRightTab);
+  const [rewriteState, setRewriteState] = useState<"idle" | "running" | "done" | "error">("idle");
+  const [rewriteMessage, setRewriteMessage] = useState<string | null>(null);
   const patch = (p: Record<string, unknown>, key: string) => apply([{ type: "update-block", blockId: block.id, patch: p } as Op], { coalesceKey: `block:${block.id}:${key}` });
   const ro = !canWrite;
+  const rewriteSupported = ["heading", "richtext", "callout", "image", "table", "button", "custom"].includes(block.kind);
+  async function rewrite() {
+    setRewriteState("running");
+    setRewriteMessage(null);
+    try {
+      const result = await api<{ created: boolean; message?: string }>(`/api/projects/${projectId}/rewrite`, {
+        method: "POST",
+        json: { blockId: block.id, baseRevision: revision },
+      });
+      if (result.created) {
+        setRewriteState("done");
+        setRightTab("copilot");
+      } else {
+        setRewriteState("done");
+        setRewriteMessage(result.message ?? "No rewrite was needed.");
+      }
+    } catch (error) {
+      setRewriteState("error");
+      setRewriteMessage(error instanceof Error ? error.message : String(error));
+    }
+  }
   return (
     <div className="space-y-4">
       <div>
@@ -87,6 +115,29 @@ function BlockPanel({ block, beat, doc, canWrite }: { block: Block; beat: Beat; 
         </div>
         <p className="font-mono text-[10.5px] text-faint">{block.id}{block.hidden ? " · hidden" : ""}{block.complex ? " · complex markup" : ""}</p>
       </div>
+
+      {rewriteSupported && (
+        <div className="rounded-md border border-accent/30 bg-accent/5 p-2.5">
+          <div className="flex items-center justify-between gap-2">
+            <div>
+              <p className="text-[12.5px] font-medium text-ink">Humanize this block</p>
+              <p className="mt-0.5 text-[11.5px] text-muted">Uses the no-ai-slop skill and creates a reviewable proposal.</p>
+            </div>
+            <Button
+              type="button"
+              size="sm"
+              variant="secondary"
+              disabled={!canWrite || rewriteState === "running" || saveState === "dirty" || saveState === "saving"}
+              title={saveState === "dirty" || saveState === "saving" ? "Wait for autosave before creating a proposal" : "Rewrite text without changing HTML structure"}
+              onClick={() => void rewrite()}
+            >
+              <Sparkles size={12} />
+              {rewriteState === "running" ? "Rewriting…" : "Remove AI slop"}
+            </Button>
+          </div>
+          {rewriteMessage && <p role={rewriteState === "error" ? "alert" : "status"} className={`mt-2 text-[11.5px] ${rewriteState === "error" ? "text-bad" : "text-muted"}`}>{rewriteMessage}</p>}
+        </div>
+      )}
 
       {block.kind === "heading" && (
         <>
