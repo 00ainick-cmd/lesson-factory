@@ -46,7 +46,7 @@ export function CopilotPanel({ canDecide, onDocumentReplaced }: { canDecide: boo
     chatEnd.current?.scrollIntoView({ block: "end" });
   }, [chat]);
 
-  async function runAudit(kind: "quality_audit" | "import_audit" | "export_preflight") {
+  async function runAudit(kind: "quality_audit" | "writing_check" | "import_audit" | "export_preflight") {
     setBusy("audit");
     setErr(null);
     setDroid("scanning");
@@ -142,6 +142,7 @@ export function CopilotPanel({ canDecide, onDocumentReplaced }: { canDecide: boo
           <span>No audit yet.</span>
         )}
         <div className="flex gap-1">
+          <Button size="sm" variant="secondary" disabled={busy === "audit"} onClick={() => runAudit("writing_check")} title="Find AI-sounding phrasing and create reviewable one-click fixes">Writing check</Button>
           <Button size="sm" variant="secondary" disabled={busy === "audit"} onClick={() => runAudit("quality_audit")} title="Evaluate the active workspace quality rules against the working document"><RefreshCw size={12} className={busy === "audit" ? "animate-spin" : ""} /> {audit?.run ? "Re-run audit" : "Run import audit"}</Button>
         </div>
       </div>
@@ -260,7 +261,7 @@ function ProposalCard({ p, busy, canDecide, onDecide, onLocate }: { p: Proposal;
           </details>
           {p.status === "open" && canDecide && (
             <div className="flex gap-1.5 pt-1">
-              <Button size="sm" variant="ok" disabled={busy} onClick={() => onDecide(p, "accept")}><Check size={12} /> Accept</Button>
+              <Button size="sm" variant="ok" disabled={busy} onClick={() => onDecide(p, "accept")}><Check size={12} /> {p.ruleKey === "writing.no-ai-slop" ? "Apply fix" : "Accept"}</Button>
               <Button size="sm" variant="secondary" disabled={busy} onClick={() => onDecide(p, "reject")}><X size={12} /> Reject</Button>
               <Button size="sm" variant="ghost" disabled={busy} onClick={() => onDecide(p, "ignore")}><Ignore size={12} /> Ignore</Button>
             </div>

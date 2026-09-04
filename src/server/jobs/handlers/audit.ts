@@ -1,16 +1,17 @@
 import { z } from "zod";
-import { and, eq } from "drizzle-orm";
+import { and, eq, isNotNull, ne } from "drizzle-orm";
 import { db } from "@/server/db/client";
 import { auditFindings, auditRuns, projects, proposals } from "@/server/db/schema";
 import { LessonDocumentSchema } from "@/server/lesson/model";
 import type { ImportReport } from "@/server/lesson/import";
 import { auditDocument } from "@/server/copilot/audit";
+import { buildNoAiSlopAudit } from "@/server/copilot/no-ai-slop";
 import { buildProposalDiff } from "@/server/copilot/proposals";
 import { recordActivity } from "@/server/activity";
 import { logger } from "@/server/log";
 import type { JobHandler } from "./index";
 
-const Payload = z.object({ projectId: z.string().uuid(), kind: z.enum(["import_audit", "quality_audit", "export_preflight"]).default("quality_audit"), userId: z.string().uuid().nullable().optional() });
+const Payload = z.object({ projectId: z.string().uuid(), kind: z.enum(["import_audit", "quality_audit", "writing_check", "export_preflight"]).default("quality_audit"), userId: z.string().uuid().nullable().optional() });
 
 /**
  * copilot.audit: evaluate the workspace's active quality rules against the working document, store an
@@ -23,11 +24,16 @@ export const auditHandler: JobHandler = async (raw) => {
   const [project] = await db.select().from(projects).where(eq(projects.id, p.projectId)).limit(1);
   if (!project?.workingDocument) throw new Error("Project has no working document");
   const doc = LessonDocumentSchema.parse(project.workingDocument);
-  const { findings, summary } = await auditDocument(project.workspaceId, doc, (project.importReport as ImportReport | null) ?? null);
+  const { findings, summary } = p.kind === "writing_check"
+    ? buildNoAiSlopAudit(doc)
+    : await auditDocument(project.workspaceId, doc, (project.importReport as ImportReport | null) ?? null);
   const [run] = await db.insert(auditRuns).values({ projectId: project.id, workingRevision: project.workingRevision, kind: p.kind, summary }).returning();
 
   // Close open proposals from previous audit runs as ignored-by-rerun; still-relevant ones are re-created below.
-  await db.update(proposals).set({ status: "ignored", decidedAt: new Date() }).where(and(eq(proposals.projectId, project.id), eq(proposals.status, "open")));
+  const sameAuditFamily = p.kind === "writing_check"
+    ? eq(proposals.ruleKey, "writing.no-ai-slop")
+    : and(isNotNull(proposals.findingId), ne(proposals.ruleKey, "writing.no-ai-slop"));
+  await db.update(proposals).set({ status: "ignored", decidedAt: new Date() }).where(and(eq(proposals.projectId, project.id), eq(proposals.status, "open"), sameAuditFamily));
 
   let proposalCount = 0;
   for (const f of findings) {

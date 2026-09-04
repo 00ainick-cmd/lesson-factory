@@ -16,7 +16,7 @@ The editor preserves the behavior of an imported lesson instead of regenerating 
 - Preserve script-sensitive custom markup through the patch-mode compiler.
 - Autosave with optimistic concurrency, undo and redo, named versions, and version restore.
 - Run deterministic instructional-design audits with source evidence.
-- Rewrite any supported text block with the MIT-licensed `no-ai-slop` editing rules while preserving its HTML structure.
+- Check the full lesson for AI-sounding writing and apply block-level fixes with one click, or rewrite a selected block with the MIT-licensed `no-ai-slop` editing rules while preserving its HTML structure.
 - Review proposal-only fixes with JSON Patch, HTML diff, and provenance.
 - Export standalone HTML and validate it in a clean Chromium session.
 - Manage workspace knowledge, objectives, beat types, quality rules, members, and activity.

@@ -6,7 +6,9 @@ import { compileLesson, renderBlock } from "@/server/lesson/compile";
 import { LessonDocumentSchema, findBlock, type LessonDocument } from "@/server/lesson/model";
 import { applyOps, OpSchema, type Op } from "@/server/lesson/ops";
 import { recordActivity } from "@/server/activity";
+import { ApiError } from "@/server/api";
 import { z } from "zod";
+import { assertProposalRevision, StaleProposalError } from "./proposal-revision";
 
 /**
  * A proposal is a set of canonical ops plus a unified diff of the affected region's HTML so a reviewer
@@ -49,6 +51,12 @@ export async function decideProposal(input: { proposalId: string; projectId: str
   if (!project) throw new Error("Project not found");
   let newRevision = project.workingRevision;
   if (input.decision === "accept") {
+    try {
+      assertProposalRevision(prop.baseRevision, project.workingRevision);
+    } catch (error) {
+      if (error instanceof StaleProposalError) throw new ApiError(409, error.message, { revision: project.workingRevision });
+      throw error;
+    }
     const doc = LessonDocumentSchema.parse(project.workingDocument);
     const ops = input.editedOps ?? (prop.patch as Op[]);
     const provenance = { origin: "copilot" as const, proposalId: prop.id, copilotRunId: prop.copilotRunId ?? undefined, userId: input.userId, at: new Date().toISOString() };

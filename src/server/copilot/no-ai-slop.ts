@@ -1,9 +1,10 @@
 import * as parse5 from "parse5";
 import type { DefaultTreeAdapterTypes as T } from "parse5";
-import type { Block } from "@/server/lesson/model";
+import { iterateBlocks, type Block, type LessonDocument } from "@/server/lesson/model";
 import { listLeaves } from "@/server/lesson/leaves";
 import { escapeHtml, isElement, isText, type Node } from "@/server/lesson/import/dom";
 import type { Op } from "@/server/lesson/ops";
+import type { Finding } from "@/server/copilot/rules/types";
 
 /**
  * Adapted from Peter Yang's MIT-licensed no-ai-slop skill.
@@ -269,5 +270,90 @@ export function buildRewriteOps(block: Block, units: RewriteUnit[], output: Rewr
   return {
     ops: [{ type: "update-block", blockId: block.id, patch } as Op],
     changedUnits: changed.map((r) => originals.get(r.id)!.label),
+  };
+}
+
+type WritingPattern = { name: string; regex: RegExp; fix: string; safeToRewrite: boolean };
+
+const WRITING_PATTERNS: WritingPattern[] = [
+  { name: "empty opener", regex: /\b(?:(?:it is|it's) (?:important|worth) to note(?: that)?|here'?s the thing|let me be clear|the key point is(?: that)?)\b/gi, fix: "Start with the point.", safeToRewrite: true },
+  { name: "empty phrase", regex: /\b(?:at the end of the day|when it comes to|at its core|in today'?s world|in the age of|the reality is(?: that)?|the truth is(?: that)?|in order to|going forward|let'?s dive in)\b/gi, fix: "Remove the setup.", safeToRewrite: true },
+  { name: "banned word", regex: /\b(?:delv(?:e|es|ed|ing)|foster(?:s|ed|ing)?|leverag(?:e|es|ed|ing)|utiliz(?:e|es|ed|ing)|facilitat(?:e|es|ed|ing)|empower(?:s|ed|ing)?|streamlin(?:e|es|ed|ing)|robust|cutting-edge|paradigm shift|game changer|multifaceted|meticulous|intricate|paramount|transformative|elevat(?:e|es|ed|ing)|embark(?:s|ed|ing)?|supercharg(?:e|es|ed|ing)|harness(?:es|ed|ing)?|ever-evolving)\b/gi, fix: "Use a direct verb or concrete fact.", safeToRewrite: true },
+  { name: "weasel attribution", regex: /\b(?:experts agree|industry reports suggest|many argue|widely regarded as|studies show)\b/gi, fix: "Name the source or remove the claim.", safeToRewrite: false },
+  { name: "faux insight", regex: /\b(?:this is the part most people skip|what most people get wrong|here'?s what nobody tells you|the part everyone misses)\b/gi, fix: "State the claim directly.", safeToRewrite: false },
+  { name: "summary ending", regex: /\b(?:in conclusion|ultimately|overall)\b/gi, fix: "End on the concrete takeaway.", safeToRewrite: true },
+];
+
+function unitText(unit: RewriteUnit): string {
+  if (unit.format === "text") return unit.content;
+  const fragment = parse5.parseFragment(unit.content);
+  const text: string[] = [];
+  for (const child of fragment.childNodes) {
+    walkNodes(child, (node) => {
+      if (isText(node)) text.push(node.value);
+    });
+  }
+  return text.join(" ");
+}
+
+/** Scan the editable text in every managed block and produce Grammarly-style findings. */
+export function scanNoAiSlopDocument(doc: LessonDocument): Finding[] {
+  const findings: Finding[] = [];
+  for (const { beat, block } of iterateBlocks(doc)) {
+    if (block.hidden || block.classification !== "managed") continue;
+    const units = collectRewriteUnits(block);
+    if (!units.length) continue;
+    const issues: { pattern: string; quote: string; fix: string; autoFixable: boolean }[] = [];
+    for (const unit of units) {
+      const text = unitText(unit);
+      for (const pattern of WRITING_PATTERNS) {
+        pattern.regex.lastIndex = 0;
+        for (const match of text.matchAll(pattern.regex)) {
+          issues.push({ pattern: pattern.name, quote: match[0], fix: pattern.fix, autoFixable: pattern.safeToRewrite });
+        }
+      }
+    }
+    if (!issues.length) continue;
+
+    const output = mockNoAiSlopRewrite(units);
+    const { ops, changedUnits } = buildRewriteOps(block, units, output);
+    const patterns = [...new Set(issues.map((issue) => issue.pattern))];
+    findings.push({
+      ruleKey: "writing.no-ai-slop",
+      ruleVersion: 1,
+      severity: "warning",
+      title: `${issues.length} writing issue${issues.length === 1 ? "" : "s"} in ${block.kind}`,
+      message: issues.map((issue) => `“${issue.quote}”: ${issue.fix}`).join(" "),
+      evidence: { blockId: block.id, patterns, issues, changedUnits, skill: NO_AI_SLOP },
+      blockId: block.id,
+      beatId: beat.id,
+      ...(ops.length
+        ? {
+            proposal: {
+              kind: "rewrite" as const,
+              title: "Remove AI-sounding phrasing",
+              explanation: "Makes the minimum safe text edit while preserving the lesson's facts and HTML structure.",
+              ops,
+            },
+          }
+        : {}),
+    });
+  }
+  return findings;
+}
+
+export function buildNoAiSlopAudit(doc: LessonDocument) {
+  const started = Date.now();
+  const findings = scanNoAiSlopDocument(doc);
+  return {
+    findings,
+    summary: {
+      auditVersion: "no-ai-slop/1.0.0",
+      rulesEvaluated: 1,
+      rulesSkipped: [],
+      counts: { error: 0, warning: findings.length, info: 0 },
+      exportReady: true,
+      durationMs: Date.now() - started,
+    },
   };
 }

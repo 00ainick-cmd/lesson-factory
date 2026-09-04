@@ -400,7 +400,7 @@ export const auditRuns = pgTable("audit_runs", {
     .notNull()
     .references(() => projects.id, { onDelete: "cascade" }),
   workingRevision: integer("working_revision").notNull(),
-  kind: text("kind").notNull(), // import_audit | quality_audit | export_preflight
+  kind: text("kind").notNull(), // import_audit | quality_audit | writing_check | export_preflight
   summary: jsonb("summary").$type<unknown>().notNull(),
   createdAt: ts("created_at"),
 });
