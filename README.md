@@ -120,7 +120,7 @@ The package also reserves `npm test` and `npm run test:e2e` for Vitest and Playw
 
 ## First workflow
 
-1. Sign in or complete the one-time setup screen.
+1. Enter the shared workspace password, or complete the one-time setup screen on a new installation.
 2. Open a workspace and choose **Import lesson**.
 3. Select a self-contained HTML file.
 4. Wait for the import and automatic audit to finish.

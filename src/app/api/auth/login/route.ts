@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { cookies } from "next/headers";
-import { eq } from "drizzle-orm";
+import { asc, eq } from "drizzle-orm";
 import { db } from "@/server/db/client";
 import { users } from "@/server/db/schema";
 import { verifyPassword } from "@/server/auth/password";
@@ -8,22 +8,27 @@ import { createSession, requestMeta, SESSION_COOKIE, encodeSessionCookie, sessio
 import { ApiError, handle, json, readJson } from "@/server/api";
 import { recordActivity } from "@/server/activity";
 import { logger } from "@/server/log";
+import { env } from "@/server/env";
 
-const Body = z.object({ email: z.string().email(), password: z.string().min(1).max(200) });
+const Body = z.object({ password: z.string().min(1).max(200) });
 const attempts = new Map<string, { n: number; until: number }>();
 
 export const POST = handle(async (req: Request) => {
   const body = await readJson(req, Body);
   const meta = await requestMeta();
-  const key = `${meta.ip ?? "?"}:${body.email.toLowerCase()}`;
+  const key = meta.ip ?? "?";
   const a = attempts.get(key);
   if (a && a.n >= 8 && a.until > Date.now()) throw new ApiError(429, "Too many attempts; try again in a few minutes");
-  const [user] = await db.select().from(users).where(eq(users.email, body.email.toLowerCase())).limit(1);
+  const configuredEmail = env().BOOTSTRAP_ADMIN_EMAIL?.toLowerCase();
+  const [user] = configuredEmail
+    ? await db.select().from(users).where(eq(users.email, configuredEmail)).limit(1)
+    : await db.select().from(users).where(eq(users.isPlatformAdmin, true)).orderBy(asc(users.createdAt)).limit(1);
+  if (!user) throw new ApiError(503, "Shared workspace access is not configured");
   const ok = user ? await verifyPassword(user.passwordHash, body.password) : false;
-  if (!ok || !user) {
+  if (!ok) {
     attempts.set(key, { n: (a?.n ?? 0) + 1, until: Date.now() + 10 * 60_000 });
-    logger.warn("auth_failed", { email: body.email.toLowerCase(), ip: meta.ip });
-    throw new ApiError(401, "Invalid email or password");
+    logger.warn("auth_failed", { mode: "shared_password", ip: meta.ip });
+    throw new ApiError(401, "Incorrect password");
   }
   attempts.delete(key);
   const session = await createSession(user.id, meta);

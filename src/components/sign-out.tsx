@@ -11,7 +11,7 @@ export function SignOutButton() {
         window.location.assign(withBase("/login"));
       }}
     >
-      Sign out
+      Lock
     </button>
   );
 }

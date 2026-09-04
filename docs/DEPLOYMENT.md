@@ -56,7 +56,7 @@ Generate a session secret with:
 openssl rand -base64 32
 ```
 
-Rotating `SESSION_SECRET` invalidates existing login sessions.
+Rotating `SESSION_SECRET` invalidates existing workspace sessions. The shared-password gate verifies against the designated platform-admin account (`BOOTSTRAP_ADMIN_EMAIL`, or the earliest platform admin when that value is unset); email is not requested at the gate.
 
 ### Durable object storage
 

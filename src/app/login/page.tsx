@@ -6,7 +6,6 @@ import { Button, Field, Input } from "@/components/ui";
 import { api, HttpError } from "@/lib/api";
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -15,25 +14,22 @@ export default function LoginPage() {
     setBusy(true);
     setError(null);
     try {
-      await api("/api/auth/login", { method: "POST", json: { email, password } });
+      await api("/api/auth/login", { method: "POST", json: { password } });
       window.location.assign(withBase("/"));
     } catch (err) {
-      setError(err instanceof HttpError ? err.message : "Sign-in failed");
+      setError(err instanceof HttpError ? err.message : "Could not unlock workspace");
     } finally {
       setBusy(false);
     }
   }
   return (
-    <AuthFrame title="Sign in" subtitle="Lesson Factory Studio is a private authoring environment.">
+    <AuthFrame title="Enter workspace" subtitle="Enter the shared password to open Lesson Factory Studio." footer="Password protected">
       <form onSubmit={submit} className="space-y-4">
-        <Field label="Email" id="email">
-          <Input id="email" type="email" autoComplete="username" required value={email} onChange={(e) => setEmail(e.target.value)} />
-        </Field>
-        <Field label="Password" id="password">
-          <Input id="password" type="password" autoComplete="current-password" required value={password} onChange={(e) => setPassword(e.target.value)} />
+        <Field label="Shared password" id="password">
+          <Input id="password" type="password" autoComplete="current-password" autoFocus required value={password} onChange={(e) => setPassword(e.target.value)} />
         </Field>
         {error && <p role="alert" className="rounded border border-bad/40 bg-bad/10 px-3 py-2 text-[13px] text-bad">{error}</p>}
-        <Button type="submit" variant="primary" className="w-full" disabled={busy}>{busy ? "Signing in…" : "Sign in"}</Button>
+        <Button type="submit" variant="primary" className="w-full" disabled={busy}>{busy ? "Unlocking…" : "Unlock workspace"}</Button>
       </form>
     </AuthFrame>
   );

@@ -4,7 +4,7 @@ import { NavLinks } from "./nav-links";
 import { SignOutButton } from "./sign-out";
 import type { Role } from "@/server/auth/rbac";
 
-export function AppShell({ workspace, role, user, children }: { workspace: { id: string; name: string }; role: Role; user: { name: string; email: string }; children: React.ReactNode }) {
+export function AppShell({ workspace, role, children }: { workspace: { id: string; name: string }; role: Role; user: { name: string; email: string }; children: React.ReactNode }) {
   return (
     <div className="flex min-h-screen">
       <aside className="flex w-[232px] shrink-0 flex-col border-r border-line bg-rail">
@@ -18,8 +18,6 @@ export function AppShell({ workspace, role, user, children }: { workspace: { id:
         </div>
         <NavLinks wsId={workspace.id} role={role} />
         <div className="mt-auto border-t border-line px-4 py-3">
-          <p className="truncate text-[12.5px]">{user.name}</p>
-          <p className="truncate text-[11px] text-faint">{user.email}</p>
           <div className="mt-2 flex items-center justify-between">
             <Link href="/w" className="text-[12px] text-muted hover:text-ink">Switch workspace</Link>
             <SignOutButton />

@@ -1,6 +1,6 @@
 import { Logo } from "./logo";
 
-export function AuthFrame({ title, subtitle, children }: { title: string; subtitle?: string; children: React.ReactNode }) {
+export function AuthFrame({ title, subtitle, footer = "Private workspace · Invite only", children }: { title: string; subtitle?: string; footer?: string; children: React.ReactNode }) {
   return (
     <main className="grid-bg flex min-h-screen items-center justify-center px-4 py-12">
       <div className="w-full max-w-[420px]">
@@ -12,7 +12,7 @@ export function AuthFrame({ title, subtitle, children }: { title: string; subtit
           {subtitle && <p className="mt-1 text-[13px] text-muted">{subtitle}</p>}
           <div className="mt-5">{children}</div>
         </div>
-        <p className="mt-6 text-center font-mono text-[11px] uppercase tracking-[0.18em] text-faint">Private workspace · Invite only</p>
+        <p className="mt-6 text-center font-mono text-[11px] uppercase tracking-[0.18em] text-faint">{footer}</p>
       </div>
     </main>
   );
