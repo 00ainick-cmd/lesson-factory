@@ -48,7 +48,7 @@ export const proposalStatusEnum = pgEnum("proposal_status", [
 ]);
 export const severityEnum = pgEnum("severity", ["blocker", "error", "warning", "info"]);
 
-const ts = () => timestamp({ withTimezone: true }).defaultNow().notNull();
+const ts = (name: string) => timestamp(name, { withTimezone: true }).defaultNow().notNull();
 
 // ---------------------------------------------------------------------------
 // Identity and access
@@ -59,8 +59,8 @@ export const users = pgTable("users", {
   name: text("name").notNull(),
   passwordHash: text("password_hash").notNull(),
   isPlatformAdmin: boolean("is_platform_admin").notNull().default(false),
-  createdAt: ts(),
-  updatedAt: ts(),
+  createdAt: ts("created_at"),
+  updatedAt: ts("updated_at"),
 });
 
 export const sessions = pgTable(
@@ -73,7 +73,7 @@ export const sessions = pgTable(
     expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
     userAgent: text("user_agent"),
     ip: text("ip"),
-    createdAt: ts(),
+    createdAt: ts("created_at"),
   },
   (t) => [index("sessions_user_idx").on(t.userId)],
 );
@@ -85,8 +85,8 @@ export const workspaces = pgTable("workspaces", {
   createdBy: uuid("created_by").references(() => users.id),
   seedCommit: text("seed_commit"),
   seededAt: timestamp("seeded_at", { withTimezone: true }),
-  createdAt: ts(),
-  updatedAt: ts(),
+  createdAt: ts("created_at"),
+  updatedAt: ts("updated_at"),
 });
 
 export const workspaceMembers = pgTable(
@@ -100,7 +100,7 @@ export const workspaceMembers = pgTable(
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
     role: roleEnum("role").notNull().default("author"),
-    createdAt: ts(),
+    createdAt: ts("created_at"),
   },
   (t) => [uniqueIndex("workspace_members_unique").on(t.workspaceId, t.userId)],
 );
@@ -116,7 +116,7 @@ export const invites = pgTable("invites", {
   invitedBy: uuid("invited_by").references(() => users.id),
   expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
   acceptedAt: timestamp("accepted_at", { withTimezone: true }),
-  createdAt: ts(),
+  createdAt: ts("created_at"),
 });
 
 // ---------------------------------------------------------------------------
@@ -137,7 +137,7 @@ export const artifacts = pgTable(
     storageKey: text("storage_key").notNull(),
     immutable: boolean("immutable").notNull().default(true),
     uploadedBy: uuid("uploaded_by").references(() => users.id),
-    createdAt: ts(),
+    createdAt: ts("created_at"),
   },
   (t) => [index("artifacts_ws_sha_idx").on(t.workspaceId, t.sha256)],
 );
@@ -161,8 +161,8 @@ export const projects = pgTable(
     sourceMap: jsonb("source_map").$type<unknown>(),
     assetManifest: jsonb("asset_manifest").$type<unknown>(),
     createdBy: uuid("created_by").references(() => users.id),
-    createdAt: ts(),
-    updatedAt: ts(),
+    createdAt: ts("created_at"),
+    updatedAt: ts("updated_at"),
   },
   (t) => [uniqueIndex("projects_ws_slug").on(t.workspaceId, t.slug)],
 );
@@ -180,7 +180,7 @@ export const projectVersions = pgTable(
     document: jsonb("document").$type<unknown>().notNull(),
     contentHash: text("content_hash").notNull(), // sha256 of canonical JSON
     createdBy: uuid("created_by").references(() => users.id),
-    createdAt: ts(),
+    createdAt: ts("created_at"),
   },
   (t) => [uniqueIndex("project_versions_unique").on(t.projectId, t.number)],
 );
@@ -195,7 +195,7 @@ export const assets = pgTable("assets", {
   kind: text("kind").notNull(), // image | audio | video | script | style | font | other
   status: text("status").notNull(), // present | missing | external | inline
   url: text("url"),
-  createdAt: ts(),
+  createdAt: ts("created_at"),
 });
 
 export const exports = pgTable("exports", {
@@ -211,8 +211,8 @@ export const exports = pgTable("exports", {
   validationReport: jsonb("validation_report").$type<unknown>(),
   jobId: uuid("job_id"),
   createdBy: uuid("created_by").references(() => users.id),
-  createdAt: ts(),
-  updatedAt: ts(),
+  createdAt: ts("created_at"),
+  updatedAt: ts("updated_at"),
 });
 
 // ---------------------------------------------------------------------------
@@ -236,8 +236,8 @@ export const knowledgeDocuments = pgTable(
     content: text("content").notNull(),
     contentSha256: text("content_sha256").notNull(),
     active: boolean("active").notNull().default(true),
-    createdAt: ts(),
-    updatedAt: ts(),
+    createdAt: ts("created_at"),
+    updatedAt: ts("updated_at"),
   },
   (t) => [uniqueIndex("knowledge_documents_ws_slug").on(t.workspaceId, t.slug)],
 );
@@ -255,7 +255,7 @@ export const knowledgeDocumentVersions = pgTable(
     isBaseline: boolean("is_baseline").notNull().default(false),
     note: text("note"),
     createdBy: uuid("created_by").references(() => users.id),
-    createdAt: ts(),
+    createdAt: ts("created_at"),
   },
   (t) => [uniqueIndex("knowledge_versions_unique").on(t.documentId, t.number)],
 );
@@ -276,7 +276,7 @@ export const knowledgeChunks = pgTable(
     heading: text("heading"),
     content: text("content").notNull(),
     embedding: vector("embedding"),
-    createdAt: ts(),
+    createdAt: ts("created_at"),
   },
   (t) => [index("knowledge_chunks_doc_idx").on(t.documentId)],
 );
@@ -296,8 +296,8 @@ export const objectives = pgTable(
     bankItems: integer("bank_items"),
     sourceDocumentId: uuid("source_document_id").references(() => knowledgeDocuments.id),
     active: boolean("active").notNull().default(true),
-    createdAt: ts(),
-    updatedAt: ts(),
+    createdAt: ts("created_at"),
+    updatedAt: ts("updated_at"),
   },
   (t) => [uniqueIndex("objectives_ws_code").on(t.workspaceId, t.code)],
 );
@@ -322,8 +322,8 @@ export const beatTypes = pgTable(
     mandatory: boolean("mandatory").notNull().default(false),
     active: boolean("active").notNull().default(true),
     sourceDocumentId: uuid("source_document_id").references(() => knowledgeDocuments.id),
-    createdAt: ts(),
-    updatedAt: ts(),
+    createdAt: ts("created_at"),
+    updatedAt: ts("updated_at"),
   },
   (t) => [uniqueIndex("beat_types_ws_key").on(t.workspaceId, t.key)],
 );
@@ -344,8 +344,8 @@ export const qualityRules = pgTable(
     version: integer("version").notNull().default(1),
     active: boolean("active").notNull().default(true),
     sourceRef: text("source_ref"), // e.g. QUALITY-BAR.md#axes / quality-gate.py CONFIG.teach.words_fail
-    createdAt: ts(),
-    updatedAt: ts(),
+    createdAt: ts("created_at"),
+    updatedAt: ts("updated_at"),
   },
   (t) => [uniqueIndex("quality_rules_ws_key").on(t.workspaceId, t.key)],
 );
@@ -362,8 +362,8 @@ export const themeTokens = pgTable(
     tokens: jsonb("tokens").$type<Record<string, string>>().notNull(),
     meaning: jsonb("meaning").$type<Record<string, string>>().notNull().default({}),
     sourceRef: text("source_ref"),
-    createdAt: ts(),
-    updatedAt: ts(),
+    createdAt: ts("created_at"),
+    updatedAt: ts("updated_at"),
   },
   (t) => [uniqueIndex("theme_tokens_ws_family").on(t.workspaceId, t.family)],
 );
@@ -387,7 +387,7 @@ export const jobs = pgTable(
     startedAt: timestamp("started_at", { withTimezone: true }),
     finishedAt: timestamp("finished_at", { withTimezone: true }),
     createdBy: uuid("created_by").references(() => users.id),
-    createdAt: ts(),
+    createdAt: ts("created_at"),
   },
   (t) => [index("jobs_status_idx").on(t.status, t.runAfter)],
 );
@@ -400,7 +400,7 @@ export const auditRuns = pgTable("audit_runs", {
   workingRevision: integer("working_revision").notNull(),
   kind: text("kind").notNull(), // import_audit | quality_audit | export_preflight
   summary: jsonb("summary").$type<unknown>().notNull(),
-  createdAt: ts(),
+  createdAt: ts("created_at"),
 });
 
 export const auditFindings = pgTable(
@@ -421,7 +421,7 @@ export const auditFindings = pgTable(
     evidence: jsonb("evidence").$type<unknown>().notNull(),
     beatId: text("beat_id"),
     blockId: text("block_id"),
-    createdAt: ts(),
+    createdAt: ts("created_at"),
   },
   (t) => [index("audit_findings_project_idx").on(t.projectId)],
 );
@@ -448,7 +448,7 @@ export const proposals = pgTable(
     status: proposalStatusEnum("status").notNull().default("open"),
     decidedBy: uuid("decided_by").references(() => users.id),
     decidedAt: timestamp("decided_at", { withTimezone: true }),
-    createdAt: ts(),
+    createdAt: ts("created_at"),
   },
   (t) => [index("proposals_project_idx").on(t.projectId, t.status)],
 );
@@ -470,7 +470,7 @@ export const copilotRuns = pgTable("copilot_runs", {
   output: jsonb("output").$type<unknown>(),
   assumptions: jsonb("assumptions").$type<string[]>().notNull().default([]),
   latencyMs: integer("latency_ms"),
-  createdAt: ts(),
+  createdAt: ts("created_at"),
 });
 
 export const activityLog = pgTable(
@@ -485,7 +485,7 @@ export const activityLog = pgTable(
     targetId: text("target_id"),
     details: jsonb("details").$type<unknown>(),
     ip: text("ip"),
-    createdAt: ts(),
+    createdAt: ts("created_at"),
   },
   (t) => [index("activity_ws_idx").on(t.workspaceId, t.createdAt)],
 );

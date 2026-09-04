@@ -13,7 +13,7 @@ CREATE TABLE "activity_log" (
 	"target_id" text,
 	"details" jsonb,
 	"ip" text,
-	"createdAt" timestamp with time zone DEFAULT now() NOT NULL
+	"created_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "artifacts" (
@@ -27,7 +27,7 @@ CREATE TABLE "artifacts" (
 	"storage_key" text NOT NULL,
 	"immutable" boolean DEFAULT true NOT NULL,
 	"uploaded_by" uuid,
-	"createdAt" timestamp with time zone DEFAULT now() NOT NULL
+	"created_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "assets" (
@@ -38,7 +38,7 @@ CREATE TABLE "assets" (
 	"kind" text NOT NULL,
 	"status" text NOT NULL,
 	"url" text,
-	"createdAt" timestamp with time zone DEFAULT now() NOT NULL
+	"created_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "audit_findings" (
@@ -53,7 +53,7 @@ CREATE TABLE "audit_findings" (
 	"evidence" jsonb NOT NULL,
 	"beat_id" text,
 	"block_id" text,
-	"createdAt" timestamp with time zone DEFAULT now() NOT NULL
+	"created_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "audit_runs" (
@@ -62,7 +62,7 @@ CREATE TABLE "audit_runs" (
 	"working_revision" integer NOT NULL,
 	"kind" text NOT NULL,
 	"summary" jsonb NOT NULL,
-	"createdAt" timestamp with time zone DEFAULT now() NOT NULL
+	"created_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "beat_types" (
@@ -81,8 +81,8 @@ CREATE TABLE "beat_types" (
 	"mandatory" boolean DEFAULT false NOT NULL,
 	"active" boolean DEFAULT true NOT NULL,
 	"source_document_id" uuid,
-	"createdAt" timestamp with time zone DEFAULT now() NOT NULL,
-	"updatedAt" timestamp with time zone DEFAULT now() NOT NULL
+	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
+	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "copilot_runs" (
@@ -100,7 +100,7 @@ CREATE TABLE "copilot_runs" (
 	"output" jsonb,
 	"assumptions" jsonb DEFAULT '[]'::jsonb NOT NULL,
 	"latency_ms" integer,
-	"createdAt" timestamp with time zone DEFAULT now() NOT NULL
+	"created_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "exports" (
@@ -114,8 +114,8 @@ CREATE TABLE "exports" (
 	"validation_report" jsonb,
 	"job_id" uuid,
 	"created_by" uuid,
-	"createdAt" timestamp with time zone DEFAULT now() NOT NULL,
-	"updatedAt" timestamp with time zone DEFAULT now() NOT NULL
+	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
+	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "invites" (
@@ -127,7 +127,7 @@ CREATE TABLE "invites" (
 	"invited_by" uuid,
 	"expires_at" timestamp with time zone NOT NULL,
 	"accepted_at" timestamp with time zone,
-	"createdAt" timestamp with time zone DEFAULT now() NOT NULL,
+	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	CONSTRAINT "invites_token_hash_unique" UNIQUE("token_hash")
 );
 --> statement-breakpoint
@@ -145,7 +145,7 @@ CREATE TABLE "jobs" (
 	"started_at" timestamp with time zone,
 	"finished_at" timestamp with time zone,
 	"created_by" uuid,
-	"createdAt" timestamp with time zone DEFAULT now() NOT NULL
+	"created_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "knowledge_chunks" (
@@ -158,7 +158,7 @@ CREATE TABLE "knowledge_chunks" (
 	"heading" text,
 	"content" text NOT NULL,
 	"embedding" vector(1536),
-	"createdAt" timestamp with time zone DEFAULT now() NOT NULL
+	"created_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "knowledge_document_versions" (
@@ -170,7 +170,7 @@ CREATE TABLE "knowledge_document_versions" (
 	"is_baseline" boolean DEFAULT false NOT NULL,
 	"note" text,
 	"created_by" uuid,
-	"createdAt" timestamp with time zone DEFAULT now() NOT NULL
+	"created_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "knowledge_documents" (
@@ -187,8 +187,8 @@ CREATE TABLE "knowledge_documents" (
 	"content" text NOT NULL,
 	"content_sha256" text NOT NULL,
 	"active" boolean DEFAULT true NOT NULL,
-	"createdAt" timestamp with time zone DEFAULT now() NOT NULL,
-	"updatedAt" timestamp with time zone DEFAULT now() NOT NULL
+	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
+	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "objectives" (
@@ -201,8 +201,8 @@ CREATE TABLE "objectives" (
 	"bank_items" integer,
 	"source_document_id" uuid,
 	"active" boolean DEFAULT true NOT NULL,
-	"createdAt" timestamp with time zone DEFAULT now() NOT NULL,
-	"updatedAt" timestamp with time zone DEFAULT now() NOT NULL
+	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
+	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "project_versions" (
@@ -214,7 +214,7 @@ CREATE TABLE "project_versions" (
 	"document" jsonb NOT NULL,
 	"content_hash" text NOT NULL,
 	"created_by" uuid,
-	"createdAt" timestamp with time zone DEFAULT now() NOT NULL
+	"created_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "projects" (
@@ -231,8 +231,8 @@ CREATE TABLE "projects" (
 	"source_map" jsonb,
 	"asset_manifest" jsonb,
 	"created_by" uuid,
-	"createdAt" timestamp with time zone DEFAULT now() NOT NULL,
-	"updatedAt" timestamp with time zone DEFAULT now() NOT NULL
+	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
+	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "proposals" (
@@ -253,7 +253,7 @@ CREATE TABLE "proposals" (
 	"status" "proposal_status" DEFAULT 'open' NOT NULL,
 	"decided_by" uuid,
 	"decided_at" timestamp with time zone,
-	"createdAt" timestamp with time zone DEFAULT now() NOT NULL
+	"created_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "quality_rules" (
@@ -268,8 +268,8 @@ CREATE TABLE "quality_rules" (
 	"version" integer DEFAULT 1 NOT NULL,
 	"active" boolean DEFAULT true NOT NULL,
 	"source_ref" text,
-	"createdAt" timestamp with time zone DEFAULT now() NOT NULL,
-	"updatedAt" timestamp with time zone DEFAULT now() NOT NULL
+	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
+	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "sessions" (
@@ -278,7 +278,7 @@ CREATE TABLE "sessions" (
 	"expires_at" timestamp with time zone NOT NULL,
 	"user_agent" text,
 	"ip" text,
-	"createdAt" timestamp with time zone DEFAULT now() NOT NULL
+	"created_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "theme_tokens" (
@@ -289,8 +289,8 @@ CREATE TABLE "theme_tokens" (
 	"tokens" jsonb NOT NULL,
 	"meaning" jsonb DEFAULT '{}'::jsonb NOT NULL,
 	"source_ref" text,
-	"createdAt" timestamp with time zone DEFAULT now() NOT NULL,
-	"updatedAt" timestamp with time zone DEFAULT now() NOT NULL
+	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
+	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "users" (
@@ -299,8 +299,8 @@ CREATE TABLE "users" (
 	"name" text NOT NULL,
 	"password_hash" text NOT NULL,
 	"is_platform_admin" boolean DEFAULT false NOT NULL,
-	"createdAt" timestamp with time zone DEFAULT now() NOT NULL,
-	"updatedAt" timestamp with time zone DEFAULT now() NOT NULL,
+	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
+	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
 	CONSTRAINT "users_email_unique" UNIQUE("email")
 );
 --> statement-breakpoint
@@ -309,7 +309,7 @@ CREATE TABLE "workspace_members" (
 	"workspace_id" uuid NOT NULL,
 	"user_id" uuid NOT NULL,
 	"role" "workspace_role" DEFAULT 'author' NOT NULL,
-	"createdAt" timestamp with time zone DEFAULT now() NOT NULL
+	"created_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "workspaces" (
@@ -319,8 +319,8 @@ CREATE TABLE "workspaces" (
 	"created_by" uuid,
 	"seed_commit" text,
 	"seeded_at" timestamp with time zone,
-	"createdAt" timestamp with time zone DEFAULT now() NOT NULL,
-	"updatedAt" timestamp with time zone DEFAULT now() NOT NULL,
+	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
+	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
 	CONSTRAINT "workspaces_slug_unique" UNIQUE("slug")
 );
 --> statement-breakpoint
@@ -369,7 +369,7 @@ ALTER TABLE "theme_tokens" ADD CONSTRAINT "theme_tokens_workspace_id_workspaces_
 ALTER TABLE "workspace_members" ADD CONSTRAINT "workspace_members_workspace_id_workspaces_id_fk" FOREIGN KEY ("workspace_id") REFERENCES "public"."workspaces"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "workspace_members" ADD CONSTRAINT "workspace_members_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "workspaces" ADD CONSTRAINT "workspaces_created_by_users_id_fk" FOREIGN KEY ("created_by") REFERENCES "public"."users"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
-CREATE INDEX "activity_ws_idx" ON "activity_log" USING btree ("workspace_id","createdAt");--> statement-breakpoint
+CREATE INDEX "activity_ws_idx" ON "activity_log" USING btree ("workspace_id","created_at");--> statement-breakpoint
 CREATE INDEX "artifacts_ws_sha_idx" ON "artifacts" USING btree ("workspace_id","sha256");--> statement-breakpoint
 CREATE INDEX "audit_findings_project_idx" ON "audit_findings" USING btree ("project_id");--> statement-breakpoint
 CREATE UNIQUE INDEX "beat_types_ws_key" ON "beat_types" USING btree ("workspace_id","key");--> statement-breakpoint

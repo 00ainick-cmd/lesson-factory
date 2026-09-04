@@ -1,4 +1,4 @@
-import { and, eq, lte, sql } from "drizzle-orm";
+import { and, eq, sql } from "drizzle-orm";
 import { db } from "@/server/db/client";
 import { jobs } from "@/server/db/schema";
 import { logger } from "@/server/log";
@@ -45,15 +45,15 @@ export async function runJob(jobId: string) {
   const [job] = await db
     .update(jobs)
     .set({ status: "running", startedAt: new Date(), attempts: sql`${jobs.attempts} + 1` })
-    .where(and(eq(jobs.id, jobId), eq(jobs.status, "queued"), lte(jobs.runAfter, new Date())))
+    .where(and(eq(jobs.id, jobId), eq(jobs.status, "queued")))
     .returning();
   if (!job) return executeClaimed(jobId);
   return executeClaimed(jobId);
 }
 
-export async function executeClaimed(jobId: string) {
+export async function executeClaimed(jobId: string): Promise<{ ok: true; result: unknown } | { ok: false; error: string } | undefined> {
   const [job] = await db.select().from(jobs).where(eq(jobs.id, jobId)).limit(1);
-  if (!job || job.status !== "running") return;
+  if (!job || job.status !== "running") return undefined;
   const handler = handlers[job.type as JobType];
   const started = Date.now();
   try {
@@ -64,10 +64,12 @@ export async function executeClaimed(jobId: string) {
       .set({ status: "succeeded", result: result ?? null, finishedAt: new Date() })
       .where(eq(jobs.id, job.id));
     logger.info("job_succeeded", { type: job.type, id: job.id, ms: Date.now() - started });
+    return { ok: true, result };
   } catch (e) {
     const message = e instanceof Error ? `${e.message}\n${e.stack ?? ""}` : String(e);
     await db.update(jobs).set({ status: "failed", error: message, finishedAt: new Date() }).where(eq(jobs.id, job.id));
     logger.error("job_failed", { type: job.type, id: job.id, error: message.split("\n")[0] });
+    return { ok: false, error: message };
   }
 }
 
