@@ -1,0 +1,2914 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="frame-ancestors https://*.thinkific.com https://aero.aea.net https://*.aea.net 'self';">
+<title>Resistance | Fundamentals of Direct Current</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   ELECTRIC INK  -  design system
+   Resistance = amber  |  Current = cyan  |  Voltage = violet
+   Color carries meaning only. Everything else is ink + paper.
+   ============================================================ */
+:root{
+  --ink:#0a0b0d;            /* canvas */
+  --ink-2:#111318;         /* raised panels */
+  --ink-3:#171a21;         /* controls */
+  --line:#262b34;          /* hairlines */
+  --paper:#eef1f4;         /* primary text */
+  --paper-2:#c6ccd6;       /* secondary text */
+  --paper-3:#a3abba;       /* captions / metadata (>=7:1 on ink) */
+  --R:#ff9e3d;             /* resistance  (amber)  */
+  --R-dim:#5a3d1c;
+  --I:#39d7ff;             /* current     (cyan)   */
+  --I-dim:#123c47;
+  --V:#b48cff;             /* voltage     (violet) */
+  --ok:#5ddb9a;
+  --bad:#ff6b6b;
+  --shadow:0 24px 60px -20px rgba(0,0,0,.7);
+  --maxw:1080px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:72px}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{
+  margin:0;background:var(--ink);color:var(--paper);
+  font-family:"IBM Plex Sans",system-ui,sans-serif;
+  font-size:19px;line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+  background-image:radial-gradient(1200px 600px at 70% -10%, #14171d 0%, var(--ink) 60%);
+}
+::selection{background:var(--R);color:#111}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 clamp(20px,5vw,48px)}
+h1,h2,h3,.display{font-family:"Space Grotesk",sans-serif;letter-spacing:-.02em;line-height:1.04}
+p{color:var(--paper-2)}
+strong{color:var(--paper);font-weight:600}
+.mono{font-family:"IBM Plex Mono",monospace}
+a{color:var(--I)}
+
+/* ---- kicker / section headers ---- */
+.kicker{font-family:"IBM Plex Mono",monospace;font-size:13px;letter-spacing:.28em;
+  text-transform:uppercase;color:var(--paper-3);display:flex;align-items:center;gap:12px}
+.kicker::before{content:"";width:26px;height:1px;background:var(--paper-3)}
+.section{padding:clamp(56px,9vw,120px) 0;border-top:1px solid var(--line)}
+.section h2{font-size:clamp(28px,5vw,46px);font-weight:600;margin:18px 0 10px}
+.lede{font-size:clamp(19px,2.4vw,23px);color:var(--paper);max-width:64ch}
+
+/* ============================================================
+   HERO
+   ============================================================ */
+.hero{position:relative;min-height:0;display:flex;flex-direction:column;
+  justify-content:center;padding:48px 0 56px;overflow:hidden}
+.hero .wrap{position:relative;z-index:2}
+.course-tag{font-family:"IBM Plex Mono",monospace;font-size:13px;letter-spacing:.24em;
+  text-transform:uppercase;color:var(--paper-3)}
+.course-tag b{color:var(--R);font-weight:500}
+.hero h1{font-size:clamp(48px,11vw,132px);font-weight:700;margin:.15em 0 .1em;color:var(--paper)}
+.hero h1 .u{position:relative;white-space:nowrap}
+.hero h1 .u::after{content:"";position:absolute;left:0;right:0;bottom:.08em;height:.09em;
+  background:var(--R);box-shadow:0 0 24px var(--R)}
+.hero-sub{font-size:clamp(20px,2.6vw,27px);max-width:40ch;color:var(--paper-2);margin-top:10px}
+.hero-meta{margin-top:44px;display:flex;flex-wrap:wrap;gap:14px 34px;
+  font-family:"IBM Plex Mono",monospace;font-size:13.5px;color:var(--paper-3)}
+.hero-meta span b{color:var(--paper);font-weight:500}
+.los{margin-top:36px;max-width:70ch;border:1px solid var(--line);border-radius:16px;
+  background:rgba(17,19,24,.72);padding:18px 22px 16px}
+.los .k{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--R);margin-bottom:10px}
+.los ol{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:8px}
+.los li{color:var(--paper);font-size:16.5px;line-height:1.45}
+.hero .sumgrid{margin-top:18px}
+.defrow{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:22px}
+@media(max-width:760px){.defrow{grid-template-columns:1fr}}
+.def{background:var(--ink-2);border:1px solid var(--line);border-radius:14px;padding:16px 18px}
+.def .d{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--paper-3)}
+.def .w{font-family:"Space Grotesk",sans-serif;font-size:28px;font-weight:600;color:var(--paper);margin:6px 0 2px}
+.def .u{font-size:14px;color:var(--paper-3)}
+.scrollcue{margin-top:56px;display:inline-flex;align-items:center;gap:12px;
+  color:var(--paper-3);font-family:"IBM Plex Mono",monospace;font-size:13px;
+  letter-spacing:.1em;text-transform:uppercase}
+.scrollcue .dot{width:10px;height:10px;border-radius:50%;background:var(--R);
+  animation:pulse 2.4s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:.35;transform:scale(.8)}50%{opacity:1;transform:scale(1.15)}}
+
+/* hero background: faint flowing electrons behind everything */
+#heroField{position:absolute;inset:0;z-index:1;opacity:.5}
+
+/* ============================================================
+   FIGURES / CALLOUTS / CARDS  (magazine rhythm blocks)
+   ============================================================ */
+.figure{background:var(--ink-2);border:1px solid var(--line);border-radius:16px;
+  padding:clamp(20px,3vw,34px);box-shadow:var(--shadow);margin:34px 0}
+.figcap{font-family:"IBM Plex Mono",monospace;font-size:12.5px;color:var(--paper-3);
+  letter-spacing:.06em;margin-top:14px;display:flex;gap:10px}
+.figcap b{color:var(--paper-2);font-weight:500}
+
+.callout{border-left:3px solid var(--R);background:linear-gradient(90deg,rgba(255,158,61,.07),transparent 80%);
+  padding:18px 22px;border-radius:0 12px 12px 0;margin:30px 0;font-size:18px}
+.callout .lbl{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--R);display:block;margin-bottom:6px}
+.callout.key{border-color:var(--I);background:linear-gradient(90deg,rgba(57,215,255,.08),transparent 80%)}
+.callout.key .lbl{color:var(--I)}
+
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:26px}
+.grid2.tight{gap:18px}
+@media(max-width:760px){.grid2{grid-template-columns:1fr}}
+
+.chip{display:inline-flex;align-items:center;gap:8px;font-family:"IBM Plex Mono",monospace;
+  font-size:12.5px;padding:5px 11px;border:1px solid var(--line);border-radius:100px;color:var(--paper-2)}
+.chip i{width:9px;height:9px;border-radius:50%;display:inline-block}
+.swR{background:var(--R)}.swI{background:var(--I)}.swV{background:var(--V)}
+
+/* prose column */
+.prose{max-width:66ch}
+.prose p{margin:0 0 20px}
+
+/* buttons */
+.btn{font-family:"IBM Plex Mono",monospace;font-size:14px;letter-spacing:.04em;
+  background:var(--ink-3);color:var(--paper);border:1px solid var(--line);
+  padding:12px 18px;border-radius:10px;cursor:pointer;transition:.15s;user-select:none}
+.btn:hover{border-color:var(--R);color:#fff}
+.btn:focus-visible{outline:2px solid var(--I);outline-offset:2px}
+.btn.active{background:var(--R);color:#111;border-color:var(--R);font-weight:600}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+
+/* skip-to-content + focus baseline */
+:focus-visible{outline:2px solid var(--I);outline-offset:2px}
+
+/* ============================================================
+   LESSON DOCK  -  sticky identity, waypoints, audio.
+   Clone: data-course / data-num / data-title on #ldock,
+   audio src, data-beat on each section. No left rail. No HUD.
+   ============================================================ */
+.skip{
+  position:absolute;left:12px;top:8px;z-index:60;padding:8px 12px;
+  background:var(--R);color:#111;font-family:"IBM Plex Mono",monospace;
+  font-size:13px;text-decoration:none;transform:translateY(-160%)}
+.skip:focus{transform:none}
+.ldock{
+  position:sticky;top:0;z-index:50;
+  background:rgba(10,11,13,.94);
+  backdrop-filter:saturate(1.2) blur(12px);
+  border-bottom:1px solid var(--line)}
+.ldock.playing{box-shadow:inset 0 2px 0 var(--R)}
+.ldock-inner{
+  max-width:var(--maxw);margin:0 auto;
+  padding:7px clamp(16px,4vw,48px) 8px;
+  display:grid;grid-template-columns:auto minmax(0,1fr) auto;
+  grid-template-areas:"id here aud";
+  gap:8px 22px;align-items:center}
+.ldock-id{grid-area:id;display:flex;flex-direction:column;min-width:0;line-height:1.15}
+.ldock-num{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--R);font-weight:500}
+.ldock-title{font-family:"Space Grotesk",sans-serif;font-weight:600;font-size:17px;
+  color:var(--paper);letter-spacing:-.02em}
+.ldock-course{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--paper-3);
+  letter-spacing:.04em;margin-top:2px}
+.ldock-here{grid-area:here;min-width:0}
+.ldock-now{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.14em;
+  text-transform:uppercase;color:#2a303a;display:block;margin-bottom:6px}
+.ldock-now b{font-weight:600}
+.ldock-now.is-open,.ldock-now.is-open b{color:var(--R)}
+.ldock-now.is-done,.ldock-now.is-done b{color:var(--ok)}
+.ldock-beats{display:flex;gap:4px;align-items:center}
+.ld-beat{
+  flex:1;min-width:0;height:44px;padding:0;border:0;background:transparent;cursor:pointer;
+  display:flex;align-items:center}
+.ld-beat i{display:block;width:100%;height:5px;background:#2a303a;border-radius:1px;
+  pointer-events:none;transition:background .15s ease,height .15s ease}
+.ld-beat.open i{background:var(--R);height:6px}
+.ld-beat.open:hover i,.ld-beat.open:focus-visible i{background:var(--R)}
+.ld-beat[aria-current="location"]:not(.done):not(.locked) i{background:var(--R);height:6px}
+.ld-beat.done i{background:var(--ok);height:5px}
+.ld-beat.done:hover i,.ld-beat.done:focus-visible i{background:var(--ok)}
+.ld-beat.locked{cursor:not-allowed;opacity:.55}
+.ld-beat.locked i,.ld-beat.locked:hover i,.ld-beat.locked:focus-visible i{background:#2a303a;height:5px}
+.gatebar{margin-top:32px}
+.gatenote{margin:0 0 12px;font-size:16.5px;line-height:1.45;color:var(--paper);max-width:62ch}
+.gatenote.is-ready{color:var(--ok)}
+.gate-next{
+  min-height:44px;cursor:pointer;border:0;border-radius:10px;
+  background:var(--I);color:#04222b;font-weight:600;
+  font-family:"IBM Plex Mono",monospace;font-size:14px;padding:14px 24px}
+.gate-next:focus-visible{outline:2.5px solid var(--R);outline-offset:3px}
+.gate-next:disabled{opacity:.4;cursor:not-allowed}
+.need-list{margin:14px 0 0;padding-left:22px;color:var(--paper-2);font-size:16.5px;line-height:1.55}
+.need-list li{margin:6px 0}
+.need-list li.is-met{color:var(--ok)}
+.ldock-hint{display:block;font-family:"IBM Plex Mono",monospace;font-size:11px;
+  letter-spacing:.04em;color:var(--R);margin-top:6px;line-height:1.35}
+.ldock-hint.is-ready{color:var(--ok)}
+.ldock-hint.is-flash{animation:gateflash .55s ease 0s 2}
+@keyframes gateflash{0%,100%{opacity:1}50%{opacity:.35}}
+[data-beat].is-locked{display:none}
+.ldock-aud{grid-area:aud;display:flex;align-items:center;gap:10px;min-width:0}
+.ldock-play{
+  width:44px;height:44px;border-radius:50%;border:0;cursor:pointer;flex:none;
+  background:var(--R);color:#111;display:grid;place-items:center}
+.ldock-play:hover{filter:brightness(1.08)}
+.ldock-play:disabled{opacity:.4;cursor:not-allowed;filter:none}
+.ldock-time{display:flex;flex-direction:column;gap:4px;min-width:148px}
+.ldock-time .row{display:flex;justify-content:space-between;font-family:"IBM Plex Mono",monospace;
+  font-size:11px;color:var(--paper-3);letter-spacing:.04em}
+.ldock-time input[type=range]{
+  -webkit-appearance:none;appearance:none;width:100%;height:4px;border-radius:2px;
+  background:var(--line);outline:none;cursor:pointer;margin:0}
+.ldock-time input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none;width:12px;height:12px;border-radius:50%;background:var(--R);border:0}
+.ldock-time input[type=range]::-moz-range-thumb{
+  width:12px;height:12px;border-radius:50%;background:var(--R);border:0}
+.ldock-time input[type=range]::-moz-range-track{
+  height:4px;background:var(--line);border:0;border-radius:2px}
+.ldock audio{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
+@media(max-width:720px){
+  .ldock-inner{
+    grid-template-columns:minmax(0,1fr) auto;
+    grid-template-areas:"id aud" "here here";
+    padding:8px 16px 10px}
+  .ldock-course{display:none}
+  .ldock-time{min-width:0;width:118px}
+}
+@media (prefers-reduced-motion:reduce){
+  .ld-beat i{transition:none}
+  .ldock-hint.is-flash{animation:none}
+  .ldock{backdrop-filter:none;background:var(--ink)}
+}
+.sumgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:28px}
+@media(max-width:820px){.sumgrid{grid-template-columns:1fr 1fr}}
+@media(max-width:460px){.sumgrid{grid-template-columns:1fr}}
+.sumcard{background:var(--ink-2);border:1px solid var(--line);border-radius:14px;padding:20px}
+.sumcard .n{font-family:"IBM Plex Mono";font-size:12px;color:var(--R)}
+.sumcard h4{font-family:"Space Grotesk";font-size:16px;margin:8px 0 6px;color:var(--paper)}
+.sumcard p{font-size:14px;margin:0;color:var(--paper-3);line-height:1.5}
+
+/* 16:9 teaching stages. Same Electric Ink tokens as the page. Do not use .stage:
+   the bench already owns that class. Do not put paper #f4f0e7 on :root. */
+.cc-card{margin-top:26px}
+.cc-spec{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:10px}
+.cc-spec-job{font:600 11px/1 "IBM Plex Mono",monospace;letter-spacing:.16em;text-transform:uppercase;color:var(--paper-3)}
+.cc-stage{position:relative;width:100%;aspect-ratio:16/9;container-type:size;border-radius:14px;overflow:hidden;
+  background:var(--ink-2);color:var(--paper);border:1px solid var(--line)}
+.cc-pad{position:absolute;inset:0;padding:7cqh 6cqw;display:flex;flex-direction:column}
+.cc-ey{font:600 1.35cqw/1 "IBM Plex Mono",monospace;letter-spacing:.18em;text-transform:uppercase;color:var(--R);display:flex;align-items:center;gap:1.3cqw;margin-bottom:2.2cqh}
+.cc-ey::before{content:"";width:2.6cqw;height:1px;background:currentColor;flex:none}
+.cc-h{font-family:"Space Grotesk",sans-serif;font-weight:600;line-height:1.04;margin:0;color:var(--paper);letter-spacing:-.02em}
+.cc-num-fig{font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:16cqw;line-height:0.9;font-variant-numeric:tabular-nums;letter-spacing:-.04em;margin:auto 0 1cqh;color:var(--paper)}
+.cc-num-unit{font:600 1.9cqw/1 "IBM Plex Mono",monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--R);margin-bottom:2cqh}
+.cc-num-mean{font-size:2cqw;line-height:1.35;color:var(--paper-2);max-width:52cqw}
+.cc-num-src{margin-top:auto;font:1.2cqw/1.35 "IBM Plex Mono",monospace;letter-spacing:.04em;color:var(--paper-3)}
+.cc-con{flex:1;min-height:0;display:grid;grid-template-columns:1.15fr .85fr;gap:3.2cqw;align-items:center}
+.cc-term{font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:8cqw;line-height:0.9;color:var(--R);margin:0 0 1.2cqh}
+.cc-term-def{font-size:1.7cqw;line-height:1.35;color:var(--paper-2);max-width:36cqw}
+.cc-dist{display:flex;flex-direction:column;gap:1.8cqh}
+.cc-dist b{display:block;font:600 1.15cqw/1 "IBM Plex Mono",monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--R);margin-bottom:.4cqh}
+.cc-dist span{font-size:1.55cqw;line-height:1.35;color:var(--paper-2)}
+.cc-glyph{width:100%;height:auto}
+.cc-pr-head{font-size:2.8cqw;max-width:74cqw;color:var(--paper);margin-bottom:3cqh}
+.cc-pr-opts{display:flex;gap:1.6cqw}
+.cc-pr-opt{appearance:none;cursor:pointer;font-family:"IBM Plex Sans",system-ui,sans-serif;font-weight:600;font-size:1.7cqw;color:var(--paper);
+  background:var(--ink-3);border:1px solid var(--line);border-radius:10px;padding:2.4cqh 2.4cqw;flex:1;transition:.18s;min-height:44px}
+.cc-pr-opt:hover{border-color:var(--R)}
+.cc-pr-opt:focus-visible{outline:2.5px solid var(--R);outline-offset:3px}
+.cc-pr-opt.pick{border-color:var(--paper)}
+.cc-pr-opt.right{border-color:var(--ok);background:rgba(93,219,154,.12);color:var(--ok)}
+.cc-pr-opt.wrong{border-color:var(--bad);background:rgba(255,107,107,.12);color:var(--bad)}
+.cc-pr-opt:disabled{cursor:default}
+.cc-pr-reveal{margin-top:2.6cqh;display:grid;grid-template-columns:auto 1fr;gap:3cqw;align-items:center;opacity:0;transform:translateY(12px);transition:.5s ease;pointer-events:none}
+.cc-pr-reveal.show{opacity:1;transform:none;pointer-events:auto}
+.cc-pr-chart{width:24cqw;height:auto}
+.cc-pr-bar{transform:scaleY(0);transform-box:fill-box;transform-origin:bottom;transition:transform .7s ease}
+.cc-pr-reveal.show .cc-pr-bar{transform:scaleY(1)}
+.cc-pr-reveal.show .cc-pr-bar.b2{transition-delay:.15s}
+.cc-pr-verdict{font-family:"Space Grotesk",sans-serif;font-weight:600;font-size:2.2cqw;line-height:1.1}
+.cc-pr-verdict.ok{color:var(--ok)}
+.cc-pr-verdict.no{color:var(--bad)}
+.cc-pr-why{font-size:1.55cqw;line-height:1.34;color:var(--paper-2);margin-top:1.2cqh}
+.cc-pr-src{font:1.15cqw/1 "IBM Plex Mono",monospace;letter-spacing:.05em;color:var(--paper-3);margin-top:1.6cqh}
+.cc-bk-bank{display:flex;flex-wrap:wrap;gap:.8cqh .8cqw;margin-bottom:1.6cqh;flex:none}
+.cc-bk-row{flex:1;min-height:0;display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.4cqw}
+.cc-bk-col-h{font:600 1.05cqw/1.2 "IBM Plex Mono",monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--paper-3);margin-bottom:.8cqh;pointer-events:none}
+.cc-bk-bin{display:flex;flex-direction:column;gap:.7cqh;min-height:0;border:1px dashed var(--line);border-radius:10px;padding:1.2cqh 1.1cqw;min-height:22cqh}
+.cc-bk-bin[data-bin="must"]{border-color:rgba(255,158,61,.45)}
+.cc-bk-bin[data-bin="never"]{border-color:rgba(255,107,107,.45)}
+.cc-bk-chip{appearance:none;text-align:left;cursor:pointer;font-family:"IBM Plex Sans",system-ui,sans-serif;font-size:1.35cqw;line-height:1.25;
+  background:var(--ink-3);border:1px solid var(--line);border-radius:8px;padding:1.3cqh 1.2cqw;color:var(--paper);min-height:44px}
+.cc-bk-bank .cc-bk-chip{flex:1 1 28cqw}
+.cc-bk-bin .cc-bk-chip{width:100%}
+.cc-bk-chip:hover,.cc-bk-chip.sel{border-color:var(--R)}
+.cc-bk-chip:focus-visible{outline:2.5px solid var(--R);outline-offset:2px}
+.cc-bk-chip.ok{border-color:var(--ok)}
+.cc-bk-chip.no{border-color:var(--bad)}
+.cc-bk-foot{display:flex;align-items:center;gap:1.4cqw;margin-top:1.8cqh;flex-wrap:wrap}
+.cc-bk-btn{appearance:none;cursor:pointer;font-family:"IBM Plex Sans",system-ui,sans-serif;font-weight:600;font-size:1.35cqw;border-radius:10px;padding:1.3cqh 2cqw;border:1px solid var(--R);background:var(--R);color:#111;min-height:44px}
+.cc-bk-btn.ghost{background:transparent;color:var(--R)}
+.cc-bk-btn:focus-visible{outline:2.5px solid var(--R);outline-offset:2px}
+.cc-bk-status{font:600 1.25cqw/1.3 "IBM Plex Mono",monospace;letter-spacing:.04em;color:var(--paper-3)}
+.cc-bk-status.done{color:var(--ok)}
+@media (prefers-reduced-motion:reduce){
+  .cc-pr-reveal{transition:none;transform:none}
+  .cc-pr-bar{transform:none}
+}
+@media (max-width:720px){
+  .cc-con,.cc-pr-opts,.cc-pr-reveal,.cc-bk-row{grid-template-columns:1fr}
+  .cc-pr-opts{flex-direction:column}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#hook">Skip to lesson</a>
+<!-- LESSON DOCK. Clone: change data-course / data-num / data-title and the audio src.
+     Label each section with data-beat. The rail builds itself. -->
+<nav class="ldock" id="ldock" data-course="Fundamentals of DC" data-num="02" data-title="Resistance" aria-label="Lesson position and audio">
+  <div class="ldock-inner">
+    <div class="ldock-id">
+      <span class="ldock-num" id="ldNum">02</span>
+      <span class="ldock-title" id="ldTitle">Resistance</span>
+      <span class="ldock-course" id="ldCourse">Fundamentals of DC</span>
+    </div>
+    <div class="ldock-here">
+      <span class="ldock-now is-open" id="ldNow">01 / 11  Start</span>
+      <div class="ldock-beats" id="ldBeats" role="list"></div>
+      <span class="ldock-hint" id="ldHint" aria-live="polite">Press Begin to start.</span>
+    </div>
+    <div class="ldock-aud" role="group" aria-label="Lesson audio">
+      <button type="button" class="ldock-play" id="ldPlay" aria-pressed="false" aria-label="Play narration"></button>
+      <div class="ldock-time">
+        <div class="row"><span id="ldT0">0:00</span><span id="ldT1">0:00</span></div>
+        <input type="range" id="ldSeek" min="0" max="0" value="0" step="0.1" aria-label="Audio position">
+      </div>
+    </div>
+  </div>
+  <audio id="lessonAudio" preload="none" src="assets/Resistance.mp3"></audio>
+</nav>
+
+<!-- ============================================================
+     HERO
+     ============================================================ -->
+<header class="hero" id="hero" data-beat="Start">
+  <canvas id="heroField" aria-hidden="true"></canvas>
+  <div class="wrap">
+    <div class="course-tag">Fundamentals of Direct Current &nbsp;/&nbsp; <b>Lesson 02</b></div>
+    <h1>Res<span class="u">ista</span>nce</h1>
+    <p class="hero-sub">Opposition to current. Symbol R. Unit: ohm.</p>
+    <div class="hero-meta">
+      <span><b>Symbol</b> &nbsp;R</span>
+      <span><b>Unit</b> &nbsp;Ohm (&#8486;)</span>
+    </div>
+    <div class="los">
+      <div class="k">When you are done you can</div>
+      <ol>
+        <li>Define resistance, name the symbol R, and name the unit (ohms).</li>
+        <li>Find total resistance in series and in parallel, and read a 4-band color code.</li>
+        <li>Take an ohm reading with a multimeter: power OFF, disconnect the device, meter in parallel.</li>
+      </ol>
+    </div>
+    <div class="sumgrid">
+      <div class="sumcard"><div class="n">DEFINITION</div><h4>Opposition</h4><p>Opposition to the flow (current) of electricity. Symbol R. Unit: ohms.</p></div>
+      <div class="sumcard"><div class="n">SERIES</div><h4>Adds</h4><p>Rt = R1 + R2 + Rn. Remove a resistor, total R decreases.</p></div>
+      <div class="sumcard"><div class="n">PARALLEL</div><h4>Reciprocal</h4><p>Reciprocal of the sum. Remove a resistor, total R increases.</p></div>
+      <div class="sumcard"><div class="n">MEASURE</div><h4>Off, then isolate</h4><p>Power OFF. Disconnect the device. Meter in parallel. Polarity does not matter.</p></div>
+    </div>
+    <div class="gatebar"><button type="button" class="gate-next" data-clear="hero">Begin</button></div>
+  </div>
+</header>
+
+<!-- ============================================================
+     1. THE HOOK  -  why resistance is consequential
+     ============================================================ -->
+<section class="section" id="hook" data-beat="Cirrus">
+  <div class="wrap">
+    <div class="kicker">Why it matters</div>
+    <h2>The strap is a resistor now.</h2>
+    <p class="lede" style="margin-top:16px">Resistance is one of the most common things to check. The figure that matters is the extra R, not a bus drawing you already memorized.</p>
+    <p>Cirrus SR22. Avionics bay is hot. Fan still spins, just slow. The ground strap is corroded. That corrosion is extra series <strong style="color:var(--R)">R</strong>. Extra R drops voltage, so <strong style="color:var(--I)">current</strong> to the fan goes down. You measure ohms. You do not guess. Full Ohm history lives in C07. This lesson is the quantity.</p>
+    <div class="cc-card">
+      <div class="cc-spec"><span class="cc-spec-job">The number</span></div>
+      <div class="cc-stage" id="rNum">
+        <div class="cc-pad">
+          <div class="cc-ey">Volts the fan never sees</div>
+          <div class="cc-num-fig" id="rNumFig">0.0</div>
+          <div class="cc-num-unit">Volts dropped</div>
+          <div class="cc-num-mean">13.6 V on the bus. 9.1 V at the fan. The missing 4.5 V is extra series R in the strap. Measure ohms. Do not swap the fan.</div>
+          <div class="cc-num-src">Illustrative shop ticket. Same numbers as FIG 1 in this lesson. Not an NTSB case.</div>
+        </div>
+      </div>
+    </div>
+    <div class="figcap"><b>FIG 1</b> Extra series R in the return. Measure ohms. Do not swap the fan.</div>
+    <div class="gatebar"><button type="button" class="gate-next" data-clear="hook">Continue</button></div>
+  </div>
+</section>
+
+<!-- ============================================================
+     2. INTUITION  -  what resistance actually is
+     ============================================================ -->
+<section class="section" id="intuition" data-beat="Define">
+  <div class="wrap">
+    <div class="kicker">Definition</div>
+    <h2>Opposition to the flow of electricity</h2>
+    <p class="lede" style="margin-top:16px">Resistance is the opposition to the flow (current) of electricity. This lesson is R. Ohm's Law math waits for C07.</p>
+    <div class="cc-card">
+      <div class="cc-spec"><span class="cc-spec-job">The term</span></div>
+      <div class="cc-stage">
+        <div class="cc-pad">
+          <div class="cc-ey">Term lockup</div>
+          <div class="cc-con">
+            <div>
+              <p class="cc-h" style="font-size:2.6cqw;margin-bottom:2cqh">Opposition to the flow of electricity</p>
+              <div class="cc-term">R</div>
+              <p class="cc-term-def">Symbol R. Unit ohms. One of three parts of Ohm's Law. Voltage is pressure. Current is flow. This card is opposition.</p>
+            </div>
+            <div class="cc-dist">
+              <div><b>Material</b><span>Copper for aircraft wire. Nichrome when you want heat.</span></div>
+              <div><b>Length</b><span>Longer path, more opposition. L sits on top of R = ρ L / A.</span></div>
+              <div><b>Thickness</b><span>More area, less opposition. A sits on the bottom.</span></div>
+              <svg class="cc-glyph" viewBox="0 0 200 70" role="img" aria-label="Resistor symbol between two terminals">
+                <line x1="8" y1="35" x2="48" y2="35" stroke="#eef1f4" stroke-width="1.6"/>
+                <polyline points="48,35 58,18 78,52 98,18 118,52 138,18 148,35" fill="none" stroke="#ff9e3d" stroke-width="2.2" stroke-linejoin="round"/>
+                <line x1="148" y1="35" x2="192" y2="35" stroke="#eef1f4" stroke-width="1.6"/>
+                <circle cx="8" cy="35" r="3.2" fill="#ff9e3d"/>
+                <circle cx="192" cy="35" r="3.2" fill="#ff9e3d"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="callout key" style="margin-top:26px">
+      <span class="lbl">What sets it</span>
+      Material (ρ), length (L), thickness (A), and heat. Formula: <span class="mono" style="color:var(--R)">R = ρ × L / A</span>. We use copper for aircraft wire because it is cheap and conducts well. Nichrome resists a lot, so heaters are nichrome.
+    </div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:16px">
+      <span class="chip"><i class="swR"></i> Resistance &middot; R &middot; ohms</span>
+      <span class="chip"><i class="swI"></i> Current &middot; I &middot; amps</span>
+      <span class="chip"><i class="swV"></i> Voltage &middot; E &middot; volts</span>
+    </div>
+    <div class="callout" style="margin-top:22px">
+      <span class="lbl">The unit has a name</span>
+      Ohm is not a brand. Georg Simon Ohm, locksmith's son, published the law in 1827. The 1825 paper is wire length versus force, not the law. German physics ignored the math for 14 years. Copley Medal, 1841. University chair, Munich, 1852, two years before he died. The ohm as a practical unit was adopted in 1881, 27 years after he died. Full timeline, fun facts, and the three-form sandbox live in Ohm's Law (C07). This lesson is the quantity: opposition, series, parallel, color, and the ohmmeter.
+    </div>
+    <div class="workbook">
+      <h3>Module plate. What sets R.</h3>
+      <p style="margin:0 0 12px;color:var(--paper-2)">R = ρ × L / A. Same specimen as the bench. ρ is resistivity at 20 C. These values match the live material buttons.</p>
+      <table>
+        <thead>
+          <tr><th>Material</th><th>ρ (ohm·m)</th><th>Why the shop uses it</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Copper</td><td class="mono">1.7e-8</td><td>Aircraft wire. Cheap. Conducts well.</td></tr>
+          <tr><td>Aluminum</td><td class="mono">2.8e-8</td><td>Lighter. Higher rho than copper, so a given run is more ohms.</td></tr>
+          <tr><td>Nichrome</td><td class="mono">1.1e-6</td><td>Resists a lot. Heaters are nichrome.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="gatebar"><button type="button" class="gate-next" data-clear="intuition">Continue</button></div>
+  </div>
+</section>
+
+<!-- ============================================================
+     3. THE CENTERPIECE  -  THE RESISTANCE BENCH
+     Honest physics:  R = rho * L / A
+     I = 12 / (R_load + R_wire),  R_load = 10 ohm fixed circuit
+     ============================================================ -->
+<style>
+.bench-wrap{background:var(--ink-2);border:1px solid var(--line);border-radius:20px;
+  box-shadow:var(--shadow);overflow:hidden;margin-top:30px}
+.bench-head{display:flex;justify-content:space-between;align-items:baseline;
+  padding:20px 26px;border-bottom:1px solid var(--line);flex-wrap:wrap;gap:8px}
+.bench-head h3{font-size:22px;font-weight:600;margin:0}
+.bench-head .tag{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--paper-3)}
+.bench-grid{display:grid;grid-template-columns:1.45fr .85fr;align-items:center}
+.stage{padding:22px 12px 22px 18px;position:relative;
+  display:flex;align-items:center;justify-content:center;
+  background-image:linear-gradient(rgba(57,215,255,.045) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(57,215,255,.045) 1px,transparent 1px);
+  background-size:26px 26px;background-position:center}
+#benchCanvas{width:100%;height:auto;display:block}
+.panel{border-left:1px solid var(--line);padding:22px 24px 24px;background:#0d0f14;
+  display:flex;flex-direction:column;justify-content:center}
+.bench-eq{padding:0 22px 20px;background:#0d0f14;border-top:1px solid var(--line)}
+.bench-eq .eqbar{margin-top:0}
+@media(max-width:820px){
+  .bench-grid{grid-template-columns:1fr}
+  .panel{border-left:none;border-top:1px solid var(--line)}
+}
+
+.ctrl{margin-bottom:18px}
+.ctrl-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}
+.ctrl-top label{font-size:14px;color:var(--paper-2);font-weight:500}
+.ctrl-top .val{font-family:"IBM Plex Mono",monospace;font-size:14px;color:var(--paper)}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:4px;
+  background:var(--line);border-radius:4px;outline-offset:4px}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;
+  border-radius:50%;background:var(--R);cursor:pointer;border:3px solid var(--ink-2);
+  box-shadow:0 0 0 1px var(--R)}
+input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:var(--R);
+  cursor:pointer;border:3px solid var(--ink-2);box-shadow:0 0 0 1px var(--R)}
+.matrow{display:flex;gap:8px;flex-wrap:wrap}
+.matrow .btn{flex:1;text-align:center;padding:9px 6px;font-size:12.5px}
+
+.readouts{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px}
+.ro{background:var(--ink-3);border:1px solid var(--line);border-radius:12px;padding:16px 14px}
+.ro .k{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--paper-3)}
+.ro .v{font-family:"IBM Plex Mono",monospace;font-size:28px;font-weight:600;margin-top:6px;line-height:1}
+.ro.r .v{color:var(--R)} .ro.i .v{color:var(--I)}
+.ro .u{font-size:14px;color:var(--paper-3);font-weight:400}
+.eqbar{font-family:"IBM Plex Mono",monospace;font-size:14.5px;color:var(--paper-2);
+  background:var(--ink);border:1px dashed var(--line);border-radius:10px;padding:12px 14px;
+  margin-top:14px;line-height:1.9}
+.eqbar b{color:var(--R)} .eqbar .ci{color:var(--I)} .eqbar .cv{color:var(--V)}
+
+/* meter mode  -  pinned to the top of the bench */
+.meter-pin{padding:12px 22px 14px;border-bottom:1px solid var(--line);background:#0d0f14}
+.meter-pin .q{font-size:15px;color:var(--paper);margin-bottom:8px;font-weight:500}
+.mm-btns{display:flex;gap:8px;flex-wrap:wrap}
+.mm-btns .btn{flex:1;font-size:12px;min-width:140px}
+.mm-read{margin-top:10px;font-family:"IBM Plex Mono",monospace;font-size:13px;
+  color:var(--paper-3);min-height:1.4em}
+.mm-read b{color:var(--I)}
+.meter-pin .warn{margin-top:10px;font-size:13.5px;color:var(--paper-2);line-height:1.45}
+
+/* predict widget */
+.predict{background:var(--ink-3);border:1px solid var(--line);border-radius:14px;
+  padding:20px 22px;margin:30px 0}
+.predict .q{font-size:18px;color:var(--paper);margin-bottom:14px}
+.predict .q .num{font-family:"IBM Plex Mono",monospace;color:var(--R)}
+.predict-opts{display:flex;gap:10px;flex-wrap:wrap}
+.predict .fb{margin-top:14px;font-size:16.5px;line-height:1.55;display:none;padding:16px 18px;
+  border-radius:10px;background:var(--ink);color:var(--paper)}
+.predict .fb.show{display:block}
+.predict .fb.right{border-left:3px solid var(--ok)}
+.predict .fb.wrong{border-left:3px solid var(--bad)}
+.predict .fb .verdict{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.14em;
+  text-transform:uppercase;display:block;margin-bottom:6px}
+.fb.right .verdict{color:var(--ok)} .fb.wrong .verdict{color:var(--bad)}
+.ctrl.flash{outline:2px solid var(--R);outline-offset:4px;border-radius:8px}
+.readouts .ro.flash{outline:2px solid var(--R);outline-offset:3px}
+.workbook{margin-top:22px;background:var(--ink-2);border:1px solid var(--line);border-radius:16px;padding:20px 22px;overflow-x:auto}
+.workbook h3{margin:0 0 12px;font-size:20px}
+.workbook table{width:100%;border-collapse:collapse;font-size:15px}
+.workbook th,.workbook td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+.workbook th{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--paper-3);font-weight:500}
+.workbook td.mono{font-family:"IBM Plex Mono",monospace;color:var(--paper);white-space:nowrap}
+</style>
+
+<section class="section" id="bench" data-beat="Bench">
+  <div class="wrap">
+    <div class="kicker">The bench</div>
+    <h2>Build a resistor. Watch the current.</h2>
+    <p class="lede" style="margin-top:18px"><span class="mono" style="color:var(--R)">R = ρ × L / A</span>. Change the material, the length, or the thickness. Current will answer.</p>
+
+    <!-- PREDICT #1 -->
+    <div class="cc-card" id="predict1">
+      <div class="cc-spec"><span class="cc-spec-job">Predict, then the bench moves</span></div>
+      <div class="cc-stage">
+        <div class="cc-pad">
+          <div class="cc-ey">Make the call first</div>
+          <h3 class="cc-h cc-pr-head">Double the length. Change nothing else. Resistance will...</h3>
+          <div class="cc-pr-opts predict-opts" id="rPrOpts">
+            <button type="button" class="cc-pr-opt" data-i="0" data-c="0">Halve</button>
+            <button type="button" class="cc-pr-opt" data-i="1" data-c="0">Stay the same</button>
+            <button type="button" class="cc-pr-opt" data-i="2" data-c="1">Double</button>
+          </div>
+          <div class="cc-pr-reveal" id="rPrReveal">
+            <svg class="cc-pr-chart" viewBox="0 0 200 150" role="img" aria-label="Resistance at 3 meters versus 6 meters, same material and area">
+              <line x1="44" y1="120" x2="190" y2="120" stroke="#262b34" stroke-width="1.4"/>
+              <rect class="cc-pr-bar" x="64" y="80" width="40" height="40" rx="2" fill="#a3abba"/>
+              <rect class="cc-pr-bar b2" x="130" y="40" width="40" height="80" rx="2" fill="#5ddb9a"/>
+              <text x="84" y="134" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" fill="#a3abba">3 m</text>
+              <text x="150" y="134" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" fill="#a3abba">6 m</text>
+              <text x="84" y="74" text-anchor="middle" font-family="Space Grotesk,sans-serif" font-weight="600" font-size="13" fill="#c6ccd6">1x</text>
+              <text x="150" y="34" text-anchor="middle" font-family="Space Grotesk,sans-serif" font-weight="600" font-size="13" fill="#5ddb9a">2x</text>
+            </svg>
+            <div>
+              <div class="cc-pr-verdict" id="rPrVerdict">.</div>
+              <div class="cc-pr-why">Length sits on top of R = ρ × L / A. Double L and R doubles. The bench length is moving to 6.0 m so you can watch it.</div>
+              <div class="cc-pr-src">R = ρ L / A. Same specimen as FIG 2.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bench-wrap">
+      <div class="bench-head">
+        <h3>Resistance Bench</h3>
+        <span class="tag">12 V source &middot; 10 &#8486; circuit load</span>
+      </div>
+      <div class="meter-pin">
+        <div class="q">Hook up a multimeter on the ohms range. Compare two connections:</div>
+        <div class="mm-btns" id="mmBtns">
+          <button class="btn active" data-mm="iso">Disconnected</button>
+          <button class="btn" data-mm="inc">Left in the circuit</button>
+        </div>
+        <div class="mm-read" id="mmRead"></div>
+        <div class="warn">On a real circuit, turn the power OFF before you take ohms. The meter puts out its own current. A live bus can blow the fuse. This bench still shows a number so you can see a bad hookup. Do not copy that on the aircraft.</div>
+      </div>
+      <div class="bench-grid">
+        <div class="stage">
+          <svg id="benchCanvas" viewBox="0 40 560 290" role="img"
+               aria-label="A conductor with electrons flowing. Adjust material, length, area and temperature to change resistance and current.">
+          </svg>
+        </div>
+        <div class="panel">
+          <div class="ctrl" id="lenCtrl">
+            <div class="ctrl-top"><label for="lenR">Length</label><span class="val"><span id="lenVal">3.0</span> m</span></div>
+            <input type="range" id="lenR" min="0.5" max="12" step="0.1" value="3">
+          </div>
+          <div class="ctrl">
+            <div class="ctrl-top"><label id="matLabel">Material</label><span class="val" id="rhoVal">Copper</span></div>
+            <div class="matrow" id="matBtns">
+              <button class="btn active" data-rho="1.7e-8" data-name="Copper">Cu</button>
+              <button class="btn" data-rho="2.8e-8" data-name="Aluminum">Al</button>
+              <button class="btn" data-rho="1.1e-6" data-name="Nichrome">NiCr</button>
+            </div>
+          </div>
+          <div class="ctrl">
+            <div class="ctrl-top"><label for="areaR">Cross-section area</label><span class="val"><span id="areaVal">2.0</span> mm&sup2;</span></div>
+            <input type="range" id="areaR" min="0.2" max="6" step="0.1" value="2">
+          </div>
+          <div class="ctrl">
+            <div class="ctrl-top"><label for="tempR">Temperature</label><span class="val"><span id="tempVal">20</span> &deg;C</span></div>
+            <input type="range" id="tempR" min="-40" max="200" step="1" value="20">
+          </div>
+          <div class="readouts">
+            <div class="ro r"><div class="k">Resistance</div><div class="v"><span id="roR">0.026</span> <span class="u">&#8486;</span></div></div>
+            <div class="ro i"><div class="k">Current</div><div class="v"><span id="roI">1.20</span> <span class="u">A</span></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="bench-eq">
+        <div class="eqbar" id="eqbar"></div>
+      </div>
+    </div>
+    <div class="figcap" style="margin-top:16px"><b>FIG 2</b> ρ is the material. Copper: cheap, conducts well, aircraft wire. Nichrome: high R, heaters.</div>
+    <div class="gatebar">
+      <p class="gatenote" id="gateNote-bench">Answer the length question, or change length, material, area, or temperature on the bench.</p>
+      <button type="button" class="gate-next" data-clear="bench" data-need="1" disabled>Continue</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     3b. THE 3D LATTICE  -  where resistance physically comes from
+     three.js scene: electron drift + scattering in a metal lattice
+     ============================================================ -->
+<style>
+.lattice-wrap{background:var(--ink-2);border:1px solid var(--line);border-radius:20px;
+  box-shadow:var(--shadow);overflow:hidden;margin-top:30px;display:grid;grid-template-columns:1.5fr .9fr}
+@media(max-width:820px){.lattice-wrap{grid-template-columns:1fr}}
+.lat-stage{position:relative;min-height:440px;background:
+  radial-gradient(120% 90% at 50% 10%, #12161d 0%, #0a0b0d 70%)}
+#latticeCanvas{width:100%;height:100%;display:block;position:absolute;inset:0;cursor:grab;touch-action:none}
+#latticeCanvas:active{cursor:grabbing}
+.lat-hint{position:absolute;left:18px;bottom:16px;font-family:"IBM Plex Mono",monospace;
+  font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--paper-3);
+  pointer-events:none;display:flex;gap:8px;align-items:center;opacity:.9}
+.lat-hint .d{width:8px;height:8px;border-radius:50%;background:var(--I);animation:pulse 2.4s infinite}
+.lat-panel{border-left:1px solid var(--line);padding:24px;background:#0d0f14}
+@media(max-width:820px){.lat-panel{border-left:none;border-top:1px solid var(--line)}}
+.lat-panel h3{font-family:"Space Grotesk";font-size:19px;margin:0 0 16px;font-weight:600}
+.meter-bar{margin:16px 0}
+.meter-bar .lab{display:flex;justify-content:space-between;font-family:"IBM Plex Mono";
+  font-size:12px;color:var(--paper-2);margin-bottom:6px}
+.meter-bar .lab .n{color:var(--paper-3)}
+.track{height:8px;border-radius:6px;background:var(--ink-3);overflow:hidden}
+.track .fill{height:100%;width:20%;border-radius:6px;transition:width .25s ease}
+.track .fill.scatter{background:linear-gradient(90deg,var(--R),#ff6b6b)}
+.track .fill.drift{background:linear-gradient(90deg,#123c47,var(--I))}
+.verdict-r{margin-top:18px;padding:14px 16px;border-radius:12px;background:var(--ink);
+  border-left:3px solid var(--R);font-size:15px}
+.verdict-r b{color:var(--R)}
+.lat-legend{display:flex;gap:16px;margin-top:18px;flex-wrap:wrap;font-size:13px;color:var(--paper-2)}
+.lat-legend span{display:inline-flex;align-items:center;gap:7px}
+.lat-legend i{width:11px;height:11px;border-radius:50%}
+</style>
+
+<section class="section" id="lattice" data-beat="Lattice">
+  <div class="wrap">
+    <div class="kicker">Inside the metal</div>
+    <h2>Electrons bouncing off atoms</h2>
+    <p class="lede" style="margin-top:18px">A conductor has many free electrons. They bounce off atoms as they move, and that bouncing is the opposition we call resistance. Heat makes the atoms shake more, so there are more collisions. Alloys put the wrong-size atoms in the way, which also increases resistance. Change the material from copper to nichrome, or raise the temperature, and you will see scattering go up and the electrons slow down. That is the same physics the bench is showing in FIG 2.</p>
+
+    <div class="lattice-wrap">
+      <div class="lat-stage">
+        <canvas id="latticeCanvas" aria-label="Interactive 3D metal lattice. Cyan electrons drift left to right and scatter off vibrating atoms. Drag to rotate."></canvas>
+        <div class="lat-hint" id="latHint"><span class="d"></span> Drag to orbit</div>
+      </div>
+      <div class="lat-panel">
+        <h3>Change the metal</h3>
+        <div class="ctrl">
+          <div class="ctrl-top"><label>Material</label><span class="val" id="latMatVal">Copper</span></div>
+          <div class="matrow" id="latMat">
+            <button class="btn active" data-m="Copper">Copper</button>
+            <button class="btn" data-m="Nichrome">Nichrome</button>
+          </div>
+        </div>
+        <div class="ctrl">
+          <div class="ctrl-top"><label for="latTemp">Temperature</label><span class="val"><span id="latTempVal">20</span> &deg;C</span></div>
+          <input type="range" id="latTemp" min="-40" max="220" step="1" value="20">
+        </div>
+
+        <div class="meter-bar">
+          <div class="lab"><span>Scattering</span><span class="n" id="scatterN">low</span></div>
+          <div class="track"><div class="fill scatter" id="scatterFill"></div></div>
+        </div>
+        <div class="meter-bar">
+          <div class="lab"><span>Electron drift</span><span class="n" id="driftN">fast</span></div>
+          <div class="track"><div class="fill drift" id="driftFill"></div></div>
+        </div>
+
+        <div class="verdict-r" id="latVerdict">Resistance: <b>low</b>. This is clean copper. Opposition is low, so the electrons get through.</div>
+
+        <div class="lat-legend">
+          <span><i style="background:#39d7ff"></i> electron</span>
+          <span><i style="background:#c98a5a" id="legAtom"></i> atom</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout key" style="margin-top:34px">
+      <span class="lbl">Same knobs as the bench</span>
+      A messier lattice, like nichrome, or more heat, means more scattering and less drift, so resistance goes up. Try copper, then nichrome, or run the temperature up, and watch the meters. You are looking at the same story as FIG 2, from inside the metal.
+    </div>
+    <div class="gatebar">
+      <p class="gatenote" id="gateNote-lattice">Switch to Nichrome, raise the temperature, or drag the lattice to orbit it.</p>
+      <button type="button" class="gate-next" data-clear="lattice" data-need="1" disabled>Continue</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     4. RESISTOR TYPES  (scannable symbol row, no tabs)
+     ============================================================ -->
+<style>
+.symrow{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin-top:30px}
+@media(max-width:820px){.symrow{grid-template-columns:repeat(2,1fr)}}
+.sym{background:var(--ink-2);border:1px solid var(--line);border-radius:14px;padding:0}
+.flip-face{padding:18px 16px}
+.sym svg{width:100%;height:56px;margin-bottom:12px}
+.sym h4{font-family:"Space Grotesk";font-size:16px;margin:0 0 6px;font-weight:600;color:var(--paper)}
+.sym p{font-size:14px;margin:0;color:var(--paper-3);line-height:1.5}
+.sym .sch{font-family:"IBM Plex Mono";font-size:11px;color:var(--R);letter-spacing:.1em}
+.flip-hint{display:none;font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--R);margin-top:12px}
+.flip-photo-well{background:#0d0f14;border-radius:8px;overflow:hidden;margin-bottom:12px;min-height:132px}
+.flip-photo{width:100%;height:132px;object-fit:cover;object-position:center;display:block}
+.flip-photo[data-shot="fixed"]{object-position:center 16%}
+.flip-photo[data-shot="therm"]{object-position:80% 88%}
+.sym-credit{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--paper-3);margin:14px 0 0;line-height:1.45}
+html.js .flip-hint{display:block}
+html.js [data-flip]{cursor:pointer;background:transparent;border:0;padding:0}
+html.js [data-flip] .flip-inner{
+  display:grid;
+  background:var(--ink-2);border:1px solid var(--line);border-radius:14px}
+html.js [data-flip]:hover .flip-inner{border-color:#3a4150}
+html.js [data-flip] .flip-face{grid-area:1/1;transition:opacity .28s ease}
+html.js [data-flip] .flip-back{opacity:0;pointer-events:none}
+html.js [data-flip].is-flipped .flip-front{opacity:0;pointer-events:none}
+html.js [data-flip].is-flipped .flip-back{opacity:1;pointer-events:auto}
+@media (prefers-reduced-motion:reduce){
+  html.js [data-flip] .flip-face{transition:none}
+}
+
+/* series/parallel */
+.spgrid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:28px}
+@media(max-width:760px){.spgrid{grid-template-columns:1fr}}
+.spcard{background:var(--ink-2);border:1px solid var(--line);border-radius:16px;padding:24px}
+.spcard h4{font-family:"Space Grotesk";font-size:18px;margin:0 0 4px;color:var(--paper)}
+.spcard .form{font-family:"IBM Plex Mono";font-size:15px;color:var(--R);margin:10px 0 4px}
+.spcard svg{width:100%;height:auto;margin:8px 0;min-height:110px}
+.spcard .note{font-size:14.5px;color:var(--paper-2);margin:6px 0 0}
+.sp-rt{font-family:"Space Grotesk",sans-serif;font-size:32px;font-weight:700;color:var(--R);margin:4px 0 12px}
+.sp-rt span{font-family:"IBM Plex Mono",monospace;font-size:14px;color:var(--paper-3);font-weight:500;margin-left:8px}
+.sp-acts{display:flex;gap:8px;flex-wrap:wrap}
+.sp-acts .btn{flex:1;min-width:120px;font-size:12.5px}
+.sp-react{min-height:2.4em;margin:12px 0 0;font-size:15px;color:var(--paper-2);line-height:1.45}
+
+/* color-code decoder */
+.decoder{background:var(--ink-2);border:1px solid var(--line);border-radius:20px;
+  box-shadow:var(--shadow);padding:clamp(22px,3vw,32px);margin-top:30px}
+.resistor-svg{width:100%;max-width:520px;height:auto;display:block;margin:6px auto 22px}
+.bands{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;max-width:560px;margin:0 auto}
+.bandcol{text-align:center}
+.bandcol .cap{font-family:"IBM Plex Mono";font-size:11px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--paper-3);margin-bottom:8px}
+.swatches{display:flex;flex-wrap:wrap;gap:5px;justify-content:center}
+.sw{width:26px;height:26px;border-radius:5px;cursor:pointer;border:2px solid rgba(255,255,255,.2);transition:.12s}
+.sw:hover{transform:scale(1.15)}
+.sw[aria-pressed=true]{border-color:#fff;box-shadow:0 0 0 2px var(--ink-2),0 0 10px rgba(255,255,255,.4)}
+.decoder-out{text-align:center;margin-top:26px}
+.decoder-out .big{font-family:"Space Grotesk";font-size:clamp(30px,6vw,52px);font-weight:700;color:var(--R);line-height:1}
+.decoder-out .sub{font-family:"IBM Plex Mono";color:var(--paper-3);font-size:13px;margin-top:8px}
+.cc-digits{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:22px 0 8px}
+@media(max-width:700px){.cc-digits{grid-template-columns:repeat(2,1fr)}}
+.cc-d{display:flex;align-items:center;gap:10px;background:var(--ink-2);border:1px solid var(--line);
+  border-radius:10px;padding:10px 12px;font-size:14.5px;color:var(--paper-2)}
+.cc-d .n{width:32px;height:32px;border-radius:8px;display:grid;place-items:center;
+  font-family:"IBM Plex Mono",monospace;font-size:15px;font-weight:600;flex-shrink:0;border:1px solid rgba(255,255,255,.18)}
+.cc-d .nm{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--paper-3)}
+.cc-lab{margin-top:22px;padding-top:20px;border-top:1px solid var(--line);text-align:center}
+.cc-lab .qtag{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--R);margin-bottom:8px}
+.cc-lab .stem{font-family:"Space Grotesk",sans-serif;font-size:22px;font-weight:600;color:var(--paper);margin:0 0 14px}
+.cc-lab .fb{margin:14px auto 0;max-width:52ch;font-size:16.5px;line-height:1.55;display:none;
+  padding:0 16px 14px;background:var(--ink);color:var(--paper);text-align:left;overflow:hidden}
+.cc-lab .fb.show{display:block}
+.cc-lab .fb.right{border-left:4px solid var(--ok)}
+.cc-lab .fb.wrong{border-left:4px solid var(--bad)}
+.cc-lab .fb .verdict{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.14em;
+  text-transform:uppercase;display:block;margin:0 -16px 10px;padding:8px 16px;font-weight:700;color:#111;background:var(--ok)}
+.cc-lab .fb.wrong .verdict{background:var(--bad);color:#111}
+.cc-end{display:none;margin-top:16px}
+.cc-end.on{display:block}
+.cc-end .score{font-family:"Space Grotesk",sans-serif;font-size:40px;font-weight:700;color:var(--R)}
+</style>
+
+<section class="section" id="types" data-beat="Types">
+  <div class="wrap">
+    <div class="kicker">Click a card</div>
+    <h2>2 types of resistors</h2>
+    <p class="lede" style="margin-top:16px">Fixed has a set value. Variable has an adjustable value. You will also see these on the board: thermistors, light-dependent resistors, and surface-mount. Click a card. Schematic on the front, the real part on the back.</p>
+    <div class="symrow">
+      <div class="sym" data-flip data-name="Fixed resistor">
+        <div class="flip-inner">
+          <div class="flip-face flip-front">
+            <svg viewBox="0 0 120 40" aria-hidden="true">
+              <line x1="4" y1="20" x2="28" y2="20" stroke="#c6ccd6" stroke-width="2"/>
+              <polyline points="28,20 36,10 48,30 60,10 72,30 84,10 92,20" fill="none" stroke="#ff9e3d" stroke-width="2"/>
+              <line x1="92" y1="20" x2="116" y2="20" stroke="#c6ccd6" stroke-width="2"/>
+            </svg>
+            <div class="sch">FIXED</div><h4>Fixed</h4>
+            <p>A set value. The one you will see the most.</p>
+            <span class="flip-hint">Click to see the part</span>
+          </div>
+          <div class="flip-face flip-back">
+            <div class="flip-photo-well">
+              <img class="flip-photo" data-shot="fixed" src="assets/resistor-types/fixed.jpg" alt="Axial carbon-film resistors in several watt sizes, plus two ceramic power resistors, next to a millimeter scale.">
+            </div>
+            <div class="sch">FIXED</div><h4>Fixed</h4>
+            <p>Axial body and color bands. Bigger body, more watts.</p>
+            <span class="flip-hint">Click to return</span>
+          </div>
+        </div>
+      </div>
+      <div class="sym" data-flip data-name="Variable resistor">
+        <div class="flip-inner">
+          <div class="flip-face flip-front">
+            <svg viewBox="0 0 120 40" aria-hidden="true">
+              <line x1="4" y1="24" x2="28" y2="24" stroke="#c6ccd6" stroke-width="2"/>
+              <polyline points="28,24 36,14 48,34 60,14 72,34 84,14 92,24" fill="none" stroke="#ff9e3d" stroke-width="2"/>
+              <line x1="92" y1="24" x2="116" y2="24" stroke="#c6ccd6" stroke-width="2"/>
+              <line x1="30" y1="38" x2="90" y2="6" stroke="#39d7ff" stroke-width="2"/>
+              <polygon points="90,6 82,8 86,14" fill="#39d7ff"/>
+            </svg>
+            <div class="sch">VAR</div><h4>Variable</h4>
+            <p>An adjustable value. Pots, dimmers, trim.</p>
+            <span class="flip-hint">Click to see the part</span>
+          </div>
+          <div class="flip-face flip-back">
+            <div class="flip-photo-well">
+              <img class="flip-photo" src="assets/resistor-types/variable.jpg" alt="Rotary potentiometer with a knurled shaft, panel nut, and three solder terminals.">
+            </div>
+            <div class="sch">VAR</div><h4>Variable</h4>
+            <p>Shaft, nut, three solder lugs. Turn it to change R.</p>
+            <span class="flip-hint">Click to return</span>
+          </div>
+        </div>
+      </div>
+      <div class="sym" data-flip data-name="Thermistor">
+        <div class="flip-inner">
+          <div class="flip-face flip-front">
+            <svg viewBox="0 0 120 40" aria-hidden="true">
+              <line x1="4" y1="24" x2="28" y2="24" stroke="#c6ccd6" stroke-width="2"/>
+              <polyline points="28,24 36,14 48,34 60,14 72,34 84,14 92,24" fill="none" stroke="#ff9e3d" stroke-width="2"/>
+              <line x1="92" y1="24" x2="116" y2="24" stroke="#c6ccd6" stroke-width="2"/>
+              <line x1="24" y1="40" x2="40" y2="10" stroke="#39d7ff" stroke-width="2"/>
+              <text x="44" y="14" fill="#39d7ff" font-size="11" font-family="'IBM Plex Mono'">t&deg;</text>
+            </svg>
+            <div class="sch">NTC</div><h4>Thermistor</h4>
+            <p>Resistance tracks temperature. Sensors and inrush limiting.</p>
+            <span class="flip-hint">Click to see the part</span>
+          </div>
+          <div class="flip-face flip-back">
+            <div class="flip-photo-well">
+              <img class="flip-photo" data-shot="therm" src="assets/resistor-types/thermistor.jpg" alt="Bead-type NTC thermistor with blue insulated leads and stripped ends.">
+            </div>
+            <div class="sch">NTC</div><h4>Thermistor</h4>
+            <p>Black bead, two leads. Value tracks temperature.</p>
+            <span class="flip-hint">Click to return</span>
+          </div>
+        </div>
+      </div>
+      <div class="sym" data-flip data-name="Light-dependent resistor">
+        <div class="flip-inner">
+          <div class="flip-face flip-front">
+            <svg viewBox="0 0 120 40" aria-hidden="true">
+              <circle cx="60" cy="22" r="16" fill="none" stroke="#262b34" stroke-width="1.5"/>
+              <polyline points="46,22 52,15 68,29 74,15" fill="none" stroke="#ff9e3d" stroke-width="2"/>
+              <line x1="4" y1="22" x2="44" y2="22" stroke="#c6ccd6" stroke-width="2"/>
+              <line x1="76" y1="22" x2="116" y2="22" stroke="#c6ccd6" stroke-width="2"/>
+              <line x1="82" y1="4" x2="90" y2="12" stroke="#39d7ff" stroke-width="2"/>
+              <polygon points="90,12 84,10 88,6" fill="#39d7ff"/>
+            </svg>
+            <div class="sch">LDR</div><h4>Light-dep.</h4>
+            <p>Resistance falls as light rises. Photocells, auto-dim displays.</p>
+            <span class="flip-hint">Click to see the part</span>
+          </div>
+          <div class="flip-face flip-back">
+            <div class="flip-photo-well">
+              <img class="flip-photo" src="assets/resistor-types/ldr.jpg" alt="Light-dependent resistor with a zigzag cadmium sulfide window on a ceramic disc.">
+            </div>
+            <div class="sch">LDR</div><h4>Light-dep.</h4>
+            <p>Squiggle window on a ceramic disc. Darker, more ohms.</p>
+            <span class="flip-hint">Click to return</span>
+          </div>
+        </div>
+      </div>
+      <div class="sym" data-flip data-name="Surface-mount resistor">
+        <div class="flip-inner">
+          <div class="flip-face flip-front">
+            <svg viewBox="0 0 120 40" aria-hidden="true">
+              <line x1="4" y1="20" x2="34" y2="20" stroke="#c6ccd6" stroke-width="2"/>
+              <rect x="34" y="10" width="52" height="20" rx="3" fill="#171a21" stroke="#ff9e3d" stroke-width="2"/>
+              <text x="60" y="24" text-anchor="middle" fill="#c6ccd6" font-size="10" font-family="'IBM Plex Mono'">472</text>
+              <line x1="86" y1="20" x2="116" y2="20" stroke="#c6ccd6" stroke-width="2"/>
+            </svg>
+            <div class="sch">SMD</div><h4>Surface-mount</h4>
+            <p>Tiny, no leads. Printed code. Modern avionics boards.</p>
+            <span class="flip-hint">Click to see the part</span>
+          </div>
+          <div class="flip-face flip-back">
+            <div class="flip-photo-well">
+              <img class="flip-photo" src="assets/resistor-types/smd.jpg" alt="1206 surface-mount chip resistor marked 101, which is 100 ohms.">
+            </div>
+            <div class="sch">SMD</div><h4>Surface-mount</h4>
+            <p>Tiny chip, no leads. Marked 101: that is 100 ohm.</p>
+            <span class="flip-hint">Click to return</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="sym-credit">Photographs: Wikimedia Commons. Axial resistors, potentiometer, NTC bead, LDR, SMD 1206.</p>
+    <div class="gatebar">
+      <p class="gatenote" id="gateNote-types">Click a card. Schematic on the front, the real part on the back.</p>
+      <button type="button" class="gate-next" data-clear="types" data-need="1" disabled>Continue</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     5. SERIES vs PARALLEL
+     ============================================================ -->
+<section class="section" id="network" data-beat="Networks">
+  <div class="wrap">
+    <div class="kicker">Series and parallel</div>
+    <h2>Series adds. Parallel is the reciprocal.</h2>
+    <p class="lede" style="margin-top:16px">Add a resistor. Pull one out. Watch total R. Series is 1 path, so pulling a part takes resistance out of the only path and total goes down. Parallel is more than 1 path, so pulling a part takes a path away and total goes up.</p>
+    <div class="spgrid">
+      <div class="spcard">
+        <h4 style="color:var(--paper)">Series &middot; one path</h4>
+        <div class="form">R<sub>t</sub> = R1 + R2 + Rn</div>
+        <svg id="seriesSvg" viewBox="0 0 320 120" role="img" aria-label="Series resistors. Add or remove parts and watch total resistance."></svg>
+        <div class="sp-rt" id="seriesRt">60 &#8486; <span>total</span></div>
+        <div class="sp-acts">
+          <button class="btn" type="button" id="seriesAdd">Add a resistor</button>
+          <button class="btn" type="button" id="seriesRm">Remove a resistor</button>
+        </div>
+        <p class="sp-react" id="seriesReact" aria-live="polite">Start with 10 + 20 + 30. Remove one and total resistance decreases.</p>
+      </div>
+      <div class="spcard">
+        <h4 style="color:var(--paper)">Parallel &middot; more than 1 path</h4>
+        <div class="form">reciprocal of the sum of the individual reciprocals</div>
+        <svg id="paraSvg" viewBox="0 0 320 140" role="img" aria-label="Parallel resistors. Add or remove parts and watch total resistance."></svg>
+        <div class="sp-rt" id="paraRt">3.33 &#8486; <span>total</span></div>
+        <div class="sp-acts">
+          <button class="btn" type="button" id="paraAdd">Add a resistor</button>
+          <button class="btn" type="button" id="paraRm">Remove a resistor</button>
+        </div>
+        <p class="sp-react" id="paraReact" aria-live="polite">Three 10 &#8486; paths. Remove one path and total resistance increases.</p>
+      </div>
+    </div>
+    <div class="callout">
+      <span class="lbl">Back to the Cirrus</span>
+      Corroded joint = extra R in series with the fan. Total resistance goes up. Current goes down. Fan starves. Series adds. That added R is the fault.
+    </div>
+    <div class="gatebar">
+      <p class="gatenote" id="gateNote-network">Add or remove a resistor. Watch total R go up or down.</p>
+      <button type="button" class="gate-next" data-clear="network" data-need="1" disabled>Continue</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     6. COLOR CODE DECODER  (interactive + challenge)
+     ============================================================ -->
+<section class="section" id="colorcode" data-beat="Color">
+  <div class="wrap">
+    <div class="kicker">Color code</div>
+    <h2>Each color is a digit from 0 to 9</h2>
+    <p class="lede" style="margin-top:16px">A 4-band resistor is a number written in color. Band 1 is the first digit. Band 2 is the second digit. Band 3 uses those same colors as the number of zeros to write after those two digits. Band 4 is tolerance. Gold and Silver are NEVER the first band. They are only the fourth. Example: Red, Orange, Blue, Silver = 23,000,000 +/- 10%. Red is 2, orange is 3, blue is 6 zeros.</p>
+
+    <div class="cc-digits" role="list">
+      <div class="cc-d" role="listitem"><span class="n" style="background:#1a1a1a;color:#fff">0</span><b>Black</b></div>
+      <div class="cc-d" role="listitem"><span class="n" style="background:#8a5a2b;color:#fff">1</span><b>Brown</b></div>
+      <div class="cc-d" role="listitem"><span class="n" style="background:#d33b30;color:#fff">2</span><b>Red</b></div>
+      <div class="cc-d" role="listitem"><span class="n" style="background:#e8801a;color:#111">3</span><b>Orange</b></div>
+      <div class="cc-d" role="listitem"><span class="n" style="background:#e5c53a;color:#111">4</span><b>Yellow</b></div>
+      <div class="cc-d" role="listitem"><span class="n" style="background:#3aa856;color:#111">5</span><b>Green</b></div>
+      <div class="cc-d" role="listitem"><span class="n" style="background:#3a6fd8;color:#fff">6</span><b>Blue</b></div>
+      <div class="cc-d" role="listitem"><span class="n" style="background:#8a54d6;color:#fff">7</span><b>Violet</b></div>
+      <div class="cc-d" role="listitem"><span class="n" style="background:#9aa0a8;color:#111">8</span><b>Grey</b></div>
+      <div class="cc-d" role="listitem"><span class="n" style="background:#f0f0f0;color:#111">9</span><b>White</b></div>
+    </div>
+    <p class="figcap" style="margin:10px 0 0"><b>BAND 3</b> Those same numbers are how many zeros you write after the first two digits. Black on band 3 means 47 stays 47. Red on band 3 means 47 becomes 4,700.</p>
+
+    <div class="decoder">
+      <svg class="resistor-svg" viewBox="0 0 520 160" role="img" aria-label="Four-band resistor. The four bands update as you choose colors.">
+        <line x1="10" y1="80" x2="150" y2="80" stroke="#c6ccd6" stroke-width="4"/>
+        <line x1="370" y1="80" x2="510" y2="80" stroke="#c6ccd6" stroke-width="4"/>
+        <rect x="150" y="42" width="220" height="76" rx="38" fill="#d9c9a3" stroke="#0a0b0d" stroke-width="2"/>
+        <rect id="bandA" x="188" y="42" width="16" height="76" fill="#8a5a2b"/>
+        <rect id="bandB" x="224" y="42" width="16" height="76" fill="#8a5a2b"/>
+        <rect id="bandC" x="260" y="42" width="16" height="76" fill="#8a5a2b"/>
+        <rect id="bandD" x="322" y="42" width="16" height="76" fill="#c9a227"/>
+      </svg>
+      <div class="bands" id="bandControls"><!-- built by JS --></div>
+      <div class="decoder-out">
+        <div class="big" id="decVal">100 &#8486;</div>
+        <div class="sub" id="decBreak">brown(1) brown(0) &middot; 1 zero &middot; &plusmn;5%</div>
+      </div>
+      <div class="cc-lab" id="ccLab">
+        <div class="qtag" id="ccQtag">Question 1 of 3</div>
+        <p class="stem" id="ccStem">Build 4.7 k&#8486; &plusmn;5%.</p>
+        <button class="btn active" type="button" id="ccCheck">Check this one</button>
+        <div class="fb" id="ccFb" aria-live="polite"></div>
+        <div class="cc-end" id="ccEnd">
+          <div class="score" id="ccScore">0 / 3</div>
+          <p id="ccSum" style="color:var(--paper-2);margin:8px 0 0"></p>
+        </div>
+      </div>
+    </div>
+    <div class="gatebar">
+      <p class="gatenote" id="gateNote-colorcode">Build each value on the bands, then Check this one. You need all 3.</p>
+      <button type="button" class="gate-next" data-clear="colorcode" data-need="1" disabled>Continue</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     7. MEASURING PROCEDURE  (numbered, not a tab stack)
+     ============================================================ -->
+<style>
+.fluke-lab{background:var(--ink-2);border:1px solid var(--line);border-radius:20px;
+  box-shadow:var(--shadow);overflow:hidden;margin-top:30px}
+.fluke-goal{padding:16px 22px;border-bottom:1px solid var(--line);font-size:17.5px;color:var(--paper)}
+.fluke-grid{display:grid;grid-template-columns:1.2fr .9fr}
+@media(max-width:860px){.fluke-grid{grid-template-columns:1fr}}
+.fluke-circ{padding:12px 8px 8px;background:
+  linear-gradient(rgba(57,215,255,.04) 1px,transparent 1px),
+  linear-gradient(90deg,rgba(57,215,255,.04) 1px,transparent 1px);
+  background-size:24px 24px}
+#ohmCirc{width:100%;height:auto;display:block}
+#ohmCirc .hit{cursor:pointer}
+#ohmCirc .hit:hover{fill-opacity:.12}
+.fluke-meter{background:#d4a017;padding:16px 18px;display:flex;justify-content:center;align-items:center}
+.fluke-body{background:#2a2e36;border-radius:16px;width:min(100%,248px);padding:14px 12px 16px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 12px 28px rgba(0,0,0,.35)}
+.fluke-brand{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.2em;
+  text-transform:uppercase;color:#c9a227;text-align:center;margin-bottom:8px}
+.fluke-lcd-wrap{background:#14160f;border-radius:8px;padding:8px 10px 10px;margin-bottom:14px}
+.fluke-ann{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.14em;
+  text-transform:uppercase;color:#6a7348;min-height:1.2em}
+.fluke-lcd{font-family:"IBM Plex Mono",monospace;font-size:40px;font-weight:600;line-height:1;
+  color:#1c2412;background:#8fa36a;border-radius:4px;padding:8px 10px;text-align:right;
+  letter-spacing:.04em;min-height:56px}
+.fluke-lcd.fuse{color:#3a0c0c;background:#d45a5a}
+.fluke-lcd.win{color:#0c2a1a;background:#7dca9a}
+.fluke-unit{font-family:"IBM Plex Mono",monospace;font-size:11px;color:#8fa36a;text-align:right;margin-top:4px}
+.fluke-dial{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:14px}
+.fluke-dial button{font-family:"IBM Plex Mono",monospace;font-size:13px;padding:12px 6px;min-height:44px;
+  border-radius:50%;border:2px solid #1a1c20;background:#3a404a;color:#c6ccd6;cursor:pointer}
+.fluke-dial button[aria-pressed=true]{background:var(--R);color:#111;border-color:#fff;font-weight:600}
+.fluke-jacks{display:flex;justify-content:space-between;gap:8px;padding:0 4px}
+.jack{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;background:transparent;
+  border:none;color:#a3abba;font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.08em;
+  text-transform:uppercase;cursor:pointer;min-height:44px}
+.jack .dot{width:22px;height:22px;border-radius:50%;border:2px solid #111;background:#1a1c20}
+.jack[aria-pressed=true] .dot{box-shadow:0 0 0 2px #fff}
+.jack.com{cursor:default}
+.jack.com .dot{background:#111}
+.jack.a .dot{border-color:#7a1f1f}
+.jack.vohm .dot{border-color:#8a2018}
+.jack.a[aria-pressed=true] .dot{background:#c0392b}
+.jack.vohm[aria-pressed=true] .dot{background:#c0392b}
+.fluke-fuse{margin-top:10px;text-align:center}
+.fluke-fuse .btn{font-size:11px;background:#3a1515;border-color:#ff6b6b;color:#ff6b6b}
+.fluke-done{display:none;padding:16px 22px;border-top:1px solid var(--line);font-size:16.5px;
+  color:var(--paper);line-height:1.5;background:#0d0f14}
+.fluke-done.on{display:block}
+.fluke-done b{color:var(--ok)}
+
+/* knowledge check  -  Checkpoint mechanics, Electric Ink skin.
+   Clone this #check block for every DC lesson. Do not go back to an overlay popup. */
+.kc{position:relative;background:var(--ink-2);border:1px solid var(--line);border-radius:20px;
+  box-shadow:var(--shadow);overflow:hidden;margin-top:30px}
+.kc::before{content:"";position:absolute;top:0;bottom:0;left:0;width:6px;
+  background:linear-gradient(var(--R),#c56a18);pointer-events:none}
+.kc-bezel{padding:16px 22px 14px 28px;border-bottom:1px solid var(--line);background:#0d0f14}
+.kc-bezel-row{display:flex;align-items:center;justify-content:space-between;gap:16px;
+  font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--paper-3)}
+.kc-tag{display:flex;align-items:center;gap:10px;min-width:0;color:var(--paper-2)}
+.kc-dot{width:9px;height:9px;border:1.5px solid var(--R);border-radius:50%;flex:none;position:relative}
+.kc-dot::after{content:"";position:absolute;inset:2px;border-radius:50%;background:var(--R)}
+.kc-count{color:var(--paper);font-weight:600;letter-spacing:.08em;border:1px solid var(--line);
+  padding:3px 10px;background:var(--ink-3);white-space:nowrap}
+.kc-count b{color:var(--R);font-weight:700}
+.kc-rail{display:flex;gap:5px;margin-top:10px}
+.kc-seg{flex:1;height:6px;background:#2a303a;position:relative;overflow:hidden;border-radius:1px}
+.kc-seg i{position:absolute;inset:0;background:var(--ok);transform:scaleX(0);transform-origin:left;transition:transform .45s ease}
+.kc-seg.done i{transform:scaleX(1)}
+.kc-seg.done.miss i{background:var(--bad)}
+.kc-seg.current i{transform:scaleX(1);background:var(--R)}
+.kc-stage{padding:clamp(20px,3vw,32px) clamp(20px,3vw,32px) clamp(20px,3vw,32px) 28px}
+.kc-screen{display:none;flex-direction:column;gap:16px}
+.kc-screen.on{display:flex}
+.kc-eyebrow{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.26em;text-transform:uppercase;
+  color:var(--R);font-weight:600;display:flex;align-items:center;gap:12px}
+.kc-eyebrow::after{content:"";flex:1;height:1px;background:var(--line);max-width:160px}
+.kc-cover-h{font-family:"Space Grotesk",sans-serif;font-size:clamp(22px,2.6vw,28px);font-weight:600;line-height:1.15;
+  letter-spacing:-.02em;margin:0;color:var(--paper);max-width:28ch}
+.kc-cover-lede{font-size:17px;line-height:1.5;color:var(--paper-2);max-width:54ch;margin:0}
+.kc-cover-los{margin:4px 0 8px;padding:0;list-style:none;display:flex;flex-direction:column;gap:12px;max-width:58ch}
+.kc-cover-los li{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:start;
+  color:var(--paper);font-size:17px;line-height:1.45}
+.kc-cover-los .n{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.12em;
+  color:var(--R);padding-top:5px}
+.kc-plate{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 48px;max-width:56ch;
+  font-family:"IBM Plex Mono",monospace;font-size:13px}
+@media(max-width:640px){.kc-plate{grid-template-columns:1fr}}
+.kc-pr{display:flex;align-items:baseline;gap:8px;color:var(--paper-3);text-transform:uppercase;letter-spacing:.03em}
+.kc-pr .lead{flex:1;border-bottom:1.5px dotted var(--line);transform:translateY(-3px);min-width:14px}
+.kc-pr .v{color:var(--paper);font-weight:600;white-space:nowrap}
+.kc-pr .v.k{color:var(--R)}
+.kc-stem{font-family:"Space Grotesk",sans-serif;font-size:clamp(20px,2.5vw,28px);font-weight:600;
+  color:var(--paper);line-height:1.25;margin:0;letter-spacing:-.01em;max-width:50ch}
+.kc-note{font-size:15px;color:var(--paper-3);margin:0;max-width:66ch}
+.kc-opts{display:flex;flex-direction:column;gap:8px}
+.kc-opt{display:grid;grid-template-columns:auto 1fr;align-items:center;gap:15px;text-align:left;width:100%;
+  cursor:pointer;position:relative;background:var(--ink);border:1.5px solid var(--line);border-radius:0;
+  padding:12px 16px;min-height:52px;font-size:17px;line-height:1.35;color:var(--paper);font-family:inherit;
+  transition:border-color .15s ease, background .15s ease, transform .12s ease, box-shadow .15s ease}
+.kc-opt:hover:not(:disabled){border-color:var(--R);box-shadow:-3px 0 0 var(--R);transform:translateX(3px)}
+.kc-opt .key{font-family:"IBM Plex Mono",monospace;font-weight:700;width:32px;height:32px;display:grid;place-items:center;
+  flex:none;font-size:15px;border:1.5px solid var(--line);color:var(--paper-3);background:var(--ink-3);
+  box-shadow:1px 1px 0 rgba(0,0,0,.35);transition:inherit}
+.kc-opt:hover:not(:disabled) .key{border-color:var(--R);color:var(--R)}
+.kc-opt:disabled{cursor:default}
+.kc-opt.is-key{border-color:var(--ok);background:rgba(93,219,154,.12);box-shadow:-3px 0 0 var(--ok)}
+.kc-opt.is-key .key{border-color:var(--ok);background:var(--ok);color:#111;box-shadow:none}
+.kc-opt.is-miss{border-color:var(--bad);background:rgba(255,107,107,.12);box-shadow:-3px 0 0 var(--bad)}
+.kc-opt.is-miss .key{border-color:var(--bad);background:var(--bad);color:#111;box-shadow:none}
+.kc-opt.dim{opacity:.46}
+.kc-fb{display:none;background:var(--ink);border:1.5px solid var(--line);border-left:4px solid var(--ok);margin-top:2px}
+.kc-fb.show{display:block}
+.kc-fb.miss{border-left-color:var(--bad)}
+.kc-verdict{display:flex;align-items:center;gap:10px;font-family:"IBM Plex Mono",monospace;font-weight:700;
+  font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:#111;background:var(--ok);padding:8px 16px}
+.kc-fb.miss .kc-verdict{background:var(--bad);color:#111}
+.kc-fb-body{padding:12px 16px 14px}
+.kc-fb-body p{margin:0;font-size:16.5px;line-height:1.5;color:var(--paper)}
+.kc-fb-body .ans{margin-top:10px;font-family:"IBM Plex Mono",monospace;font-size:14px;color:var(--ok);line-height:1.45}
+.kc-qfoot{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding-top:8px}
+.kc-qfoot.hide{display:none}
+.kc-hint{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--paper-3)}
+.kc-nav{display:flex;gap:10px;flex-wrap:wrap}
+.kc-nav .btn.retry{border-color:var(--bad);color:var(--bad)}
+.kc-debrief-head{display:flex;align-items:center;gap:28px;flex-wrap:wrap}
+.kc-gauge-wrap{position:relative;flex:none;display:grid;place-items:center}
+.kc-gauge{width:120px;aspect-ratio:1;display:block}
+.kc-gauge .track{stroke:var(--line);fill:none;stroke-width:10}
+.kc-gauge .arc{stroke:var(--R);fill:none;stroke-width:10;transition:stroke-dasharray .8s ease}
+.kc-gauge-face{position:absolute;inset:0;display:grid;place-items:center;text-align:center;line-height:1}
+.kc-gauge-face .gn{font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:36px;color:var(--paper)}
+.kc-gauge-face .gn small{font-size:.45em;color:var(--paper-3);font-weight:500}
+.kc-score-meta{display:flex;flex-direction:column;gap:6px}
+.kc-score-meta .kicker{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--paper-3)}
+.kc-score-meta .band{font-family:"Space Grotesk",sans-serif;font-size:clamp(26px,4vw,40px);font-weight:600;line-height:1;color:var(--paper)}
+.kc-score-meta .pct{font-family:"IBM Plex Mono",monospace;color:var(--R);font-weight:600;font-size:14px;letter-spacing:.04em}
+.kc-review{display:flex;flex-direction:column;border-top:1px solid var(--line)}
+.kc-rev-row{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:12px;width:100%;
+  text-align:left;cursor:pointer;background:transparent;border:0;border-bottom:1px solid var(--line);
+  padding:10px 2px;font-family:inherit;color:var(--paper);transition:background .14s ease,padding-left .14s ease}
+.kc-rev-row:hover{background:var(--ink);padding-left:8px}
+.kc-rev-row .mark{font-family:"IBM Plex Mono",monospace;font-weight:700;width:24px;height:24px;display:grid;place-items:center;
+  color:#111;font-size:14px}
+.kc-rev-row .mark.ok{background:var(--ok)}
+.kc-rev-row .mark.no{background:var(--bad)}
+.kc-rev-row .q{font-size:15.5px;line-height:1.3;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kc-rev-row .q b{font-weight:600;color:var(--paper-3);font-family:"IBM Plex Mono",monospace;font-size:13px;margin-right:6px}
+.kc-rev-fb{padding:10px 12px 14px 44px;font-size:15.5px;line-height:1.5;color:var(--paper-2);background:var(--ink);
+  border-bottom:1px solid var(--line)}
+.kc-synth{background:var(--R);color:#111;padding:16px 22px;position:relative;overflow:hidden}
+.kc-synth .lab{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;
+  display:flex;align-items:center;gap:10px;font-weight:700;color:#111}
+.kc-synth .lab::before{content:"";width:18px;height:1.5px;background:#111}
+.kc-synth p,.kc-synth li{font-size:16px;line-height:1.45;margin:0;color:#111;font-weight:600}
+.kc-synth-los{margin:10px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px}
+.kc-synth-los li{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:start}
+.kc-synth-los .n{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.12em;padding-top:3px;color:#111}
+.kc-dfoot{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.kc-dfoot .note{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--paper-3);letter-spacing:.04em;text-transform:uppercase}
+@media (prefers-reduced-motion:reduce){
+  .kc-opt:hover:not(:disabled){transform:none}
+  .kc-seg i,.kc-gauge .arc{transition:none}
+}
+
+/* field-card summary (CardCraft plate + three LO cards) */
+.fsum{margin-top:28px;background:var(--ink-2);border:1px solid var(--line);border-radius:20px;
+  box-shadow:var(--shadow);overflow:hidden;position:relative}
+.fsum::before{content:"";position:absolute;top:0;bottom:0;left:0;width:6px;background:linear-gradient(var(--R),#c56a18)}
+.fsum-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0}
+@media(max-width:820px){.fsum-grid{grid-template-columns:1fr}}
+.fsum-card{padding:24px 22px 22px 28px;border-right:1px solid var(--line)}
+@media(max-width:820px){.fsum-card{border-right:none;border-bottom:1px solid var(--line)}}
+.fsum-card:last-child{border-right:none}
+.fsum-card .n{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.16em;color:var(--R)}
+.fsum-card h3{font-family:"Space Grotesk",sans-serif;font-size:13px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--paper-3);font-weight:600;margin:8px 0 6px}
+.fsum-card .big{font-family:"Space Grotesk",sans-serif;font-size:28px;font-weight:600;color:var(--paper);margin:0 0 14px;line-height:1.1}
+.fsum-card .plate{display:flex;flex-direction:column;gap:7px;font-family:"IBM Plex Mono",monospace;font-size:12.5px}
+.fsum-card .pr{display:flex;align-items:baseline;gap:8px;color:var(--paper-3);text-transform:uppercase;letter-spacing:.03em}
+.fsum-card .pr .lead{flex:1;border-bottom:1.5px dotted var(--line);transform:translateY(-3px);min-width:10px}
+.fsum-card .pr .v{color:var(--paper);font-weight:600;text-transform:none;letter-spacing:0;white-space:nowrap}
+.fsum-card .pr .v.r{color:var(--R)}
+.fsum-synth{background:var(--R);color:#111;padding:18px 22px 18px 28px}
+.fsum-synth .lab{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;
+  font-weight:700;display:flex;align-items:center;gap:10px}
+.fsum-synth .lab::before{content:"";width:18px;height:1.5px;background:#111}
+.fsum-synth p{margin:6px 0 0;font-size:17px;line-height:1.4;font-weight:600;max-width:70ch;color:#111}
+
+/* summary */
+.sumgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:28px}
+@media(max-width:820px){.sumgrid{grid-template-columns:1fr 1fr}}
+@media(max-width:460px){.sumgrid{grid-template-columns:1fr}}
+.sumcard{background:var(--ink-2);border:1px solid var(--line);border-radius:14px;padding:20px}
+.sumcard .n{font-family:"IBM Plex Mono";font-size:12px;color:var(--R)}
+.sumcard h4{font-family:"Space Grotesk";font-size:16px;margin:8px 0 6px;color:var(--paper)}
+.sumcard p{font-size:14px;margin:0;color:var(--paper-3);line-height:1.5}
+.nextbar{margin-top:40px;display:flex;justify-content:space-between;align-items:center;
+  flex-wrap:wrap;gap:16px;padding-top:30px;border-top:1px solid var(--line)}
+.nextbar .lbl{font-family:"IBM Plex Mono";font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--paper-3)}
+.nextbar .nx{font-family:"Space Grotesk";font-size:22px;font-weight:600;color:var(--paper)}
+.nextbar .go{background:var(--I);color:#04222b;font-weight:600;border:none;padding:14px 24px;
+  border-radius:10px;font-family:"IBM Plex Mono";cursor:pointer;font-size:14px}
+.nextbar .go:disabled{opacity:.4;cursor:not-allowed}
+.nextbar .actions{display:flex;flex-wrap:wrap;gap:10px}
+.src{margin-top:40px;font-family:"IBM Plex Mono";font-size:12px;color:var(--paper-3);line-height:1.7}
+.footer{padding:50px 0 70px;border-top:1px solid var(--line);text-align:center}
+</style>
+
+<section class="section" id="measure" data-beat="Ohms">
+  <div class="wrap">
+    <div class="kicker">Using a multimeter</div>
+    <h2>Get the true ohms on R1</h2>
+    <p class="lede" style="margin-top:16px">The meter is a Fluke. R1 sits on the bus with a 10 &#8486; lamp. You can set the dial to ohms before you kill the bus. Probes do not touch until power is OFF and R1 is isolated. Sort that, then get 100.0 &#8486; on R1 itself.</p>
+    <div class="cc-card">
+      <div class="cc-spec"><span class="cc-spec-job">Before the probes</span></div>
+      <div class="cc-stage" id="ohmRule">
+        <div class="cc-pad">
+          <div class="cc-ey">Tap a chip, then a column</div>
+          <div class="cc-bk-bank" id="ohmBank"></div>
+          <div class="cc-bk-row">
+            <div class="cc-bk-bin" data-bin="any" id="ohmBinAny" role="button" tabindex="0" aria-label="Anytime before probes">
+              <div class="cc-bk-col-h">Anytime before probes</div>
+            </div>
+            <div class="cc-bk-bin" data-bin="must" id="ohmBinMust" role="button" tabindex="0" aria-label="Must before probes">
+              <div class="cc-bk-col-h">Must before probes</div>
+            </div>
+            <div class="cc-bk-bin" data-bin="never" id="ohmBinNever" role="button" tabindex="0" aria-label="Never">
+              <div class="cc-bk-col-h">Never</div>
+            </div>
+          </div>
+          <div class="cc-bk-foot">
+            <button type="button" class="cc-bk-btn" id="ohmRuleCheck">Check</button>
+            <button type="button" class="cc-bk-btn ghost" id="ohmRuleReset">Reset</button>
+            <span class="cc-bk-status" id="ohmRuleStatus">Set the meter first if you want. Do not probe a live bus.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="fluke-lab">
+      <div class="fluke-goal" id="ohmLive">Measure R1. If the LCD says FUSE, replace the fuse and start with power OFF. The meter sources its own current.</div>
+      <div class="fluke-grid">
+        <div class="fluke-circ">
+          <svg id="ohmCirc" viewBox="0 0 460 300" role="img" aria-label="12 volt circuit with a switch, R1, and a 10 ohm lamp in parallel. Click the switch, R1, a lead, or the battery."></svg>
+        </div>
+        <div class="fluke-meter">
+          <div class="fluke-body" role="group" aria-label="Virtual Fluke multimeter">
+            <div class="fluke-brand">Fluke</div>
+            <div class="fluke-lcd-wrap">
+              <div class="fluke-ann" id="flukeAnn"></div>
+              <div class="fluke-lcd" id="flukeLcd" aria-live="polite">0.00</div>
+              <div class="fluke-unit" id="flukeUnit">V</div>
+            </div>
+            <div class="fluke-dial" role="radiogroup" aria-label="Function dial">
+              <button type="button" data-dial="v" aria-pressed="true">V</button>
+              <button type="button" data-dial="ohm" aria-pressed="false">&#8486;</button>
+              <button type="button" data-dial="a" aria-pressed="false">A</button>
+            </div>
+            <div class="fluke-jacks">
+              <button type="button" class="jack a" data-jack="a" aria-pressed="false" aria-label="Red lead in A jack"><span class="dot"></span>A</button>
+              <button type="button" class="jack com" disabled aria-label="Black lead in COM"><span class="dot"></span>COM</button>
+              <button type="button" class="jack vohm" data-jack="vohm" aria-pressed="true" aria-label="Red lead in V ohms jack"><span class="dot"></span>V&#8486;</button>
+            </div>
+            <div class="fluke-fuse" id="flukeFuse" hidden>
+              <button class="btn" type="button" id="fuseBtn">Replace fuse</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="fluke-done" id="flukeDone">That is R1 itself. Power was OFF, one lead was lifted, red in V&#8486;, dial on ohms, probes on the part.</div>
+    </div>
+    <div class="callout" style="margin-top:22px">
+      <span class="lbl">What the meter should say</span>
+      Open: infinite resistance (blown resistor or other component). Short: very little resistance. Closed switch: close to 0 ohms. Wire: .2-.3 ohms is a good reading.
+    </div>
+    <div class="gatebar">
+      <p class="gatenote" id="gateNote-measure">Get 100.0 ohms on R1. Power OFF before the probes touch. You can set the meter first.</p>
+      <button type="button" class="gate-next" data-clear="measure" data-need="1" disabled>Continue</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     8. KNOWLEDGE CHECK  (Cirrus SR22, teaching feedback)
+     ============================================================ -->
+<section class="section" id="check" data-beat="Check">
+  <div class="wrap">
+    <div class="kicker">Knowledge check</div>
+    <h2>Check yourself</h2>
+    <p class="lede" style="margin-top:12px">Five questions on the three objectives. Color code lives in the build lab above.</p>
+    <div class="kc" id="kc" role="group" aria-label="Knowledge check: resistance">
+      <div class="kc-bezel" id="kcBezel" hidden>
+        <div class="kc-bezel-row">
+          <span class="kc-tag"><span class="kc-dot" aria-hidden="true"></span> Checkpoint // Resistance</span>
+          <span class="kc-count" id="kcQtag">Q <b>01</b> / 05</span>
+        </div>
+        <div class="kc-rail" id="kcRail" aria-hidden="true"></div>
+      </div>
+      <div class="kc-stage" id="kcStage">
+        <div class="kc-screen on" id="kcCover" aria-label="Before you begin">
+          <span class="kc-eyebrow">Knowledge check</span>
+          <h3 class="kc-cover-h">When you are done you can</h3>
+          <ol class="kc-cover-los">
+            <li><span class="n">01</span><span>Define resistance, name the symbol R, and name the unit (ohms).</span></li>
+            <li><span class="n">02</span><span>Find total resistance in series and in parallel, and read a 4-band color code.</span></li>
+            <li><span class="n">03</span><span>Take an ohm reading with a multimeter: power OFF, disconnect the device, meter in parallel.</span></li>
+          </ol>
+          <button class="btn active" type="button" id="kcBegin">Begin</button>
+        </div>
+        <div class="kc-screen" id="kcQuestion" aria-label="Question" aria-live="polite">
+          <p class="kc-note" id="kcNote"></p>
+          <h3 class="kc-stem" id="kcStem"></h3>
+          <div class="kc-opts" id="kcOpts" role="group" aria-label="Answer options"></div>
+          <div class="kc-fb" id="kcFb">
+            <div class="kc-verdict" id="kcVerdict"></div>
+            <div class="kc-fb-body">
+              <p id="kcFbText"></p>
+              <p class="ans" id="kcFbAns"></p>
+            </div>
+          </div>
+          <div class="kc-qfoot hide" id="kcQfoot">
+            <span class="kc-hint" id="kcHint"></span>
+            <div class="kc-nav" id="kcNav"></div>
+          </div>
+        </div>
+        <div class="kc-screen" id="kcEnd" aria-label="Your results">
+          <div class="kc-debrief-head">
+            <div class="kc-gauge-wrap">
+              <svg class="kc-gauge" viewBox="0 0 100 100" aria-hidden="true">
+                <circle class="track" cx="50" cy="50" r="42"></circle>
+                <circle class="arc" id="kcArc" cx="50" cy="50" r="42" stroke-linecap="butt" stroke-dasharray="0 264" transform="rotate(-90 50 50)"></circle>
+              </svg>
+              <div class="kc-gauge-face">
+                <span class="gn"><span id="kcScoreN">0</span><small>/<span id="kcScoreD">5</span></small></span>
+              </div>
+            </div>
+            <div class="kc-score-meta">
+              <span class="kicker">Debrief // the meter reads</span>
+              <span class="band" id="kcBand">Debrief</span>
+              <span class="pct" id="kcPct">0 percent correct</span>
+            </div>
+          </div>
+          <div class="kc-review" id="kcReview"></div>
+          <div class="kc-synth">
+            <span class="lab">From this lesson</span>
+            <ol class="kc-synth-los">
+              <li><span class="n">01</span><span>Resistance is opposition to the flow (current) of electricity. Symbol R. Unit ohms.</span></li>
+              <li><span class="n">02</span><span>Series adds. Pull one, Rt goes down. Parallel is the reciprocal. Pull one, Rt goes up.</span></li>
+              <li><span class="n">03</span><span>Ohms: power OFF, disconnect the device, meter in parallel.</span></li>
+            </ol>
+          </div>
+          <div class="kc-dfoot">
+            <button class="btn" type="button" id="kcAgain">Run it again</button>
+            <span class="note">Tap any row to re-read its feedback.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="gatebar">
+      <p class="gatenote" id="gateNote-check">Begin the check. You need 4 of 5 to continue.</p>
+      <button type="button" class="gate-next" data-clear="check" data-need="1" disabled>Continue</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     9. AUDIO + SUMMARY + NEXT
+     ============================================================ -->
+<section class="section" id="wrap-up" data-beat="Field card">
+  <div class="wrap">
+    <div class="kicker">Conclusion</div>
+    <h2>Field card</h2>
+    <div class="fsum">
+      <div class="fsum-grid">
+        <article class="fsum-card">
+          <div class="n">01</div>
+          <h3>Define</h3>
+          <p class="big">Opposition</p>
+          <div class="plate">
+            <div class="pr"><span>Means</span><span class="lead"></span><span class="v">opposition to flow</span></div>
+            <div class="pr"><span>Symbol</span><span class="lead"></span><span class="v r">R</span></div>
+            <div class="pr"><span>Unit</span><span class="lead"></span><span class="v">ohms</span></div>
+            <div class="pr"><span>Types</span><span class="lead"></span><span class="v">fixed / variable</span></div>
+          </div>
+        </article>
+        <article class="fsum-card">
+          <div class="n">02</div>
+          <h3>Networks</h3>
+          <p class="big">Series adds</p>
+          <div class="plate">
+            <div class="pr"><span>Series</span><span class="lead"></span><span class="v">pull one, Rt down</span></div>
+            <div class="pr"><span>Parallel</span><span class="lead"></span><span class="v">pull one, Rt up</span></div>
+            <div class="pr"><span>Color</span><span class="lead"></span><span class="v">digit, digit, zeros</span></div>
+            <div class="pr"><span>4th band</span><span class="lead"></span><span class="v">gold / silver only</span></div>
+          </div>
+        </article>
+        <article class="fsum-card">
+          <div class="n">03</div>
+          <h3>Measure</h3>
+          <p class="big">Power OFF</p>
+          <div class="plate">
+            <div class="pr"><span>Then</span><span class="lead"></span><span class="v">disconnect the part</span></div>
+            <div class="pr"><span>Meter</span><span class="lead"></span><span class="v">parallel over it</span></div>
+            <div class="pr"><span>Open</span><span class="lead"></span><span class="v">infinite / OL</span></div>
+            <div class="pr"><span>Wire</span><span class="lead"></span><span class="v">.2 to .3 ohms</span></div>
+          </div>
+        </article>
+      </div>
+      <div class="fsum-synth">
+        <span class="lab">Cirrus</span>
+        <p>13.6 V on the bus, 9.1 V at the fan. Extra series R. Fix the path, not the fan.</p>
+      </div>
+    </div>
+
+    <div class="nextbar">
+      <div>
+        <div class="lbl">Closeout</div>
+        <div class="nx" id="lmsHint">Work the bench, networks, and ohms lab. Then pass the checkpoint (4 of 5).</div>
+      </div>
+      <div class="actions">
+        <button class="go" type="button" id="replayBench">Replay the bench</button>
+        <button class="go" type="button" id="markComplete" disabled>Mark lesson complete</button>
+      </div>
+    </div>
+
+    <div class="src">
+      SOURCE &middot; Nick Brown, AET Certification Book (resistance, color code, ohmmeter). Resistivity: Cu 1.7&times;10&#8315;&#8312;, Al 2.8&times;10&#8315;&#8312;, NiCr 1.1&times;10&#8315;&#8310; &#8486;&middot;m. Color code: EIA 4-band. Cirrus 13.6 V / 9.1 V from the AEA DC course.
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="course-tag" style="justify-content:center">Fundamentals of Direct Current</div>
+  </div>
+</footer>
+
+<script src="../../../core/lesson-runtime.js"></script>
+<script src="assets/three.min.js"></script>
+<script>
+"use strict";
+(function(){
+  document.documentElement.classList.add("js");
+  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* Completion is work + a passing score. Scroll does not count.
+     Bench predict, series/parallel poke, true ohms on R1, then 4 of 5 on the checkpoint. */
+  var work={ bench:false, networks:false, ohms:false, check:false, checkN:0 };
+  var PASS_N=4;
+  function credit(key, poke){
+    if(!work[key]){
+      work[key]=true;
+      if(window.AeroLesson){
+        if(poke) window.AeroLesson.interaction(poke);
+        window.AeroLesson.saveState(work);
+      }
+    }
+    var beatId={ bench:"bench", networks:"network", ohms:"measure" }[key];
+    if(beatId && window.__inkGate) window.__inkGate.ready(beatId);
+    paintCompleteGate();
+  }
+  function paintCompleteGate(){
+    var mark=document.getElementById("markComplete");
+    var nx=document.getElementById("lmsHint");
+    var labs=work.bench && work.networks && work.ohms;
+    var passed=work.check && work.checkN>=PASS_N;
+    if(mark) mark.disabled=!(labs && passed);
+    if(!nx) return;
+    var miss=[];
+    if(!work.bench) miss.push("bench predict");
+    if(!work.networks) miss.push("add or pull a resistor");
+    if(!work.ohms) miss.push("true ohms on R1");
+    if(!work.check) miss.push("checkpoint");
+    else if(work.checkN<PASS_N) miss.push("4 of 5 on the checkpoint");
+    nx.textContent = (labs && passed) ? "Work and score posted. Mark complete." : ("Still need: "+miss.join(", ")+".");
+    var checkNote=document.getElementById("gateNote-check");
+    if(checkNote && !passed && work.check){
+      checkNote.textContent="You need 4 of 5. Run it again.";
+      checkNote.classList.remove("is-ready");
+    }
+    if(passed && window.__inkGate) window.__inkGate.ready("check");
+  }
+
+  /* schematic front, photograph back. One recognition. Not a game. */
+  (function typeFlips(){
+    var cards=document.querySelectorAll("[data-flip]");
+    if(!cards.length) return;
+    [].forEach.call(cards, function(el){
+      var name=el.getAttribute("data-name")||"Resistor";
+      el.setAttribute("role","button");
+      el.setAttribute("tabindex","0");
+      el.setAttribute("aria-pressed","false");
+      el.setAttribute("aria-label", name+". Click to flip between the schematic and a photograph.");
+      function toggle(){
+        var on=!el.classList.contains("is-flipped");
+        el.classList.toggle("is-flipped", on);
+        el.setAttribute("aria-pressed", on?"true":"false");
+        if(window.__inkGate) window.__inkGate.ready("types");
+      }
+      el.addEventListener("click", toggle);
+      el.addEventListener("keydown", function(e){
+        if(e.key==="Enter" || e.key===" "){
+          e.preventDefault();
+          toggle();
+        }
+      });
+    });
+  })();
+  /* QA affordance: ?qa=1 collapses the tall hero so a full-page screenshot keeps real proportions */
+  if(/qa=1/.test(location.search)){var qs=document.createElement("style");
+    qs.textContent=".hero{min-height:auto !important;padding:70px 0 50px !important}";document.head.appendChild(qs);}
+
+  /* ============================================================
+     LESSON DOCK  -  identity + waypoints + honest audio
+     Clone surface: #ldock data-course/num/title, audio src, data-beat on sections.
+     ============================================================ */
+  (function lessonDock(){
+    var dock=document.getElementById("ldock");
+    if(!dock) return;
+    var num=dock.getAttribute("data-num")||"";
+    var title=dock.getAttribute("data-title")||"";
+    var course=dock.getAttribute("data-course")||"";
+    document.getElementById("ldNum").textContent=num;
+    document.getElementById("ldTitle").textContent=title;
+    document.getElementById("ldCourse").textContent=course;
+    var beats=[].map.call(document.querySelectorAll("[data-beat]"), function(el){
+      return {id:el.id, label:el.getAttribute("data-beat"), el:el};
+    }).filter(function(b){ return b.id && b.label; });
+    var rail=document.getElementById("ldBeats");
+    var nowEl=document.getElementById("ldNow");
+    var play=document.getElementById("ldPlay");
+    var seek=document.getElementById("ldSeek");
+    var t0=document.getElementById("ldT0");
+    var t1=document.getElementById("ldT1");
+    var audio=document.getElementById("lessonAudio");
+    var ICON_PLAY='<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>';
+    var ICON_PAUSE='<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="5" width="4" height="14"/><rect x="14" y="5" width="4" height="14"/></svg>';
+    var seeking=false;
+    var idx=-1;
+    var beatCleared={};
+    var beatReady={};
+    var hintEl=document.getElementById("ldHint");
+    var HINTS={
+      hero:"Press Begin to start.",
+      hook:"Read this, then Continue.",
+      intuition:"Read this, then Continue.",
+      bench:"Answer the length question, or change length, material, area, or temperature on the bench.",
+      lattice:"Switch to Nichrome, raise the temperature, or drag the lattice to orbit it.",
+      types:"Click a card. Schematic on the front, the real part on the back.",
+      network:"Add or remove a resistor. Watch total R go up or down.",
+      colorcode:"Build each value on the bands, then Check this one. You need all 3.",
+      measure:"Get 100.0 ohms on R1. Power OFF before the probes touch. You can set the meter first.",
+      check:"Begin the check. You need 4 of 5 to continue.",
+      "wrap-up":"Mark the lesson complete."
+    };
+    function pad2(n){ return (n<10?"0":"")+n; }
+    function fmtTime(s){
+      if(!isFinite(s) || s<0) return "0:00";
+      s=Math.floor(s);
+      return Math.floor(s/60)+":"+pad2(s%60);
+    }
+    function furthestOpen(){
+      for(var i=0;i<beats.length;i++) if(!beatCleared[beats[i].id]) return i;
+      return beats.length-1;
+    }
+    function setBeat(i, force){
+      if(i<0 || i>=beats.length) return;
+      if(i===idx && !force) return;
+      idx=i;
+      nowEl.textContent="";
+      nowEl.appendChild(document.createTextNode(pad2(i+1)+" / "+pad2(beats.length)+"  "));
+      var b=document.createElement("b");
+      b.textContent=beats[i].label;
+      nowEl.appendChild(b);
+      paintBeats();
+    }
+    function paintHint(){
+      if(!hintEl) return;
+      var open=furthestOpen();
+      var id=beats[open] && beats[open].id;
+      var ready=!!(id && beatReady[id] && !beatCleared[id]);
+      var line=ready?"Done. Continue.":(HINTS[id]||"");
+      hintEl.textContent=line;
+      hintEl.classList.toggle("is-ready", ready);
+      hintEl.hidden=!line;
+    }
+    function paintBeats(){
+      var open=furthestOpen();
+      var hereDone=idx>=0 && !!beatCleared[beats[idx].id];
+      nowEl.classList.toggle("is-done", hereDone);
+      nowEl.classList.toggle("is-open", !hereDone);
+      [].forEach.call(rail.children, function(btn,n){
+        var done=!!beatCleared[beats[n].id];
+        var locked=n>open;
+        btn.classList.toggle("done", done);
+        btn.classList.toggle("locked", locked);
+        btn.classList.toggle("open", !done && !locked);
+        btn.setAttribute("aria-disabled", locked?"true":"false");
+        btn.tabIndex=locked?-1:0;
+        if(n===idx) btn.setAttribute("aria-current","location");
+        else btn.removeAttribute("aria-current");
+      });
+      beats.forEach(function(b){
+        b.el.classList.toggle("is-locked", beats.indexOf(b)>open);
+        var note=document.getElementById("gateNote-"+b.id);
+        if(note){
+          if(b.id==="check" && work.check && work.checkN<PASS_N && !beatCleared[b.id]){
+            note.textContent="You need 4 of 5. Run it again.";
+            note.classList.remove("is-ready");
+          } else if(beatReady[b.id] && !beatCleared[b.id]){
+            note.textContent="Done. Continue.";
+            note.classList.add("is-ready");
+          } else if(!beatCleared[b.id]){
+            note.textContent=HINTS[b.id]||note.textContent;
+            note.classList.remove("is-ready");
+          }
+        }
+      });
+      [].forEach.call(document.querySelectorAll("[data-clear]"), function(btn){
+        var id=btn.getAttribute("data-clear");
+        var bar=btn.closest(".gatebar");
+        if(bar) bar.hidden=!!beatCleared[id];
+        if(btn.hasAttribute("data-need")){
+          btn.disabled=!(beatReady[id] || beatCleared[id]);
+        }
+      });
+      paintHint();
+    }
+    function persistBeats(){
+      work.cleared=beatCleared;
+      work.ready=beatReady;
+      if(window.AeroLesson) window.AeroLesson.saveState(work);
+    }
+    function readyBeat(id){
+      if(beatCleared[id] || beatReady[id]) return;
+      beatReady[id]=true;
+      persistBeats();
+      paintBeats();
+      var btn=document.querySelector('[data-clear="'+id+'"]');
+      if(btn) btn.scrollIntoView({behavior: reduce?"auto":"smooth", block:"nearest"});
+    }
+    function clearBeat(id, opts){
+      opts=opts||{};
+      if(beatCleared[id]){ paintBeats(); return; }
+      var at=-1;
+      for(var i=0;i<beats.length;i++) if(beats[i].id===id) at=i;
+      if(at<0) return;
+      beatCleared[id]=true;
+      beatReady[id]=true;
+      persistBeats();
+      var next=at+1<beats.length?at+1:at;
+      setBeat(next, true);
+      if(!opts.silent && beats[next] && next!==at){
+        beats[next].el.scrollIntoView({behavior: reduce?"auto":"smooth", block:"start"});
+      }
+    }
+    function restoreBeats(s){
+      if(!s) return;
+      if(s.cleared){
+        for(var k in s.cleared) if(s.cleared[k]) beatCleared[k]=true;
+      } else {
+        var through=null;
+        if(s.check && s.checkN>=4) through="check";
+        else if(s.ohms) through="measure";
+        else if(s.networks) through="network";
+        else if(s.bench) through="bench";
+        if(through){
+          for(var i=0;i<beats.length;i++){
+            beatCleared[beats[i].id]=true;
+            if(beats[i].id===through) break;
+          }
+        }
+      }
+      if(s.ready){
+        for(var rk in s.ready) if(s.ready[rk]) beatReady[rk]=true;
+      }
+      if(s.bench) beatReady.bench=true;
+      if(s.networks) beatReady.network=true;
+      if(s.ohms) beatReady.measure=true;
+      if(s.check && s.checkN>=4) beatReady.check=true;
+      setBeat(furthestOpen(), true);
+    }
+    beats.forEach(function(b,i){
+      var btn=document.createElement("button");
+      btn.type="button";
+      btn.className="ld-beat";
+      btn.setAttribute("role","listitem");
+      btn.setAttribute("aria-label", b.label);
+      btn.title=b.label;
+      var tick=document.createElement("i");
+      btn.appendChild(tick);
+      btn.addEventListener("click", function(){
+        if(i>furthestOpen()){
+          if(hintEl){
+            hintEl.classList.remove("is-flash");
+            void hintEl.offsetWidth;
+            hintEl.classList.add("is-flash");
+          }
+          var stay=beats[furthestOpen()];
+          if(stay) stay.el.scrollIntoView({behavior: reduce?"auto":"smooth", block:"start"});
+          return;
+        }
+        b.el.scrollIntoView({behavior: reduce?"auto":"smooth", block:"start"});
+        setBeat(i);
+      });
+      rail.appendChild(btn);
+    });
+    document.addEventListener("click", function(e){
+      var btn=e.target.closest("[data-clear]");
+      if(!btn || btn.disabled) return;
+      clearBeat(btn.getAttribute("data-clear"));
+    });
+    window.__inkGate={
+      clear:clearBeat,
+      ready:readyBeat,
+      restore:restoreBeats,
+      paint:paintBeats
+    };
+    setBeat(0, true);
+    var ticking=false;
+    function spy(){
+      var pick=0, line=88, open=furthestOpen();
+      for(var n=0;n<=open;n++){
+        if(beats[n].el.getBoundingClientRect().top<=line) pick=n;
+      }
+      setBeat(pick);
+    }
+    window.addEventListener("scroll", function(){
+      if(ticking) return;
+      ticking=true;
+      requestAnimationFrame(function(){ ticking=false; spy(); });
+    }, {passive:true});
+    spy();
+    function paintPlay(on){
+      play.setAttribute("aria-pressed", on?"true":"false");
+      play.setAttribute("aria-label", on?"Pause narration":"Play narration");
+      play.innerHTML=on?ICON_PAUSE:ICON_PLAY;
+      dock.classList.toggle("playing", on);
+    }
+    paintPlay(false);
+    play.addEventListener("click", function(){
+      if(audio.paused){ var p=audio.play(); if(p&&p.catch) p.catch(function(){}); }
+      else audio.pause();
+    });
+    audio.addEventListener("play", function(){ paintPlay(true); });
+    audio.addEventListener("pause", function(){ paintPlay(false); });
+    audio.addEventListener("ended", function(){ paintPlay(false); });
+    audio.addEventListener("loadedmetadata", function(){
+      seek.max=isFinite(audio.duration)?String(audio.duration):"0";
+      t1.textContent=fmtTime(audio.duration);
+    });
+    audio.addEventListener("timeupdate", function(){
+      if(seeking) return;
+      t0.textContent=fmtTime(audio.currentTime);
+      if(isFinite(audio.duration) && audio.duration>0){
+        seek.max=String(audio.duration);
+        seek.value=String(audio.currentTime);
+        t1.textContent=fmtTime(audio.duration);
+      }
+    });
+    audio.addEventListener("error", function(){
+      play.disabled=true;
+      t0.textContent="No audio";
+      t1.textContent="";
+    });
+    seek.addEventListener("input", function(){
+      seeking=true;
+      t0.textContent=fmtTime(+seek.value);
+    });
+    seek.addEventListener("change", function(){
+      audio.currentTime=+seek.value;
+      seeking=false;
+    });
+  })();
+
+  /* ---------- deterministic pseudo-random (seeded LCG) for layout only ---------- */
+  function LCG(seed){this.s=seed>>>0;}
+  LCG.prototype.next=function(){this.s=(1664525*this.s+1013904223)>>>0;return this.s/4294967296;};
+
+  /* ============================================================
+     HERO FIELD  -  faint drifting electrons, deterministic
+     ============================================================ */
+  (function heroField(){
+    var c=document.getElementById("heroField"); if(!c) return;
+    var ctx=c.getContext("2d"), DPR=Math.min(window.devicePixelRatio||1,2), pts=[];
+    function size(){c.width=c.clientWidth*DPR;c.height=c.clientHeight*DPR;}
+    var rng=new LCG(20240211), N=reduce?40:90;
+    for(var i=0;i<N;i++){pts.push({x:rng.next(),y:rng.next(),v:0.2+rng.next()*0.6,r:rng.next()*1.6+0.4});}
+    size(); window.addEventListener("resize",size);
+    function frame(t){
+      ctx.clearRect(0,0,c.width,c.height);
+      for(var i=0;i<pts.length;i++){var p=pts[i];
+        var x=p.x*c.width + (reduce?0:Math.sin((t*0.00025)+i)*4*DPR);
+        var y=p.y*c.height;
+        ctx.beginPath();ctx.arc(x,y,(p.r*0.7)*DPR,0,6.2832);
+        ctx.fillStyle="rgba(255,158,61,"+(0.10+p.v*0.10)+")";ctx.fill();
+      }
+      requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  })();
+
+  /* ============================================================
+     RESISTANCE BENCH  -  honest physics
+     R = rho * L / A * (1 + alpha*(T-20));  I = 12 / (10 + R)
+     ============================================================ */
+  var MAT={Copper:{rho:1.7e-8,a:0.0039},Aluminum:{rho:2.8e-8,a:0.0039},Nichrome:{rho:1.1e-6,a:0.0004}};
+  var state={mat:"Copper",L:3,A:2,T:20,mm:"iso"};
+  var RLOAD=10, VSRC=12;
+
+  function computeR(){
+    var m=MAT[state.mat];
+    var A_m2=state.A*1e-6;
+    var r20=m.rho*state.L/A_m2;
+    return r20*(1+m.a*(state.T-20));
+  }
+  function fmtR(r){ if(r>=10)return r.toFixed(1); if(r>=1)return r.toFixed(2); return r.toFixed(3); }
+  function fmtOhm(r){ if(r>=1000)return (r/1000).toFixed(2)+" kΩ"; return fmtR(r)+" Ω"; }
+
+  var svg=document.getElementById("benchCanvas");
+  var SVGNS="http://www.w3.org/2000/svg";
+  function el(tag,attrs){var e=document.createElementNS(SVGNS,tag);for(var k in attrs)e.setAttribute(k,attrs[k]);return e;}
+
+  // static scaffold
+  var electrons=[];
+  function buildBench(){
+    while(svg.firstChild)svg.removeChild(svg.firstChild);
+    // battery (violet) on the left vertical rail: proper 2-cell symbol,
+    // horizontal plates, long = positive terminal, short = negative
+    var bx=44, cells=[ {y:156,long:true},{y:170,long:false},{y:184,long:true},{y:198,long:false} ];
+    cells.forEach(function(c){
+      var half=c.long?20:11, sw=c.long?2:5;
+      svg.appendChild(el("line",{x1:bx-half,y1:c.y,x2:bx+half,y2:c.y,stroke:"#b48cff","stroke-width":sw,"stroke-linecap":"round"}));
+    });
+    // polarity + own-lane label
+    var bp=el("text",{x:bx+26,y:160,fill:"#b48cff","font-size":15,"font-family":"'IBM Plex Mono',monospace"});bp.textContent="+";svg.appendChild(bp);
+    var bn=el("text",{x:bx+26,y:203,fill:"#a3abba","font-size":15,"font-family":"'IBM Plex Mono',monospace"});bn.textContent="−";svg.appendChild(bn);
+    var bl=el("text",{x:bx-38,y:182,fill:"#b48cff","font-size":13,"font-family":"'IBM Plex Mono',monospace"});bl.textContent="12 V";svg.appendChild(bl);
+    // terminal stubs into the battery
+    svg.appendChild(el("line",{x1:bx,y1:150,x2:bx,y2:156,stroke:"#39d7ff","stroke-width":2}));
+    svg.appendChild(el("line",{x1:bx,y1:198,x2:bx,y2:210,stroke:"#39d7ff","stroke-width":2}));
+    // wires
+    svg.appendChild(el("line",{x1:44,y1:150,x2:44,y2:120,stroke:"#39d7ff","stroke-width":2}));
+    svg.appendChild(el("line",{x1:44,y1:120,x2:120,y2:120,stroke:"#39d7ff","stroke-width":2}));
+    // resistor body (zigzag) placeholder group
+    var g=el("g",{id:"resBody"});svg.appendChild(g);
+    svg.appendChild(el("line",{x1:410,y1:120,x2:470,y2:120,stroke:"#39d7ff","stroke-width":2}));
+    // load box right
+    svg.appendChild(el("rect",{x:470,y:96,width:70,height:48,rx:8,fill:"#171a21",stroke:"#262b34"}));
+    var lt=el("text",{x:505,y:118,"text-anchor":"middle",fill:"#c6ccd6","font-size":12,"font-family":"'IBM Plex Mono',monospace"});lt.textContent="10 Ω";svg.appendChild(lt);
+    var lt2=el("text",{x:505,y:134,"text-anchor":"middle",fill:"#8a92a0","font-size":9.5,"font-family":"'IBM Plex Mono',monospace"});lt2.textContent="circuit";svg.appendChild(lt2);
+    // return wire
+    svg.appendChild(el("line",{x1:505,y1:144,x2:505,y2:300,stroke:"#39d7ff","stroke-width":2}));
+    svg.appendChild(el("line",{x1:505,y1:300,x2:44,y2:300,stroke:"#39d7ff","stroke-width":2}));
+    svg.appendChild(el("line",{x1:44,y1:300,x2:44,y2:210,stroke:"#39d7ff","stroke-width":2}));
+    // junction dots at wire corners (schematic realism)
+    [[44,120],[44,300],[505,300],[505,120],[470,120]].forEach(function(p){
+      svg.appendChild(el("circle",{cx:p[0],cy:p[1],r:2.6,fill:"#39d7ff"}));
+    });
+    // electron layer: distributed around the whole loop, ride the zigzag
+    var eg=el("g",{id:"eLayer"});svg.appendChild(eg);
+    electrons=[];
+    var NE=34;
+    for(var i=0;i<NE;i++){var dot=el("circle",{r:3.1,fill:"#39d7ff"});eg.appendChild(dot);electrons.push({node:dot,off:i/NE});}
+    // meter clamp + reading
+    var mg=el("g",{id:"meter"});svg.appendChild(mg);
+    mg.appendChild(el("rect",{x:212,y:212,width:126,height:62,rx:10,fill:"#0d0f14",stroke:"#262b34"}));
+    var mlab=el("text",{id:"mLab",x:275,y:232,"text-anchor":"middle",fill:"#a3abba","font-size":9.5,"font-family":"'IBM Plex Mono',monospace"});mlab.textContent="OHMMETER";mg.appendChild(mlab);
+    var mval=el("text",{id:"mVal",x:275,y:257,"text-anchor":"middle",fill:"#39d7ff","font-size":19,"font-family":"'IBM Plex Mono',monospace","font-weight":600});mval.textContent="";mg.appendChild(mval);
+    // probe leads clamp the resistor's two leads, with tip dots
+    mg.appendChild(el("line",{x1:245,y1:212,x2:120,y2:120,stroke:"#ff6b6b","stroke-width":1.5}));
+    mg.appendChild(el("line",{x1:305,y1:212,x2:410,y2:120,stroke:"#c6ccd6","stroke-width":1.5}));
+    mg.appendChild(el("circle",{cx:120,cy:120,r:3.6,fill:"none",stroke:"#ff6b6b","stroke-width":2}));
+    mg.appendChild(el("circle",{cx:410,cy:120,r:3.6,fill:"none",stroke:"#c6ccd6","stroke-width":2}));
+    drawResistor();
+  }
+  function drawResistor(){
+    var g=document.getElementById("resBody"); if(!g)return;
+    while(g.firstChild)g.removeChild(g.firstChild);
+    var x1=120,x2=410,y=120;
+    var humps=Math.max(3,Math.min(12,Math.round(state.L)));
+    var sw=Math.max(2.2,Math.min(9, state.A*1.4)); // thickness cue = area
+    var amp=Math.min(30, 14+humps*0.8);
+    var seg=(x2-x1)/(humps*2);
+    var d="M"+x1+" "+y+" L"+(x1)+" "+y;
+    var px=x1;
+    d="M"+x1+" "+y;
+    for(var i=0;i<humps*2;i++){px+=seg;var yy=y+((i%2===0)?-amp:amp);d+=" L"+px.toFixed(1)+" "+yy.toFixed(1);}
+    d+=" L"+x2+" "+y;
+    g.appendChild(el("path",{d:d,fill:"none",stroke:"#ff9e3d","stroke-width":sw,"stroke-linejoin":"round","stroke-linecap":"round"}));
+    // material label lane (own lane, connector) - above resistor, clear of shape
+    var ml=el("text",{x:x1,y:70,fill:"#ff9e3d","font-size":12.5,"font-family":"'IBM Plex Mono',monospace"});
+    ml.textContent=state.mat+" · "+state.L.toFixed(1)+" m · "+state.A.toFixed(1)+" mm²";
+    g.appendChild(ml);
+  }
+
+  var roR=document.getElementById("roR"),roI=document.getElementById("roI"),eqbar=document.getElementById("eqbar"),mmRead=document.getElementById("mmRead");
+  function render(){
+    var R=computeR(), I=VSRC/(RLOAD+R);
+    roR.textContent=fmtR(R); roI.textContent=I.toFixed(2);
+    // adjust unit label for R if large
+    roR.parentNode.querySelector(".u").innerHTML = R>=1000 ? "kΩ" : "Ω";
+    if(R>=1000) roR.textContent=(R/1000).toFixed(2);
+    eqbar.innerHTML="R = <b>&rho;</b> &times; L / A &nbsp;=&nbsp; <b>"+MAT[state.mat].rho.toExponential(1)+"</b> &times; <b>"+state.L.toFixed(1)+"</b> / <b>"+(state.A).toFixed(1)+"e-6</b><br>"+
+      "I = <span class='cv'>12 V</span> / (10 &#8486; + <b>"+fmtR(R)+" &#8486;</b>) = <span class='ci'>"+I.toFixed(2)+" A</span>";
+    drawResistor();
+    // meter reading
+    var mVal=document.getElementById("mVal"),mLab=document.getElementById("mLab");
+    if(mVal){
+      if(state.mm==="iso"){mLab.textContent="MULTIMETER · DISCONNECTED";mVal.textContent=fmtOhm(R);mVal.setAttribute("fill","#5ddb9a");
+        mmRead.innerHTML="The device is disconnected. The meter is reading this part alone: <b>"+fmtOhm(R)+"</b>.";}
+      else{var par=(R*RLOAD)/(R+RLOAD);mLab.textContent="MULTIMETER · STILL IN CIRCUIT";mVal.textContent=fmtOhm(par);mVal.setAttribute("fill","#ff6b6b");
+        mmRead.innerHTML="The device is still wired in. The meter is reading the whole circuit, not just this part: <b>"+fmtOhm(par)+"</b>. That number is always lower than the real resistance.";}
+    }
+    return I;
+  }
+
+  // full circuit loop vertices (conductor centerline). Zigzag matches drawResistor.
+  function getLoopPts(){
+    var x1=120,x2=410,y=120;
+    var humps=Math.max(3,Math.min(12,Math.round(state.L)));
+    var amp=Math.min(30,14+humps*0.8), seg=(x2-x1)/(humps*2);
+    var pts=[{x:44,y:120},{x:x1,y:y}];
+    var px=x1;
+    for(var i=0;i<humps*2;i++){px+=seg;pts.push({x:px,y:y+((i%2===0)?-amp:amp)});}
+    pts.push({x:x2,y:y},{x:470,y:120},{x:505,y:120},{x:505,y:300},{x:44,y:300},{x:44,y:210});
+    return pts;
+  }
+  // animation: electrons circulate the whole loop, speed proportional to current.
+  // The closing run (battery bottom back up to top) is a hidden "internal" gap.
+  (function animate(){
+    var last=0, base=0;
+    function frame(t){
+      var R=computeR(), I=VSRC/(RLOAD+R);
+      var pts=getLoopPts(), segLen=[], total=0;
+      for(var i=0;i<pts.length-1;i++){var dx=pts[i+1].x-pts[i].x,dy=pts[i+1].y-pts[i].y;
+        var L=Math.sqrt(dx*dx+dy*dy);segLen.push(L);total+=L;}
+      var closeLen=Math.abs(pts[0].y-pts[pts.length-1].y); // battery internal gap
+      var full=total+closeLen;
+      if(!reduce){ base=(base + I*0.14*(t-last)) % full; }
+      for(var e=0;e<electrons.length;e++){var E=electrons[e];
+        var s=(base + E.off*full) % full;
+        if(s>=total){ E.node.setAttribute("opacity",0); continue; } // inside battery
+        var acc=0, idx=0;
+        while(idx<segLen.length && acc+segLen[idx]<s){acc+=segLen[idx];idx++;}
+        var f=segLen[idx]?(s-acc)/segLen[idx]:0;
+        var x=pts[idx].x+(pts[idx+1].x-pts[idx].x)*f;
+        var y=pts[idx].y+(pts[idx+1].y-pts[idx].y)*f;
+        E.node.setAttribute("cx",x.toFixed(1));E.node.setAttribute("cy",y.toFixed(1));
+        E.node.setAttribute("opacity",0.85);
+      }
+      last=t; requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  })();
+
+  buildBench(); render();
+
+  // controls
+  document.getElementById("lenR").addEventListener("input",function(){state.L=+this.value;document.getElementById("lenVal").textContent=state.L.toFixed(1);render();
+    credit("bench",{ id:"bench-control", kind:"lab" });});
+  document.getElementById("areaR").addEventListener("input",function(){state.A=+this.value;document.getElementById("areaVal").textContent=state.A.toFixed(1);render();
+    credit("bench",{ id:"bench-control", kind:"lab" });});
+  document.getElementById("tempR").addEventListener("input",function(){state.T=+this.value;document.getElementById("tempVal").textContent=state.T;render();
+    credit("bench",{ id:"bench-control", kind:"lab" });});
+  document.getElementById("matBtns").addEventListener("click",function(e){var b=e.target.closest("button");if(!b)return;
+    state.mat=b.getAttribute("data-name");document.getElementById("rhoVal").textContent=state.mat;
+    [].forEach.call(this.children,function(c){c.classList.toggle("active",c===b);});render();
+    if(b.getAttribute("data-name")!=="Copper") credit("bench",{ id:"bench-control", kind:"lab" });});
+  document.getElementById("mmBtns").addEventListener("click",function(e){var b=e.target.closest("button");if(!b)return;
+    state.mm=b.getAttribute("data-mm");
+    [].forEach.call(this.children,function(c){c.classList.toggle("active",c===b);});render();});
+
+  /* ---------- PREDICT #1 (CardCraft 11) ---------- */
+  document.querySelectorAll("#predict1 .predict-opts button").forEach(function(b){
+    b.addEventListener("click",function(){
+      var ok=this.getAttribute("data-c")==="1";
+      var i=+this.getAttribute("data-i");
+      var opts=document.querySelectorAll("#predict1 .predict-opts button");
+      opts.forEach(function(x){ x.disabled=true; });
+      this.classList.add("pick", ok?"right":"wrong");
+      if(!ok){
+        opts.forEach(function(x){ if(x.getAttribute("data-c")==="1") x.classList.add("right"); });
+      }
+      var verdict=document.getElementById("rPrVerdict");
+      if(verdict){
+        verdict.textContent=ok?"Correct.":"Not quite.";
+        verdict.className="cc-pr-verdict "+(ok?"ok":"no");
+      }
+      var reveal=document.getElementById("rPrReveal");
+      if(reveal) reveal.classList.add("show");
+      state.L=6;
+      var len=document.getElementById("lenR");
+      len.value="6";
+      document.getElementById("lenVal").textContent="6.0";
+      var box=document.getElementById("lenCtrl");
+      if(box){box.classList.add("flash");setTimeout(function(){box.classList.remove("flash");},1800);}
+      var rr=document.querySelector("#bench .ro.r");
+      if(rr){rr.classList.add("flash");setTimeout(function(){rr.classList.remove("flash");},1800);}
+      render();
+      document.getElementById("lenCtrl").scrollIntoView({behavior:reduce?"auto":"smooth",block:"center"});
+      credit("bench",{ id:"bench-predict", kind:"predict", correct:ok });
+    });
+  });
+
+  /* ---------- CardCraft 04: count-up on the Cirrus number ---------- */
+  (function(){
+    var el=document.getElementById("rNumFig");
+    if(!el) return;
+    var target=4.5, started=false;
+    function run(){
+      if(started) return; started=true;
+      if(reduce){ el.textContent="4.5"; return; }
+      var t0=null, dur=900;
+      function tick(now){
+        if(t0==null) t0=now;
+        var p=Math.min(1,(now-t0)/dur);
+        el.textContent=(target*p).toFixed(1);
+        if(p<1) requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+    }
+    var card=document.getElementById("rNum");
+    if("IntersectionObserver" in window && card){
+      var io=new IntersectionObserver(function(entries){
+        entries.forEach(function(en){ if(en.isIntersecting) run(); });
+      },{threshold:0.4});
+      io.observe(card);
+    } else run();
+  })();
+
+  /* ---------- Ohms rule: MUST / anytime / NEVER. Not a sequence. ---------- */
+  (function(){
+    var root=document.getElementById("ohmRule"); if(!root) return;
+    var items=[
+      {t:"Set the dial to ohms.",b:"any"},
+      {t:"Put the probes on R1 while the bus is live.",b:"never"},
+      {t:"Lift one lead of R1 so the part is isolated.",b:"must"},
+      {t:"Red lead in the V ohms jack.",b:"any"},
+      {t:"Open the switch. Power OFF.",b:"must"}
+    ];
+    var bank=document.getElementById("ohmBank");
+    var bins={
+      any:document.getElementById("ohmBinAny"),
+      must:document.getElementById("ohmBinMust"),
+      never:document.getElementById("ohmBinNever")
+    };
+    var status=document.getElementById("ohmRuleStatus");
+    var picked=null;
+    function chipEl(item){
+      var b=document.createElement("button");
+      b.type="button"; b.className="cc-bk-chip"; b.textContent=item.t; b.dataset.b=item.b;
+      b.addEventListener("click",function(e){
+        e.stopPropagation();
+        if(picked===b){ b.classList.remove("sel"); picked=null; return; }
+        root.querySelectorAll(".cc-bk-chip").forEach(function(c){ c.classList.remove("sel"); });
+        b.classList.add("sel"); picked=b;
+      });
+      return b;
+    }
+    function build(){
+      picked=null;
+      bank.innerHTML="";
+      Object.keys(bins).forEach(function(k){
+        [].slice.call(bins[k].querySelectorAll(".cc-bk-chip")).forEach(function(c){ c.remove(); });
+      });
+      items.forEach(function(item){ bank.appendChild(chipEl(item)); });
+      status.className="cc-bk-status";
+      status.textContent="Set the meter first if you want. Do not probe a live bus.";
+    }
+    function drop(bin){
+      if(!picked) return;
+      bin.appendChild(picked);
+      picked.classList.remove("sel","ok","no");
+      picked=null;
+    }
+    Object.keys(bins).forEach(function(k){
+      bins[k].addEventListener("click",function(){ drop(bins[k]); });
+      bins[k].addEventListener("keydown",function(e){
+        if(e.key==="Enter"||e.key===" "){ e.preventDefault(); drop(bins[k]); }
+      });
+    });
+    document.getElementById("ohmRuleCheck").addEventListener("click",function(){
+      var chips=[].slice.call(root.querySelectorAll(".cc-bk-chip"));
+      var placed=chips.filter(function(c){ return c.parentNode!==bank; });
+      if(placed.length<items.length){ status.textContent="Put every rule in a column first."; return; }
+      var right=0;
+      placed.forEach(function(c){
+        var ok=c.parentNode.getAttribute("data-bin")===c.dataset.b;
+        c.classList.toggle("ok",ok); c.classList.toggle("no",!ok);
+        if(ok) right++;
+      });
+      status.className="cc-bk-status"+(right===items.length?" done":"");
+      status.textContent= right===items.length
+        ? "Yes. Meter setup can come first. Probes wait for OFF and isolate. Now get 100.0 ohms on R1."
+        : right+" of "+items.length+" in the right column. Reset and retry.";
+    });
+    document.getElementById("ohmRuleReset").addEventListener("click",build);
+    build();
+  })();
+
+  /* ============================================================
+     SERIES / PARALLEL  -  add and remove resistors
+     ============================================================ */
+  var seriesRs=[10,20,30];
+  var paraRs=[10,10,10];
+  function zigPts(x,y,w){
+    return x+","+y+" "+(x+w*0.14)+","+(y-9)+" "+(x+w*0.38)+","+(y+9)+" "+(x+w*0.62)+","+(y-9)+" "+(x+w*0.86)+","+(y+9)+" "+(x+w)+","+y;
+  }
+  function seriesSum(){return seriesRs.reduce(function(a,b){return a+b;},0);}
+  function paraSum(){var s=0;paraRs.forEach(function(r){s+=1/r;});return 1/s;}
+  function fmtOhmN(r){ if(Math.abs(r-Math.round(r))<0.01) return Math.round(r)+" Ω"; return r.toFixed(2)+" Ω"; }
+  function drawSeries(){
+    var s=document.getElementById("seriesSvg"); if(!s) return;
+    while(s.firstChild)s.removeChild(s.firstChild);
+    var n=seriesRs.length, W=320, H=120, left=16, right=304, y=44;
+    s.setAttribute("viewBox","0 0 "+W+" "+H);
+    var span=right-left, slot=span/n;
+    for(var i=0;i<n;i++){
+      var x0=left+slot*i+slot*0.18, w=slot*0.64;
+      if(i===0) s.appendChild(el("line",{x1:left,y1:y,x2:x0,y2:y,stroke:"#39d7ff","stroke-width":"2"}));
+      else {
+        var prevEnd=left+slot*(i-1)+slot*0.18+slot*0.64;
+        s.appendChild(el("line",{x1:prevEnd,y1:y,x2:x0,y2:y,stroke:"#39d7ff","stroke-width":"2"}));
+      }
+      s.appendChild(el("polyline",{points:zigPts(x0,y,w),fill:"none",stroke:"#ff9e3d","stroke-width":"2.4","stroke-linejoin":"round"}));
+      var t=el("text",{x:(x0+w/2),y:82,"text-anchor":"middle",fill:"#8a92a0","font-size":"12","font-family":"'IBM Plex Mono',monospace"});
+      t.textContent=seriesRs[i]+"Ω"; s.appendChild(t);
+      if(i===n-1) s.appendChild(el("line",{x1:x0+w,y1:y,x2:right,y2:y,stroke:"#39d7ff","stroke-width":"2"}));
+    }
+    document.getElementById("seriesRt").innerHTML=fmtOhmN(seriesSum())+' <span>total</span>';
+    document.getElementById("seriesRm").disabled=n<=1;
+    document.getElementById("seriesAdd").disabled=n>=6;
+  }
+  function drawPara(){
+    var s=document.getElementById("paraSvg"); if(!s) return;
+    while(s.firstChild)s.removeChild(s.firstChild);
+    var n=paraRs.length, W=320, row=28, top=18, H=Math.max(120, top+n*row+36);
+    s.setAttribute("viewBox","0 0 "+W+" "+H);
+    var railL=50, railR=250, x1=78, x2=170;
+    var y0=top, y1=top+(n-1)*row;
+    s.appendChild(el("line",{x1:12,y1:(y0+y1)/2,x2:railL,y2:(y0+y1)/2,stroke:"#39d7ff","stroke-width":"2"}));
+    s.appendChild(el("line",{x1:railR,y1:(y0+y1)/2,x2:308,y2:(y0+y1)/2,stroke:"#39d7ff","stroke-width":"2"}));
+    s.appendChild(el("line",{x1:railL,y1:y0,x2:railL,y2:y1,stroke:"#39d7ff","stroke-width":"2"}));
+    s.appendChild(el("line",{x1:railR,y1:y0,x2:railR,y2:y1,stroke:"#39d7ff","stroke-width":"2"}));
+    for(var i=0;i<n;i++){
+      var y=top+i*row;
+      s.appendChild(el("line",{x1:railL,y1:y,x2:x1,y2:y,stroke:"#39d7ff","stroke-width":"2"}));
+      s.appendChild(el("polyline",{points:zigPts(x1,y,x2-x1),fill:"none",stroke:"#ff9e3d","stroke-width":"2.4","stroke-linejoin":"round"}));
+      s.appendChild(el("line",{x1:x2,y1:y,x2:railR,y2:y,stroke:"#39d7ff","stroke-width":"2"}));
+      var t=el("text",{x:x2+14,y:y-8,fill:"#8a92a0","font-size":"11","font-family":"'IBM Plex Mono',monospace"});
+      t.textContent=paraRs[i]+"Ω"; s.appendChild(t);
+    }
+    document.getElementById("paraRt").innerHTML=fmtOhmN(paraSum())+' <span>total</span>';
+    document.getElementById("paraRm").disabled=n<=1;
+    document.getElementById("paraAdd").disabled=n>=6;
+  }
+  function bindSp(addId, rmId, arr, addVal, draw, reactId, isSeries){
+    document.getElementById(addId).addEventListener("click",function(){
+      if(arr.length>=6) return;
+      var before=isSeries?seriesSum():paraSum();
+      arr.push(addVal); draw();
+      var after=isSeries?seriesSum():paraSum();
+      document.getElementById(reactId).textContent="You added one. Total went "+(after>before?"up":"down")+" from "+fmtOhmN(before)+" to "+fmtOhmN(after)+".";
+      credit("networks",{ id:"networks-add", kind:"lab" });
+    });
+    document.getElementById(rmId).addEventListener("click",function(){
+      if(arr.length<=1) return;
+      var before=isSeries?seriesSum():paraSum();
+      arr.pop(); draw();
+      var after=isSeries?seriesSum():paraSum();
+      document.getElementById(reactId).textContent="You removed one. Total went "+(after<before?"down":"up")+" from "+fmtOhmN(before)+" to "+fmtOhmN(after)+".";
+      credit("networks",{ id:"networks-pull", kind:"lab" });
+    });
+  }
+  drawSeries(); drawPara();
+  bindSp("seriesAdd","seriesRm",seriesRs,10,drawSeries,"seriesReact",true);
+  bindSp("paraAdd","paraRm",paraRs,10,drawPara,"paraReact",false);
+
+  /* ============================================================
+     COLOR CODE DECODER  +  3-question build lab
+     ============================================================ */
+  var COLORS=[["Black","#1a1a1a"],["Brown","#8a5a2b"],["Red","#d33b30"],["Orange","#e8801a"],["Yellow","#e5c53a"],
+    ["Green","#3aa856"],["Blue","#3a6fd8"],["Violet","#8a54d6"],["Grey","#9aa0a8"],["White","#f0f0f0"]];
+  var TOL=[["Gold","#c9a227","±5%"],["Silver","#b8b8b8","±10%"]];
+  var dec={a:1,b:0,c:1,tol:0};
+  var caps=["Band 1 (digit)","Band 2 (digit)","Band 3 (zeros)","Band 4 (tolerance)"];
+  var CCTASKS=[
+    {stem:"Build 4.7 kΩ ±5%.",val:4700,tol:0},
+    {stem:"Build 23 MΩ ±10%.",val:23000000,tol:1},
+    {stem:"Build 47 Ω ±5%.",val:47,tol:0}
+  ];
+  var ccI=0, ccLast=[], ccPhase="check";
+  function buildBands(){
+    var wrap=document.getElementById("bandControls");wrap.innerHTML="";
+    var cols=[{k:"a",set:COLORS},{k:"b",set:COLORS},{k:"c",set:COLORS},{k:"tol",set:TOL}];
+    cols.forEach(function(col,ci){
+      var d=document.createElement("div");d.className="bandcol";
+      var cap=document.createElement("div");cap.className="cap";cap.textContent=caps[ci];d.appendChild(cap);
+      var sw=document.createElement("div");sw.className="swatches";
+      col.set.forEach(function(c,idx){
+        var b=document.createElement("button");b.className="sw";b.style.background=c[1];
+        b.setAttribute("aria-label",c[0]);b.setAttribute("aria-pressed", dec[col.k]===idx?"true":"false");
+        b.addEventListener("click",function(){dec[col.k]=idx;
+          [].forEach.call(sw.children,function(x,xi){x.setAttribute("aria-pressed",xi===idx?"true":"false");});
+          updateDecoder();});
+        sw.appendChild(b);
+      });
+      d.appendChild(sw);wrap.appendChild(d);
+    });
+  }
+  function fmtVal(v){ if(v>=1e6)return (v/1e6)+" MΩ"; if(v>=1000)return (v/1000)+" kΩ"; return v+" Ω"; }
+  function zerosWords(n){ return n===0?"no zeros":(n===1?"1 zero":n+" zeros"); }
+  function decValue(){ return (dec.a*10+dec.b)*Math.pow(10,dec.c); }
+  function updateDecoder(){
+    var val=decValue();
+    document.getElementById("bandA").setAttribute("fill",COLORS[dec.a][1]);
+    document.getElementById("bandB").setAttribute("fill",COLORS[dec.b][1]);
+    document.getElementById("bandC").setAttribute("fill",COLORS[dec.c][1]);
+    document.getElementById("bandD").setAttribute("fill",TOL[dec.tol][1]);
+    document.getElementById("decVal").innerHTML=fmtVal(val);
+    document.getElementById("decBreak").innerHTML=COLORS[dec.a][0]+"("+dec.a+") "+COLORS[dec.b][0]+"("+dec.b+") · "+zerosWords(dec.c)+" · "+TOL[dec.tol][2];
+  }
+  function showCc(){
+    ccPhase="check";
+    document.getElementById("ccQtag").textContent="Question "+(ccI+1)+" of "+CCTASKS.length;
+    document.getElementById("ccStem").textContent=CCTASKS[ccI].stem;
+    var fb=document.getElementById("ccFb"); fb.className="fb"; fb.innerHTML="";
+    var btn=document.getElementById("ccCheck");
+    btn.style.display=""; btn.textContent="Check this one";
+    document.getElementById("ccEnd").className="cc-end";
+  }
+  document.getElementById("ccCheck").addEventListener("click",function(){
+    if(ccPhase==="next"){
+      if(ccI<CCTASKS.length-1){ ccI++; showCc(); }
+      else {
+        var n=0; ccLast.forEach(function(v){if(v)n++;});
+        this.style.display="none";
+        document.getElementById("ccFb").className="fb";
+        document.getElementById("ccEnd").className="cc-end on";
+        document.getElementById("ccScore").textContent=n+" / "+CCTASKS.length;
+        document.getElementById("ccSum").textContent=n===CCTASKS.length?"3 of 3. Band 1 and 2 are digits. Band 3 is zeros. Band 4 is gold or silver.":"Score is "+n+" of 3.";
+        if(window.__inkGate) window.__inkGate.ready("colorcode");
+      }
+      return;
+    }
+    var task=CCTASKS[ccI], val=decValue(), ok=val===task.val && dec.tol===task.tol;
+    var fb=document.getElementById("ccFb");
+    fb.className="fb show "+(ok?"right":"wrong");
+    if(ok){
+      ccLast[ccI]=1;
+      ccPhase="next";
+      fb.innerHTML="<span class='verdict'>CORRECT</span>You built "+fmtVal(val)+" "+TOL[dec.tol][2]+".";
+      this.textContent=ccI<CCTASKS.length-1?"Next":"See score";
+      if(ccI===CCTASKS.length-1 && window.__inkGate) window.__inkGate.ready("colorcode");
+    } else {
+      ccLast[ccI]=0;
+      fb.innerHTML="<span class='verdict'>WRONG</span>You have "+fmtVal(val)+" "+TOL[dec.tol][2]+". Band 1 and 2 are the digits. Band 3 is how many zeros. Band 4 is gold ±5% or silver ±10%.";
+    }
+  });
+  buildBands(); updateDecoder(); showCc();
+
+  /* ============================================================
+     VIRTUAL FLUKE  -  ohms procedure by doing it
+     ============================================================ */
+  var fluke={power:true,isolated:false,dial:"v",probes:"off",redJack:"vohm",fused:false,won:false};
+  function flukeWouldBlow(){
+    if(fluke.probes==="off") return false;
+    if(fluke.dial==="ohm" && fluke.power && fluke.redJack==="vohm") return true;
+    if(fluke.dial==="a" && fluke.power && fluke.redJack==="a") return true;
+    return false;
+  }
+  function flukeReading(){
+    if(fluke.fused) return {text:"FUSE",unit:"",cls:"fuse",ann:"FUSED"};
+    if(fluke.redJack==="a" && fluke.dial!=="a") return {text:"LEAD",unit:"",cls:"",ann:"LEAD"};
+    if(fluke.redJack==="vohm" && fluke.dial==="a") return {text:"LEAD",unit:"",cls:"",ann:"LEAD"};
+    if(fluke.dial==="ohm"){
+      if(fluke.probes==="off") return {text:"OL",unit:"Ω",cls:"",ann:"Ω"};
+      if(fluke.probes==="bus") return {text:"OL",unit:"Ω",cls:"",ann:"Ω"};
+      if(fluke.isolated) return {text:"100.0",unit:"Ω",cls:"win",ann:"Ω",win:true};
+      return {text:"9.09",unit:"Ω",cls:"",ann:"Ω"};
+    }
+    if(fluke.dial==="v"){
+      var v="0.00";
+      if(fluke.power && fluke.probes==="bus") v="12.00";
+      if(fluke.power && fluke.probes==="r1" && !fluke.isolated) v="12.00";
+      return {text:v,unit:"V",cls:"",ann:"V DC"};
+    }
+    return {text:"0.00",unit:"A",cls:"",ann:"A"};
+  }
+  function paintFluke(){
+    if(flukeWouldBlow()) fluke.fused=true;
+    var r=flukeReading();
+    var lcd=document.getElementById("flukeLcd");
+    lcd.textContent=r.text;
+    lcd.className="fluke-lcd"+(r.cls?" "+r.cls:"");
+    document.getElementById("flukeUnit").textContent=r.unit;
+    document.getElementById("flukeAnn").textContent=r.ann||"";
+    document.getElementById("flukeFuse").hidden=!fluke.fused;
+    if(r.win && !fluke.won){
+      fluke.won=true;
+      document.getElementById("flukeDone").className="fluke-done on";
+      credit("ohms",{ id:"fluke-r1", kind:"meter" });
+    }
+    var liveEl=document.getElementById("ohmLive");
+    if(liveEl){
+      liveEl.textContent=fluke.fused
+        ?"FUSE. Replace it, open the switch, then measure again. The meter sources its own current."
+        :"Measure R1. If the LCD says FUSE, replace the fuse and start with power OFF. The meter sources its own current.";
+    }
+    var steps=document.getElementById("ohmSteps");
+    if(steps){
+      var met={
+        sw:!fluke.power,
+        lift:!!fluke.isolated,
+        dial:fluke.dial==="ohm",
+        jack:fluke.redJack==="vohm",
+        r1:fluke.probes==="r1" && fluke.isolated && !fluke.power && fluke.dial==="ohm" && !fluke.fused
+      };
+      [].forEach.call(steps.querySelectorAll("[data-step]"), function(li){
+        li.classList.toggle("is-met", !!met[li.getAttribute("data-step")]);
+      });
+    }
+    drawOhmCirc();
+  }
+  function drawOhmCirc(){
+    var s=document.getElementById("ohmCirc"); if(!s) return;
+    while(s.firstChild)s.removeChild(s.firstChild);
+    var live=fluke.power && !fluke.fused;
+    var wire=live?"#39d7ff":"#5a6270";
+    function hit(x,y,w,h,act,lab){
+      var r=el("rect",{x:x,y:y,width:w,height:h,fill:"#39d7ff","fill-opacity":"0",class:"hit","data-act":act,rx:"6"});
+      r.setAttribute("role","button"); r.setAttribute("tabindex","0"); r.setAttribute("aria-label",lab);
+      s.appendChild(r);
+    }
+    // battery plates
+    [[70,true],[86,false],[102,true],[118,false]].forEach(function(c){
+      var half=c[1]?18:10, sw=c[1]?2.4:5;
+      s.appendChild(el("line",{x1:40-half+40,y1:c[0],x2:40+half+40,y2:c[0],stroke:"#b48cff","stroke-width":sw,"stroke-linecap":"round"}));
+    });
+    var bt=el("text",{x:80,y:58,fill:"#b48cff","font-size":"13","font-family":"'IBM Plex Mono',monospace","text-anchor":"middle"});
+    bt.textContent="12 V"; s.appendChild(bt);
+    s.appendChild(el("line",{x1:80,y1:70,x2:80,y2:48,stroke:wire,"stroke-width":"2"}));
+    s.appendChild(el("line",{x1:80,y1:48,x2:160,y2:48,stroke:wire,"stroke-width":"2"}));
+    // switch
+    if(fluke.power){
+      s.appendChild(el("line",{x1:160,y1:48,x2:210,y2:48,stroke:wire,"stroke-width":"3","stroke-linecap":"round"}));
+    } else {
+      s.appendChild(el("line",{x1:160,y1:48,x2:198,y2:28,stroke:"#ff9e3d","stroke-width":"3","stroke-linecap":"round"}));
+      s.appendChild(el("line",{x1:210,y1:48,x2:230,y2:48,stroke:wire,"stroke-width":"2"}));
+    }
+    var swl=el("text",{x:185,y:20,fill:fluke.power?"#5ddb9a":"#ff6b6b","font-size":"11","font-family":"'IBM Plex Mono',monospace","text-anchor":"middle"});
+    swl.textContent=fluke.power?"PWR ON":"PWR OFF"; s.appendChild(swl);
+    // node to right, down to two branches
+    s.appendChild(el("line",{x1:210,y1:48,x2:250,y2:48,stroke:wire,"stroke-width":"2"}));
+    s.appendChild(el("circle",{cx:250,cy:48,r:"3",fill:wire}));
+    s.appendChild(el("line",{x1:250,y1:48,x2:250,y2:210,stroke:wire,"stroke-width":"2"}));
+    // R1 branch
+    var r1y=110, zigX=290, zigW=70;
+    if(fluke.isolated){
+      s.appendChild(el("line",{x1:250,y1:r1y,x2:266,y2:r1y,stroke:wire,"stroke-width":"2"}));
+      s.appendChild(el("circle",{cx:266,cy:r1y,r:"3.5",fill:"none",stroke:"#ff9e3d","stroke-width":"2"}));
+      s.appendChild(el("circle",{cx:286,cy:r1y,r:"3.5",fill:"none",stroke:"#ff9e3d","stroke-width":"2"}));
+      s.appendChild(el("line",{x1:286,y1:r1y,x2:zigX,y2:r1y,stroke:wire,"stroke-width":"2"}));
+    } else {
+      s.appendChild(el("line",{x1:250,y1:r1y,x2:zigX,y2:r1y,stroke:wire,"stroke-width":"2"}));
+    }
+    s.appendChild(el("polyline",{points:zigPts(zigX,r1y,zigW),fill:"none",stroke:"#ff9e3d","stroke-width":"2.6","stroke-linejoin":"round"}));
+    s.appendChild(el("line",{x1:zigX+zigW,y1:r1y,x2:380,y2:r1y,stroke:wire,"stroke-width":"2"}));
+    var r1t=el("text",{x:325,y:r1y-16,fill:"#ff9e3d","font-size":"13","font-family":"'IBM Plex Mono',monospace","text-anchor":"middle"});
+    r1t.textContent="R1"; s.appendChild(r1t);
+    var lift=el("text",{x:252,y:r1y+28,fill:"#a3abba","font-size":"10","font-family":"'IBM Plex Mono',monospace"});
+    lift.textContent=fluke.isolated?"LEAD LIFTED":"LEAD"; s.appendChild(lift);
+    // lamp branch
+    var ly=180;
+    s.appendChild(el("line",{x1:250,y1:ly,x2:302,y2:ly,stroke:wire,"stroke-width":"2"}));
+    s.appendChild(el("circle",{cx:318,cy:ly,r:"16",fill:"none",stroke:live?"#e5c53a":"#5a6270","stroke-width":"2"}));
+    s.appendChild(el("line",{x1:308,y1:ly-8,x2:328,y2:ly+8,stroke:live?"#e5c53a":"#5a6270","stroke-width":"1.5"}));
+    s.appendChild(el("line",{x1:328,y1:ly-8,x2:308,y2:ly+8,stroke:live?"#e5c53a":"#5a6270","stroke-width":"1.5"}));
+    s.appendChild(el("line",{x1:334,y1:ly,x2:380,y2:ly,stroke:wire,"stroke-width":"2"}));
+    var lt=el("text",{x:318,y:ly+32,fill:"#8a92a0","font-size":"11","font-family":"'IBM Plex Mono',monospace","text-anchor":"middle"});
+    lt.textContent="10 Ω"; s.appendChild(lt);
+    // right rail + return
+    s.appendChild(el("line",{x1:380,y1:r1y,x2:380,y2:ly,stroke:wire,"stroke-width":"2"}));
+    s.appendChild(el("circle",{cx:380,cy:r1y,r:"3",fill:wire}));
+    s.appendChild(el("circle",{cx:380,cy:ly,r:"3",fill:wire}));
+    s.appendChild(el("line",{x1:380,y1:ly,x2:380,y2:250,stroke:wire,"stroke-width":"2"}));
+    s.appendChild(el("line",{x1:380,y1:250,x2:80,y2:250,stroke:wire,"stroke-width":"2"}));
+    s.appendChild(el("line",{x1:80,y1:250,x2:80,y2:118,stroke:wire,"stroke-width":"2"}));
+    // probes
+    if(fluke.probes==="r1"){
+      s.appendChild(el("circle",{cx:zigX,cy:r1y,r:"5",fill:"none",stroke:"#ff6b6b","stroke-width":"2.4"}));
+      s.appendChild(el("circle",{cx:zigX+zigW,cy:r1y,r:"5",fill:"none",stroke:"#c6ccd6","stroke-width":"2.4"}));
+    } else if(fluke.probes==="bus"){
+      s.appendChild(el("circle",{cx:80,cy:70,r:"5",fill:"none",stroke:"#ff6b6b","stroke-width":"2.4"}));
+      s.appendChild(el("circle",{cx:80,cy:250,r:"5",fill:"none",stroke:"#c6ccd6","stroke-width":"2.4"}));
+    }
+    hit(148,18,72,44,"sw",fluke.power?"Open the switch":"Close the switch");
+    hit(240,r1y-24,56,52,"lift",fluke.isolated?"Reconnect R1 lead":"Lift R1 lead");
+    hit(288,r1y-26,80,48,"r1","Place probes on R1");
+    hit(48,48,64,90,"bus","Place probes on the battery");
+  }
+  function applyFluke(act){
+    if(act==="sw") fluke.power=!fluke.power;
+    if(act==="lift") fluke.isolated=!fluke.isolated;
+    if(act==="r1") fluke.probes = fluke.probes==="r1"?"off":"r1";
+    if(act==="bus") fluke.probes = fluke.probes==="bus"?"off":"bus";
+    paintFluke();
+  }
+  document.getElementById("ohmCirc").addEventListener("click",function(e){
+    var t=e.target.closest("[data-act]"); if(!t) return;
+    applyFluke(t.getAttribute("data-act"));
+  });
+  document.getElementById("ohmCirc").addEventListener("keydown",function(e){
+    if(e.key!=="Enter" && e.key!==" ") return;
+    var t=e.target.closest("[data-act]"); if(!t) return;
+    e.preventDefault(); applyFluke(t.getAttribute("data-act"));
+  });
+  document.querySelector(".fluke-dial").addEventListener("click",function(e){
+    var b=e.target.closest("button"); if(!b) return;
+    fluke.dial=b.getAttribute("data-dial");
+    [].forEach.call(this.querySelectorAll("button"),function(x){x.setAttribute("aria-pressed",x===b?"true":"false");});
+    paintFluke();
+  });
+  document.querySelector(".fluke-jacks").addEventListener("click",function(e){
+    var b=e.target.closest("button[data-jack]"); if(!b) return;
+    fluke.redJack=b.getAttribute("data-jack");
+    [].forEach.call(this.querySelectorAll("button[data-jack]"),function(x){x.setAttribute("aria-pressed",x===b?"true":"false");});
+    paintFluke();
+  });
+  document.getElementById("fuseBtn").addEventListener("click",function(){
+    fluke.fused=false; fluke.probes="off"; paintFluke();
+  });
+  paintFluke();
+
+  /* ============================================================
+     KNOWLEDGE CHECK  -  Checkpoint mechanics, Electric Ink skin
+     Clone this block for every DC lesson.
+     ============================================================ */
+  var KEYS=["A","B","C","D"];
+  var ITEMS=[
+    {lo:"1",stem:"What is the definition of resistance?",note:"",ans:0,opts:["Opposition to the flow (current) of electricity.","The flow of electrons.","The pressure of electrons.","The work produced."],
+      miss:["Resistance is the opposition to the flow (current) of electricity. Symbol R. Unit ohms.","The flow of electrons is current (I), amps. Resistance is the opposition to that flow.","The pressure of electrons is voltage (E or V), volts. Resistance is opposition to flow.","Work produced is power (P), watts. Resistance is opposition to the flow of electricity."]},
+    {lo:"3",stem:"Before you trust an ohm reading on a part still in the aircraft, you:",note:"",ans:1,opts:["Leave power on so the meter sees real current.","Power OFF, then disconnect the device from the rest of the circuit.","Probe it while it is still wired in. Parallel paths do not matter.","Use the voltage range. Ohms are only for dead batteries."],
+      miss:["The ohmmeter sources its own current. Leave power on and you can blow the fuse. Power OFF, then disconnect the device.","Power OFF, then disconnect the device. You want the part itself, not every path still wired to it.","If you leave it wired in, the meter sees every path between the probes. The reading is always lower than the true part.","Voltage range is for a live drop. Ohms are taken with power OFF and the device disconnected."]},
+    {lo:"2",stem:"Four 100 ohm resistors in series. Total R is:",note:"",ans:0,opts:["400 Ω","25 Ω","100 Ω","500 Ω"],
+      miss:["Series adds. Four 100 ohm parts on one path: 100 + 100 + 100 + 100 = 400 Ω.","25 Ω is four 100 ohm parts in parallel (100 / 4). Series adds, so this is 400 Ω.","100 Ω would be one resistor. Series adds the four of them: 400 Ω.","There are four resistors, not five. 100 + 100 + 100 + 100 = 400 Ω."]},
+    {lo:"2",stem:"Three 10 ohm resistors in parallel. Total R is:",note:"",ans:0,opts:["3.33 Ω","30 Ω","10 Ω","300 Ω"],
+      miss:["Equal values in parallel: divide by how many. 10 / 3 = 3.33 Ω. Total is always less than the smallest branch.","30 Ω is the series total (10 + 10 + 10). Parallel opens more paths, so total R goes down, to 3.33 Ω.","You added two more paths. Total cannot stay 10 Ω. Equal values: 10 / 3 = 3.33 Ω.","300 is not how parallel works. Equal 10 Ω branches: divide by 3, which is 3.33 Ω."]},
+    {lo:"3",stem:"Where is the fault?",note:"Cirrus SR22. Fan slow, bay hot. Bus 13.6 V. Fan 9.1 V. Series path. Nothing burned.",ans:1,opts:["Replace the fan motor first. It is weak, so the motor failed.","Extra R in the feed or ground is dropping voltage before the fan.","Battery or alternator is weak. Service the source.","The fan is in parallel, so less than bus voltage is normal."],
+      miss:["The fan still sees 9.1 V, so it is not dead. Extra series R starved it. Swap the motor and the corrosion is still in the path.","13.6 V on the bus and 9.1 V at the fan means 4.5 V dropped in the series path. Extra R in the feed or ground. Clean it, re-terminate, re-measure.","13.6 V on the bus is a normal charging reading. Energy left the source. It was lost between the bus and the fan.","The stem is a series path. A parallel branch would see full bus voltage. The missing volts are extra series R."]}
+  ];
+  var qi=0, answers=[], locked=false, kcScored=false;
+  var rail=document.getElementById("kcRail");
+  ITEMS.forEach(function(){ var s=document.createElement("span"); s.className="kc-seg"; s.innerHTML="<i></i>"; rail.appendChild(s); });
+  var segs=[].slice.call(rail.children);
+  document.getElementById("kcScoreD").textContent=String(ITEMS.length);
+  function pad2(n){ return (n<10?"0":"")+n; }
+  function showKc(name){
+    document.getElementById("kcCover").classList.toggle("on", name==="cover");
+    document.getElementById("kcQuestion").classList.toggle("on", name==="question");
+    document.getElementById("kcEnd").classList.toggle("on", name==="debrief");
+    document.getElementById("kcBezel").hidden = name==="cover";
+  }
+  function paintRail(){
+    segs.forEach(function(seg,idx){
+      seg.className="kc-seg";
+      var a=answers[idx];
+      if(a){ seg.classList.add("done"); if(!a.ok) seg.classList.add("miss"); }
+      else if(idx===qi && document.getElementById("kcQuestion").classList.contains("on")) seg.classList.add("current");
+    });
+  }
+  function hideFb(){
+    document.getElementById("kcFb").className="kc-fb";
+    document.getElementById("kcQfoot").className="kc-qfoot hide";
+    document.getElementById("kcNav").innerHTML="";
+  }
+  function showItem(){
+    locked=false;
+    showKc("question");
+    var it=ITEMS[qi];
+    document.getElementById("kcQtag").innerHTML="Q <b>"+pad2(qi+1)+"</b> / "+pad2(ITEMS.length);
+    document.getElementById("kcStem").textContent=it.stem;
+    document.getElementById("kcNote").textContent=it.note||"";
+    document.getElementById("kcNote").style.display=it.note?"":"none";
+    var opts=document.getElementById("kcOpts"); opts.innerHTML="";
+    it.opts.forEach(function(t,i){
+      var b=document.createElement("button"); b.type="button"; b.className="kc-opt"; b.setAttribute("data-i",i);
+      b.innerHTML="<span class='key'>"+KEYS[i]+"</span><span>"+t+"</span>";
+      opts.appendChild(b);
+    });
+    hideFb();
+    paintRail();
+  }
+  function finish(){
+    var n=0; answers.forEach(function(a){ if(a&&a.ok) n++; });
+    showKc("debrief");
+    document.getElementById("kcQtag").innerHTML="Done";
+    document.getElementById("kcScoreN").textContent=String(n);
+    var pct=Math.round((n/ITEMS.length)*100);
+    document.getElementById("kcPct").textContent=pct+" percent correct";
+    document.getElementById("kcBand").textContent=n===ITEMS.length?"Solid":(n>=4?"Passing":"Worth another pass");
+    var circ=2*Math.PI*42;
+    document.getElementById("kcArc").setAttribute("stroke-dasharray", ((n/ITEMS.length)*circ).toFixed(1)+" 264");
+    var rev=document.getElementById("kcReview"); rev.innerHTML="";
+    ITEMS.forEach(function(it,idx){
+      var a=answers[idx]||{pick:0,ok:false};
+      var row=document.createElement("button"); row.type="button"; row.className="kc-rev-row";
+      row.innerHTML="<span class='mark "+(a.ok?"ok":"no")+"'>"+(a.ok?"+":"x")+"</span><span class='q'><b>"+pad2(idx+1)+"</b> "+it.stem+"</span>";
+      row.setAttribute("aria-expanded","false");
+      row.addEventListener("click",function(){
+        var next=row.nextSibling;
+        if(next && next.classList && next.classList.contains("kc-rev-fb")){ next.parentNode.removeChild(next); row.setAttribute("aria-expanded","false"); return; }
+        [].forEach.call(rev.querySelectorAll(".kc-rev-fb"),function(x){ x.parentNode.removeChild(x); });
+        [].forEach.call(rev.querySelectorAll(".kc-rev-row"),function(x){ x.setAttribute("aria-expanded","false"); });
+        var fb=document.createElement("div"); fb.className="kc-rev-fb";
+        var line=it.miss[a.pick];
+        if(!a.ok) line=line+" Answer: "+it.opts[it.ans];
+        fb.textContent=line;
+        row.setAttribute("aria-expanded","true");
+        if(row.nextSibling) rev.insertBefore(fb, row.nextSibling); else rev.appendChild(fb);
+      });
+      rev.appendChild(row);
+    });
+    paintRail();
+    work.check=true;
+    work.checkN=n;
+    if(!kcScored && window.AeroLesson){
+      kcScored=true;
+      var n24=0,t24=0,n72=0,t72=0;
+      ITEMS.forEach(function(it,idx){
+        var ok=answers[idx] && answers[idx].ok;
+        if(idx===1){ t72++; if(ok) n72++; }
+        else { t24++; if(ok) n24++; }
+      });
+      window.AeroLesson.score({ correct:n24, total:t24, objectiveId:"CAET-2.4" });
+      window.AeroLesson.score({ correct:n72, total:t72, objectiveId:"CAET-7.2" });
+      window.AeroLesson.saveState(work);
+    }
+    paintCompleteGate();
+  }
+  document.getElementById("kcBegin").addEventListener("click",function(){
+    qi=0; answers=[]; showItem();
+    if(window.AeroLesson) window.AeroLesson.interaction({ id:"checkpoint", kind:"reach" });
+  });
+  document.getElementById("kcOpts").addEventListener("click",function(e){
+    var btn=e.target.closest(".kc-opt"); if(!btn||locked) return;
+    locked=true;
+    var it=ITEMS[qi], i=+btn.getAttribute("data-i"), ok=i===it.ans;
+    answers[qi]={pick:i,ok:ok};
+    if(window.AeroLesson) window.AeroLesson.interaction({ id:"kc-q"+(qi+1), kind:"answer", response:KEYS[i], correct:ok, attempt:1 });
+    [].forEach.call(document.querySelectorAll("#kcOpts .kc-opt"),function(b){
+      b.disabled=true;
+      var j=+b.getAttribute("data-i");
+      if(j===it.ans) b.classList.add("is-key");
+      if(j===i && !ok) b.classList.add("is-miss");
+      if(j!==it.ans && j!==i) b.classList.add("dim");
+    });
+    var fb=document.getElementById("kcFb");
+    fb.className="kc-fb show"+(ok?"":" miss");
+    document.getElementById("kcVerdict").innerHTML=ok
+      ? '<span aria-hidden="true">&#10003;</span> Correct'
+      : '<span aria-hidden="true">&#10007;</span> Wrong';
+    document.getElementById("kcFbText").textContent=it.miss[i];
+    var ans=document.getElementById("kcFbAns");
+    if(!ok){ ans.style.display="block"; ans.textContent="Answer: "+it.opts[it.ans]; }
+    else { ans.style.display="none"; ans.textContent=""; }
+    var foot=document.getElementById("kcQfoot"); foot.className="kc-qfoot";
+    document.getElementById("kcHint").textContent=ok?"Next.":"Wrong. You can try this one again.";
+    var nav=document.getElementById("kcNav"); nav.innerHTML="";
+    if(!ok){
+      var r=document.createElement("button"); r.type="button"; r.className="btn retry"; r.textContent="Try this one again";
+      r.onclick=function(){ answers[qi]=null; showItem(); };
+      nav.appendChild(r);
+    }
+    var nx=document.createElement("button"); nx.type="button"; nx.className="btn active";
+    nx.textContent=qi<ITEMS.length-1?"Next":"See score";
+    nx.onclick=function(){ if(qi<ITEMS.length-1){qi++; showItem();} else finish(); };
+    nav.appendChild(nx);
+    paintRail();
+  });
+  document.getElementById("kcAgain").addEventListener("click",function(){ qi=0; answers=[]; showKc("cover"); paintRail(); });
+  showKc("cover");
+
+  /* ============================================================
+     3D LATTICE  -  three.js. Electron drift + scattering.
+     Deterministic: fixed physics dt, seeded scatter, no Date.now.
+     ============================================================ */
+  (function lattice(){
+    function pokeLattice(){ if(window.__inkGate) window.__inkGate.ready("lattice"); }
+    var matRow=document.getElementById("latMat");
+    var tmpEl=document.getElementById("latTemp");
+    var cvs=document.getElementById("latticeCanvas");
+    if(!cvs || !window.THREE){
+      if(cvs){cvs.parentNode.style.display="none";}
+      if(matRow) matRow.addEventListener("click",function(e){
+        var b=e.target.closest("button"); if(!b) return;
+        document.getElementById("latMatVal").textContent=b.getAttribute("data-m");
+        [].forEach.call(this.children,function(c){c.classList.toggle("active",c===b);});
+        pokeLattice();
+      });
+      if(tmpEl) tmpEl.addEventListener("input",function(){
+        document.getElementById("latTempVal").textContent=this.value;
+        pokeLattice();
+      });
+      return;
+    }
+    var stage=cvs.parentNode;
+    var renderer=new THREE.WebGLRenderer({canvas:cvs,antialias:true,alpha:true});
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
+    var scene=new THREE.Scene();
+    var camera=new THREE.PerspectiveCamera(45,1.6,0.1,100);
+    var camR=15, az=0.7, elev=0.32;
+    function resize(){var w=stage.clientWidth||600,h=stage.clientHeight||440;
+      renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix();}
+    scene.add(new THREE.AmbientLight(0xffffff,0.6));
+    var dl=new THREE.DirectionalLight(0xffffff,0.85);dl.position.set(6,9,7);scene.add(dl);
+    var dl2=new THREE.DirectionalLight(0x39d7ff,0.25);dl2.position.set(-6,-4,-5);scene.add(dl2);
+
+    // seeded prng
+    var seed=987654321>>>0;
+    function rnd(){seed=(1664525*seed+1013904223)>>>0;return seed/4294967296;}
+
+    var nx=5,ny=3,nz=3,sp=2.3;
+    var atomGeo=new THREE.SphereGeometry(0.52,20,20);
+    var group=new THREE.Group();scene.add(group);
+    var atoms=[];
+    function buildLattice(jitter,color){
+      while(group.children.length){group.remove(group.children[0]);}
+      atoms=[];seed=987654321>>>0; // reseed so layout is deterministic per material
+      var mat=new THREE.MeshStandardMaterial({color:color,roughness:0.42,metalness:0.55});
+      for(var i=0;i<nx;i++)for(var j=0;j<ny;j++)for(var k=0;k<nz;k++){
+        var m=new THREE.Mesh(atomGeo,mat);
+        var bx=(i-(nx-1)/2)*sp+(rnd()-0.5)*jitter*sp;
+        var by=(j-(ny-1)/2)*sp+(rnd()-0.5)*jitter*sp;
+        var bz=(k-(nz-1)/2)*sp+(rnd()-0.5)*jitter*sp;
+        m.position.set(bx,by,bz);m.userData={bx:bx,by:by,bz:bz,ph:rnd()*6.283};
+        group.add(m);atoms.push(m);
+      }
+    }
+    var xmin=-(nx-1)/2*sp-2, xmax=(nx-1)/2*sp+2;
+    var eGeo=new THREE.SphereGeometry(0.17,12,12);
+    var eMat=new THREE.MeshBasicMaterial({color:0x39d7ff});
+    var els=[];
+    for(var i=0;i<38;i++){var mesh=new THREE.Mesh(eGeo,eMat);scene.add(mesh);
+      els.push({mesh:mesh,x:xmin+rnd()*(xmax-xmin),y:(rnd()-0.5)*ny*sp,z:(rnd()-0.5)*nz*sp,vx:0.07,vy:0,vz:0});}
+
+    var P={jitter:0,color:0xc98a5a,scatterR:0.62};
+    var tempC=20;
+    function setMaterial(name){
+      if(name==="Nichrome"){P.jitter=0.24;P.color=0x9aa6b0;P.scatterR=0.82;}
+      else{P.jitter=0;P.color=0xc98a5a;P.scatterR=0.62;}
+      buildLattice(P.jitter,P.color);
+      var leg=document.getElementById("legAtom");if(leg)leg.style.background="#"+P.color.toString(16).padStart(6,"0");
+    }
+    function vibAmp(){return 0.02+((tempC+40)/260)*0.17;}
+    buildLattice(0,P.color);resize();window.addEventListener("resize",resize);
+
+    // drag to orbit
+    var drag=false,px=0,py=0,touched=false;
+    cvs.addEventListener("pointerdown",function(e){drag=true;px=e.clientX;py=e.clientY;touched=true;
+      var h=document.getElementById("latHint");if(h)h.style.opacity=0;try{cvs.setPointerCapture(e.pointerId);}catch(_){}});
+    cvs.addEventListener("pointermove",function(e){if(!drag)return;az+=(e.clientX-px)*0.006;elev+=(e.clientY-py)*0.006;
+      elev=Math.max(-1.15,Math.min(1.15,elev));
+      if(Math.abs(e.clientX-px)>2 || Math.abs(e.clientY-py)>2) pokeLattice();
+      px=e.clientX;py=e.clientY;});
+    cvs.addEventListener("pointerup",function(){drag=false;});
+    cvs.addEventListener("pointercancel",function(){drag=false;});
+
+    // metrics accumulators
+    var coll=0,frames=0,driftAcc=0,driftN=0;
+    var scatterFill=document.getElementById("scatterFill"),driftFill=document.getElementById("driftFill"),
+        scatterN=document.getElementById("scatterN"),driftLab=document.getElementById("driftN"),
+        verdict=document.getElementById("latVerdict");
+    function updateHud(rate,drift){
+      var s=Math.max(0,Math.min(1,rate/2.2));
+      var dn=Math.max(0,Math.min(1,drift/0.07));
+      if(scatterFill)scatterFill.style.width=(12+s*88)+"%";
+      if(driftFill)driftFill.style.width=(12+dn*88)+"%";
+      var lvl=s<0.33?"low":s<0.66?"moderate":"high";
+      if(scatterN)scatterN.textContent=lvl;
+      if(driftLab)driftLab.textContent=dn>0.66?"fast":dn>0.33?"slowed":"choked";
+      if(verdict){var word=s<0.33?"low":s<0.66?"moderate":"high";
+        verdict.innerHTML="Resistance: <b>"+word+"</b>. "+(
+          s<0.33?"This is clean copper. Opposition is low, so the electrons get through."
+          :s<0.66?"There are more collisions now, so resistance is higher and current is slowing down."
+          :"The lattice is hot or messy. Opposition is high, and current can barely get thru.");}
+    }
+
+    function step(){
+      if(!reduce && !drag) az+=0.0015;
+      camera.position.set(camR*Math.cos(elev)*Math.sin(az),camR*Math.sin(elev),camR*Math.cos(elev)*Math.cos(az));
+      camera.lookAt(0,0,0);
+      var amp=reduce?0:vibAmp();
+      for(var a=0;a<atoms.length;a++){var m=atoms[a],u=m.userData;u.ph+=0.05+amp*0.35;
+        m.position.set(u.bx+Math.sin(u.ph)*amp,u.by+Math.cos(u.ph*1.1)*amp,u.bz+Math.sin(u.ph*0.7)*amp);}
+      for(var i=0;i<els.length;i++){var e=els[i];
+        e.vx+=(0.07-e.vx)*0.045;
+        if(reduce){/* keep static-ish */}
+        e.x+=e.vx;e.y+=e.vy;e.z+=e.vz;e.vy*=0.95;e.vz*=0.95;
+        for(var a2=0;a2<atoms.length;a2++){var m2=atoms[a2];
+          var dx=e.x-m2.position.x,dy=e.y-m2.position.y,dz=e.z-m2.position.z;var d2=dx*dx+dy*dy+dz*dz;
+          if(d2<P.scatterR*P.scatterR){var inv=1/Math.sqrt(d2||0.001);
+            e.vy+=dy*inv*0.05+(rnd()-0.5)*0.07;e.vz+=dz*inv*0.05+(rnd()-0.5)*0.07;
+            e.vx=0.015+rnd()*0.02;coll++;break;}
+        }
+        driftAcc+=e.vx;driftN++;
+        if(e.x>xmax){e.x=xmin;e.y=(rnd()-0.5)*ny*sp;e.z=(rnd()-0.5)*nz*sp;e.vx=0.07;e.vy=0;e.vz=0;}
+        e.mesh.position.set(e.x,e.y,e.z);
+      }
+      frames++;
+      if(frames>=28){updateHud(coll/frames,driftAcc/(driftN||1));coll=0;frames=0;driftAcc=0;driftN=0;}
+      renderer.render(scene,camera);
+      requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+
+    // controls
+    document.getElementById("latMat").addEventListener("click",function(e){var b=e.target.closest("button");if(!b)return;
+      setMaterial(b.getAttribute("data-m"));document.getElementById("latMatVal").textContent=b.getAttribute("data-m");
+      [].forEach.call(this.children,function(c){c.classList.toggle("active",c===b);});
+      pokeLattice();});
+    document.getElementById("latTemp").addEventListener("input",function(){tempC=+this.value;document.getElementById("latTempVal").textContent=tempC;
+      pokeLattice();});
+  })();
+
+  var replay=document.getElementById("replayBench");
+  if(replay){
+    replay.addEventListener("click",function(){
+      var bench=document.getElementById("bench");
+      if(bench) bench.scrollIntoView({behavior: reduce ? "auto" : "smooth"});
+    });
+  }
+  var mark=document.getElementById("markComplete");
+  if(mark){
+    mark.addEventListener("click",function(){
+      if(mark.disabled) return;
+      mark.disabled=true;
+      if(window.__inkGate) window.__inkGate.clear("wrap-up");
+      if(window.AeroLesson) window.AeroLesson.complete(true);
+    });
+  }
+  if(window.AeroLesson){
+    window.AeroLesson.onInit(function(payload){
+      var s=payload && payload.state;
+      if(!s) return;
+      work.bench=!!s.bench; work.networks=!!s.networks; work.ohms=!!s.ohms;
+      work.check=!!s.check; work.checkN=+s.checkN||0;
+      if(window.__inkGate) window.__inkGate.restore(s);
+      paintCompleteGate();
+    });
+  }
+  paintCompleteGate();
+
+  window.autoSolve=function(){
+    return new Promise(function(resolve,reject){
+      function wait(ms){ return new Promise(function(r){ setTimeout(r,ms); }); }
+      function fire(el){
+        if(!el) throw new Error("autoSolve: missing control");
+        el.dispatchEvent(new MouseEvent("click",{bubbles:true}));
+      }
+      (async function(){
+        try{
+          fire(document.querySelector('[data-clear="hero"]'));
+          await wait(80);
+          fire(document.querySelector('[data-clear="hook"]'));
+          await wait(80);
+          fire(document.querySelector('[data-clear="intuition"]'));
+          await wait(80);
+          fire(document.querySelector('#predict1 .predict-opts button[data-c="1"]'));
+          await wait(80);
+          fire(document.querySelector('[data-clear="bench"]'));
+          await wait(80);
+          fire(document.querySelector('#latMat button[data-m="Nichrome"]'));
+          await wait(80);
+          fire(document.querySelector('[data-clear="lattice"]'));
+          await wait(80);
+          fire(document.querySelector("[data-flip]"));
+          await wait(80);
+          fire(document.querySelector('[data-clear="types"]'));
+          await wait(80);
+          fire(document.getElementById("seriesAdd"));
+          await wait(80);
+          fire(document.querySelector('[data-clear="network"]'));
+          await wait(80);
+          function swatch(col, idx){
+            var cols=document.querySelectorAll("#bandControls .bandcol");
+            fire(cols[col].querySelectorAll(".sw")[idx]);
+          }
+          swatch(0,4); swatch(1,7); swatch(2,2); swatch(3,0);
+          await wait(40);
+          fire(document.getElementById("ccCheck"));
+          await wait(80);
+          fire(document.getElementById("ccCheck"));
+          await wait(80);
+          swatch(0,2); swatch(1,3); swatch(2,6); swatch(3,1);
+          await wait(40);
+          fire(document.getElementById("ccCheck"));
+          await wait(80);
+          fire(document.getElementById("ccCheck"));
+          await wait(80);
+          swatch(0,4); swatch(1,7); swatch(2,0); swatch(3,0);
+          await wait(40);
+          fire(document.getElementById("ccCheck"));
+          await wait(80);
+          fire(document.getElementById("ccCheck"));
+          await wait(80);
+          fire(document.querySelector('[data-clear="colorcode"]'));
+          await wait(80);
+          fire(document.querySelector('#ohmCirc [data-act="sw"]'));
+          await wait(40);
+          fire(document.querySelector('#ohmCirc [data-act="lift"]'));
+          await wait(40);
+          fire(document.querySelector('.fluke-dial button[data-dial="ohm"]'));
+          await wait(40);
+          fire(document.querySelector('#ohmCirc [data-act="r1"]'));
+          await wait(80);
+          fire(document.querySelector('[data-clear="measure"]'));
+          await wait(80);
+          fire(document.getElementById("kcBegin"));
+          await wait(80);
+          for(var q=0;q<ITEMS.length;q++){
+            var opt=document.querySelector('#kcOpts .kc-opt[data-i="'+ITEMS[q].ans+'"]');
+            fire(opt);
+            await wait(80);
+            var nx=document.querySelector("#kcNav .btn.active");
+            fire(nx);
+            await wait(80);
+          }
+          fire(document.querySelector('[data-clear="check"]'));
+          await wait(80);
+          fire(document.getElementById("markComplete"));
+          await wait(50);
+          resolve({ok:true});
+        }catch(err){ reject(err); }
+      })();
+    });
+  };
+  window.__actTest=window.__actTest||{};
+  window.__actTest.autoSolve=window.autoSolve;
+  if(window.AeroLesson) window.AeroLesson.ready();
+
+})();
+</script>
+</body>
+</html>
